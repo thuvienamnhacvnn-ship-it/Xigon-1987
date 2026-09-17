@@ -6,7 +6,6 @@ import styles from './MenuBoard.module.css';
 import { fill, type Dictionary } from '@/lib/dictionary';
 import { formatMoney } from '@/lib/money';
 import { hrefFor, type Locale } from '@/lib/i18n';
-import { PRICE_NOTE } from '@/lib/price-note';
 import type { MenuCategory, MenuDish } from '@/server/menu';
 
 /** Three plates a page. The photographs are the point; six of them are wallpaper. */
@@ -28,10 +27,12 @@ export function MenuBoard({
   locale,
   dict,
   categories,
+  cartCount,
 }: {
   locale: Locale;
   dict: Dictionary;
   categories: MenuCategory[];
+  cartCount: number;
 }) {
   const [category, setCategory] = useState<string | null>(null);
   const [query, setQuery] = useState('');
@@ -63,6 +64,13 @@ export function MenuBoard({
 
   return (
     <div className={styles.board}>
+      <header className={styles.head}>
+        <h1 className={styles.title}>{dict.menu.title}</h1>
+        {/* The KIT labels the card itself, and it is right to: the prices below
+            are demo prices, and that belongs in the heading, not a footnote. */}
+        <p className={styles.subtitle}>{dict.menu.demoLabel}</p>
+      </header>
+
       {/* ---------- filters ---------- */}
       <div className={styles.controls}>
         <div className={styles.tabs} role="group" aria-label={dict.menu.categories}>
@@ -97,15 +105,6 @@ export function MenuBoard({
         </label>
       </div>
 
-      {/*
-       * The two standing caveats, once, where a price is about to be read.
-       * They are not decoration: the prices in this database are demo prices,
-       * and no allergen data has ever been supplied by the restaurant.
-       */}
-      <p className={styles.caveat}>
-        {PRICE_NOTE[locale]} · {dict.menu.crossContact}
-      </p>
-
       {/* ---------- the plates ---------- */}
       {shown.length ? (
         <ul className={styles.grid}>
@@ -130,52 +129,45 @@ export function MenuBoard({
         </div>
       )}
 
-      {/* ---------- page numbers ---------- */}
-      <nav className={styles.pager} aria-label={fill(dict.menu.pageOf, { n: current + 1, total: pages })}>
-        <button
-          type="button"
-          className={styles.step}
-          onClick={() => setPage(current - 1)}
-          disabled={current === 0}
-          aria-label={dict.menu.prevPage}
-        >
-          ‹
-        </button>
+      {/* ---------- the foot ---------- */}
+      <div className={styles.foot}>
+        {/*
+         * Two arrows and a count, not eleven numbered buttons. Nobody jumps to
+         * page nine of a menu; they turn pages until something looks good.
+         */}
+        <nav className={styles.pager} aria-label={fill(dict.menu.pageOf, { n: current + 1, total: pages })}>
+          <button
+            type="button"
+            className={styles.step}
+            onClick={() => setPage(current - 1)}
+            disabled={current === 0}
+            aria-label={dict.menu.prevPage}
+          >
+            ←
+          </button>
 
-        <ol className={styles.numbers}>
-          {Array.from({ length: pages }, (_, index) => (
-            <li key={index}>
-              <button
-                type="button"
-                className={styles.number}
-                aria-current={index === current ? 'page' : undefined}
-                aria-label={fill(dict.menu.goToPage, { n: index + 1 })}
-                onClick={() => setPage(index)}
-              >
-                {index + 1}
-              </button>
-            </li>
-          ))}
-        </ol>
+          <span className={styles.pageCount} aria-hidden="true">
+            {current + 1} / {pages}
+          </span>
 
-        <button
-          type="button"
-          className={styles.step}
-          onClick={() => setPage(current + 1)}
-          disabled={current >= pages - 1}
-          aria-label={dict.menu.nextPage}
-        >
-          ›
-        </button>
+          <button
+            type="button"
+            className={styles.step}
+            onClick={() => setPage(current + 1)}
+            disabled={current >= pages - 1}
+            aria-label={dict.menu.nextPage}
+          >
+            →
+          </button>
+        </nav>
 
-        <span className={styles.count}>
-          {found.length === 0
-            ? dict.menu.resultsNone
-            : found.length === 1
-              ? dict.menu.resultsOne
-              : fill(dict.menu.results, { n: found.length })}
-        </span>
-      </nav>
+        <Link href={hrefFor(locale, 'cart')} className={styles.basket}>
+          <BasketIcon />
+          {cartCount === 0
+            ? dict.shell.cartEmpty
+            : fill(dict.shell.cartCount, { count: cartCount })}
+        </Link>
+      </div>
     </div>
   );
 }
@@ -212,28 +204,13 @@ function DishCard({ locale, dict, dish }: { locale: Locale; dict: Dictionary; di
       </Link>
 
       <div className={styles.body}>
-        <p className={styles.category}>{dish.categoryName}</p>
+        {/* Name and price on one line: the two things a guest reads together. */}
         <h3 className={styles.name}>
           <Link href={href}>
             {dish.code ? <span className={styles.code}>{dish.code}</span> : null}
             {dish.name}
           </Link>
-        </h3>
-
-        {dish.description ? <p className={styles.text}>{dish.description}</p> : null}
-
-        <div className={styles.tags}>
-          {dish.vegan ? <span className={styles.tag}>{dict.menu.vegan}</span> : null}
-          {!dish.vegan && dish.vegetarian ? <span className={styles.tag}>{dict.menu.vegetarian}</span> : null}
-          {dish.spice > 0 ? (
-            <span className={styles.tag} aria-label={`${dict.menu.spice} ${dish.spice}/3`}>
-              {'🌶'.repeat(dish.spice)}
-            </span>
-          ) : null}
-        </div>
-
-        <div className={styles.foot}>
-          <p className={styles.price}>
+          <span className={styles.price}>
             {dish.fromCents === null ? (
               '—'
             ) : (
@@ -242,13 +219,47 @@ function DishCard({ locale, dict, dish }: { locale: Locale; dict: Dictionary; di
                 {formatMoney(dish.fromCents, locale)}
               </>
             )}
-          </p>
-          <Link href={href} className="btn btn--gold">
-            {dict.menu.details}
+          </span>
+        </h3>
+
+        {dish.description ? <p className={styles.text}>{dish.description}</p> : null}
+
+        <div className={styles.foot}>
+          {/*
+           * The allergen link is not a nicety. No allergen data has ever been
+           * supplied for this card, and the dish page is where that is said
+           * plainly, so the way to it belongs on every plate.
+           */}
+          <Link href={href} className={styles.detailLink}>
+            {dict.menu.allergensAndDetails}
+            <span aria-hidden="true"> ↗</span>
+          </Link>
+
+          <Link href={href} className={styles.add}>
+            <span className={styles.addMark} aria-hidden="true">
+              +
+            </span>
+            {dict.menu.add}
           </Link>
         </div>
       </div>
     </li>
+  );
+}
+
+function BasketIcon() {
+  return (
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M3.4 5.2h2.3l1.9 9.6a1.6 1.6 0 0 0 1.6 1.3h7.4a1.6 1.6 0 0 0 1.6-1.3L19.6 8H6.6"
+        stroke="currentColor"
+        strokeWidth="1.3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <circle cx="10" cy="19.4" r="1.2" stroke="currentColor" strokeWidth="1.3" />
+      <circle cx="17" cy="19.4" r="1.2" stroke="currentColor" strokeWidth="1.3" />
+    </svg>
   );
 }
 

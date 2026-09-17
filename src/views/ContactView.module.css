@@ -1,54 +1,320 @@
-.layout {
+/*
+ * Kontakt.
+ *
+ * Three columns and a footer rule, inside the shell's pane of glass: what we
+ * know, where it is, and the code that carries it to a phone.
+ */
+.screen {
   display: grid;
-  gap: clamp(1.8rem, 1rem + 3vw, 3.5rem);
-  align-items: start;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: clamp(0.8rem, 0.4rem + 1.2vw, 1.5rem);
+  min-height: 100%;
+  padding: clamp(1rem, 0.5rem + 1.6vw, 2.1rem) clamp(1rem, 0.5rem + 1.8vw, 2.4rem);
 }
-@media (min-width: 880px) { .layout { grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); } }
 
-.details { display: flex; flex-direction: column; gap: 1.6rem; }
-
-.block { display: flex; flex-direction: column; gap: 0.4rem; align-items: flex-start; }
-
-.big {
-  font-family: var(--font-display);
-  font-size: var(--step-2);
-  line-height: 1.35;
-  color: var(--ivory);
-  font-variant-numeric: lining-nums tabular-nums;
+.columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.25fr) minmax(0, 0.7fr);
+  gap: clamp(1rem, 0.5rem + 1.6vw, 2.2rem);
+  min-height: 0;
 }
-a.big { border-bottom: 1px solid var(--gold-hair); padding-bottom: 0.1em; }
-a.big:hover { color: var(--gold-lit); border-bottom-color: var(--gold); }
 
-.link { color: var(--ivory-soft); border-bottom: 1px solid transparent; }
-.link:hover { color: var(--gold-lit); border-bottom-color: var(--gold-hair); }
+/* ---------- what we know ---------- */
 
-.meta { font-size: var(--step--1); color: var(--ivory-mute); line-height: 1.6; max-width: 46ch; }
+.facts {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
 
-.hours { list-style: none; margin: 0.2rem 0 0; padding: 0; display: grid; gap: 0.5rem; }
-.hours li { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.8rem; }
-.hoursTime {
+.title {
+  margin: 0.3rem 0 0;
   font-family: var(--font-display);
-  font-size: var(--step-1);
-  font-variant-numeric: lining-nums tabular-nums;
+  font-size: clamp(1.8rem, 1.1rem + 2vw, 3rem);
+  font-weight: 400;
+  line-height: 1.04;
   color: var(--ivory);
 }
-.hoursSource {
-  font-size: var(--step--2);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--ivory-mute);
+
+.lede {
+  margin: 0.7rem 0 0;
+  font-size: var(--step-0);
+  line-height: 1.5;
+  color: var(--ivory-soft);
+}
+
+.rows {
+  margin: 0.9rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.9rem;
+  padding: 0.6rem 0;
   border-bottom: 1px solid var(--gold-hair);
 }
-.hoursSource:hover { color: var(--gold-lit); }
 
-.warn {
-  margin-top: 0.5rem;
-  font-size: var(--step--1);
-  line-height: 1.6;
-  color: var(--gold-lit);
-  border-left: 2px solid var(--gold);
-  padding-left: 0.8rem;
-  max-width: 48ch;
+.rowIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--gold-hair);
+  border-radius: 50%;
+  color: var(--gold);
 }
 
-.mapCol { position: sticky; top: calc(var(--header-h) + 1.5rem); }
+.rowBody {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
+  font-size: var(--step--1);
+  color: var(--ivory-soft);
+}
+
+.rowTitle {
+  font-size: var(--step-0);
+  color: var(--ivory);
+}
+
+.strong {
+  font-size: var(--step-0);
+  color: var(--ivory);
+}
+
+.strong:hover {
+  color: var(--gold-lit);
+}
+
+.sub {
+  font-size: var(--step--1);
+  color: var(--ivory-mute);
+}
+
+.hoursRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.6rem;
+}
+
+/* Every published figure carries the page it came from, so nobody has to take
+   our word for a set of opening hours we did not settle. */
+.source {
+  font-size: var(--step--2);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gold-deep);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-top: 0.9rem;
+}
+
+.action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.6rem 1.15rem;
+  border: 1px solid var(--gold-hair);
+  border-radius: var(--r-pill);
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  color: var(--ivory);
+  transition: border-color var(--dur-1) var(--ease), color var(--dur-1) var(--ease);
+}
+
+.action:hover {
+  border-color: var(--gold);
+  color: var(--gold-lit);
+}
+
+.action svg {
+  color: var(--gold);
+}
+
+/* ---------- where it is ---------- */
+
+.map {
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+}
+
+.map > * {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+/* ---------- in a pocket ---------- */
+
+.pocket {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  min-width: 0;
+  text-align: center;
+}
+
+.qr {
+  width: clamp(110px, 9vw, 152px);
+  height: auto;
+  padding: 0.6rem;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.qrTitle {
+  margin: 0.7rem 0 0;
+  font-size: var(--step-0);
+  color: var(--ivory);
+}
+
+.qrText {
+  margin: 0;
+  font-size: var(--step--2);
+  line-height: 1.5;
+  color: var(--ivory-mute);
+}
+
+.qrRoute {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  font-size: var(--step--1);
+  color: var(--ivory);
+}
+
+.qrRoute:hover {
+  color: var(--gold-lit);
+}
+
+.qrMark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border: 1px solid var(--gold);
+  border-radius: 50%;
+  color: var(--gold);
+}
+
+/* ---------- the footer row ---------- */
+
+.foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: clamp(0.8rem, 0.4rem + 1.4vw, 2rem);
+  padding-top: clamp(0.8rem, 0.4rem + 1.2vw, 1.4rem);
+  border-top: 1px solid var(--gold-hair);
+}
+
+.wordmark {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1.25;
+  color: var(--gold-lit);
+}
+
+.wordmark b {
+  font-family: var(--font-display);
+  font-size: var(--step-1);
+  font-weight: 400;
+  letter-spacing: var(--track-wide);
+}
+
+.wordmark span {
+  font-family: var(--font-body);
+  font-size: 0.56rem;
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
+  color: var(--ivory-mute);
+}
+
+.footRule {
+  width: 1px;
+  align-self: stretch;
+  background: var(--gold-hair);
+}
+
+.social {
+  display: flex;
+  gap: 1.1rem;
+  color: var(--ivory);
+}
+
+.social a:hover {
+  color: var(--gold-lit);
+}
+
+.legal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(0.9rem, 0.4rem + 1.6vw, 2.4rem);
+  margin-left: auto;
+  font-size: var(--step--1);
+  color: var(--ivory-soft);
+}
+
+.legal a:hover {
+  color: var(--gold-lit);
+}
+
+/* ---------- narrower ---------- */
+
+@media (max-width: 1100px) {
+  .columns {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  /* The code is the least of the three when space runs out, so it goes under
+     the other two rather than squeezing the map into a stamp. */
+  .pocket {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    justify-content: center;
+    gap: 1.5rem;
+    text-align: left;
+  }
+
+  .qrRoute {
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 720px) {
+  .columns {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .map {
+    min-height: 14rem;
+  }
+
+  .pocket {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .legal {
+    margin-left: 0;
+  }
+}

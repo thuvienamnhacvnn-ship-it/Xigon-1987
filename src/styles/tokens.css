@@ -10,12 +10,28 @@
  * the only accent. Colour beyond that belongs to the photography.
  */
 :root {
-  /* green — the ground the whole site sits on */
-  --green: #0a3d2a;
-  --green-deep: #06301f;
-  --green-dark: #042417;
-  --green-panel: #0d4630;
-  --green-veil: rgba(0, 42, 26, 0.86);
+  /*
+   * Surfaces.
+   *
+   * The ground of this site is the photograph of the restaurant, so every
+   * surface above it is warm near-black glass, never a colour. Green belongs to
+   * the velvet on the banquettes in the pictures and to nothing else.
+   *
+   * The --green-* names below are aliases kept only so the screens written
+   * before this change keep working; they point at the surfaces now and should
+   * be replaced at the call site as each screen is redrawn.
+   */
+  --surface: #120c08;
+  --surface-deep: #0d0906;
+  --surface-dark: #080705;
+  --surface-panel: rgba(30, 22, 15, 0.55);
+  --surface-veil: rgba(8, 7, 5, 0.86);
+
+  --green: var(--surface);
+  --green-deep: var(--surface-deep);
+  --green-dark: var(--surface-dark);
+  --green-panel: var(--surface-panel);
+  --green-veil: var(--surface-veil);
 
   /* black — the rail, the top bar, the outlined buttons */
   --ink-black: #0e0d0b;

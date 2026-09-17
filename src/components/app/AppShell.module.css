@@ -1,89 +1,122 @@
 /*
  * The shell.
  *
- * Three rows in a viewport-height grid — bar, content, dock — plus a thin
- * footer. The dock is a real row rather than something floating over the
- * content, because a floating dock eventually lands on top of the one button a
- * screen needs. It only *looks* like it floats: it sits in its own row with air
- * around it and glass behind it.
- *
- * Only .content scrolls. Screens that have more than fits are expected to
- * paginate; the scroll here is the safety net, not the plan.
+ * One layer of room, and everything else floating over it. Nothing here is a
+ * grid row: the bar, the dock and the footer are positioned, and the content
+ * simply keeps enough padding clear that they never cover it. That is what lets
+ * the picture run the full height of the window instead of being cut down to
+ * whatever is left between two bars.
  */
 .shell {
-  --shell-gutter: clamp(0.9rem, 0.4rem + 2vw, 2.6rem);
-  --shell-bar-h: 66px;
-  --shell-dock-h: 76px;
+  --shell-gutter: clamp(1rem, 0.4rem + 2.2vw, 2.75rem);
+  /* What the content must keep clear at each end for the floating furniture. */
+  --shell-top: clamp(64px, 5.2vw, 96px);
+  --shell-bottom: clamp(92px, 7.4vw, 124px);
 
   position: relative;
-  z-index: 0;
-  display: grid;
+  isolation: isolate;
   /*
-   * The column is minmax(0, 1fr), not 1fr.
-   *
-   * A grid item's automatic minimum size is its min-content width, so with a
-   * plain 1fr any screen holding something unbreakable — a row of seven filter
-   * pills, a wide form — silently widens the whole column past the viewport.
-   * Horizontal overflow is hidden here, so the excess is not scrolled to, it is
-   * simply gone. This one keyword is what makes the filters wrap on a phone.
+   * Dynamic viewport units: on a phone the address bar makes 100vh taller than
+   * the screen, and the dock is the one thing that must never be below the fold.
    */
-  grid-template-columns: minmax(0, 1fr);
-  grid-template-rows: var(--shell-bar-h) minmax(0, 1fr) auto auto;
-  /*
-   * Small viewport units, not 100vh: on iOS the address bar makes 100vh taller
-   * than the screen, which would push the dock off the bottom — the one place
-   * it must never be.
-   */
-  height: 100svh;
-  min-height: 560px;
+  height: 100dvh;
   overflow: hidden;
   color: var(--ivory);
-  background: var(--green-dark);
+  background: #080705;
 }
 
-/* ---------- the room behind everything ---------- */
+/* ---------- the room ---------- */
 
 .backdrop {
   position: absolute;
   inset: 0;
-  z-index: -1;
-  overflow: hidden;
+  z-index: 0;
 }
 
-.backdropImg {
+.backdropVideo {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  /* Warm the photograph towards the gold of the room and drop its contrast, so
-     ivory text stays legible wherever a screen happens to put it. */
-  filter: saturate(0.92) contrast(0.94) brightness(0.62);
 }
 
-.backdropVeil {
+/*
+ * A screen with a panel on it dims the room a little.
+ *
+ * Not to make text readable — the text is on glass, not on the photograph — but
+ * because a fully lit restaurant behind a price list pulls the eye off the
+ * prices. Erleben has no panel and gets the room at full strength.
+ */
+.shell:not([data-bare='true']) .backdropVideo {
+  filter: brightness(0.62) saturate(0.95);
+  transform: scale(1.03);
+  transition: filter var(--dur-3) var(--ease), transform var(--dur-3) var(--ease);
+}
+
+/* ---------- the content ---------- */
+
+.content {
   position: absolute;
   inset: 0;
-  background:
-    radial-gradient(120% 90% at 50% 0%, rgba(10, 61, 42, 0.35), transparent 62%),
-    linear-gradient(180deg, rgba(4, 36, 23, 0.72), rgba(4, 36, 23, 0.86));
+  z-index: 10;
+  display: grid;
+  /*
+   * Both tracks are minmax(0, …) on purpose. The column keeps an unbreakable
+   * row of filter pills from widening the screen past the phone; the row is
+   * what gives a screen a definite height to be 100% of. Left as `auto`, the
+   * row grows to whatever the screen asks for and the panel runs off the
+   * bottom of the window with its prices under the dock.
+   */
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+  overflow: hidden;
+  padding: var(--shell-top) var(--shell-gutter) var(--shell-bottom);
+
+  /*
+   * A screen is not a page. The section rhythm in tokens.css was written for a
+   * document thousands of pixels tall; inside a frame this size the same
+   * figures put the first sentence three swipes away.
+   */
+  --section-y: clamp(0.8rem, 0.5rem + 1vw, 1.5rem);
 }
 
-/* Erleben paints its own video, so the shell stands back entirely. */
-.shell[data-bare='true'] {
-  background: #000;
+/* Erleben is the room. It takes the whole window and pads nothing. */
+.content[data-bare='true'] {
+  padding: 0;
+}
+
+.panel {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden auto;
+  overscroll-behavior: contain;
+  border: 1px solid var(--gold-hair);
+  border-radius: clamp(16px, 1.6vw, 26px);
+  background: rgba(18, 13, 9, 0.5);
+  backdrop-filter: blur(22px) saturate(1.08);
+  box-shadow: 0 50px 110px -60px rgba(0, 0, 0, 0.95);
 }
 
 /* ---------- the top bar ---------- */
 
 .bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 30;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.75rem;
   min-width: 0;
-  padding: 0 var(--shell-gutter);
-  padding-top: env(safe-area-inset-top, 0px);
-  border-bottom: 1px solid var(--gold-hair);
-  background: linear-gradient(180deg, rgba(6, 26, 18, 0.82), rgba(6, 26, 18, 0.42));
-  backdrop-filter: blur(14px) saturate(1.1);
+  padding: calc(env(safe-area-inset-top, 0px) + clamp(0.8rem, 0.5rem + 0.9vw, 1.35rem))
+    var(--shell-gutter) 0;
+  pointer-events: none;
+}
+
+/* The bar itself is air; only what you can press catches the pointer. */
+.bar > * {
+  pointer-events: auto;
 }
 
 .brand {
@@ -95,32 +128,54 @@
 .brand img {
   display: block;
   width: auto;
-  height: clamp(26px, 3.4vw, 35px);
+  height: clamp(34px, 3.4vw, 52px);
+  /* The mark is a lit sign in the photograph behind it; a little glow keeps it
+     from reading as a sticker laid on top. */
+  filter: drop-shadow(0 2px 14px rgba(0, 0, 0, 0.55));
 }
 
 .barSpacer {
   flex: 1 1 auto;
 }
 
+/*
+ * The name of the screen you are on, in the middle, where the eye starts.
+ *
+ * It is the one piece of chrome that tells a guest which of the seven screens
+ * they opened without making them read the dock upside down.
+ */
+.here {
+  position: absolute;
+  left: 50%;
+  top: calc(env(safe-area-inset-top, 0px) + clamp(0.8rem, 0.5rem + 0.9vw, 1.35rem));
+  transform: translateX(-50%);
+  padding: 0.6rem 2.1rem;
+  border: 1px solid var(--gold-hair);
+  border-radius: var(--r-pill);
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  color: var(--ivory);
+  background: rgba(14, 10, 7, 0.55);
+  backdrop-filter: blur(16px);
+}
+
 .langs {
   display: flex;
   align-items: center;
-  gap: 1px;
-  padding: 3px;
-  border: 1px solid var(--gold-hair);
-  border-radius: var(--r-pill);
+  gap: 0.15rem;
 }
 
 .lang {
-  padding: 0.24rem 0.52rem;
-  border-radius: var(--r-pill);
+  padding: 0.3rem 0.4rem;
   font-family: var(--font-body);
-  font-size: var(--step--2);
-  font-weight: 600;
-  letter-spacing: 0.08em;
+  font-size: var(--step--1);
+  font-weight: 500;
+  letter-spacing: 0.12em;
   color: var(--ivory-mute);
   text-decoration: none;
-  transition: color var(--dur-1) var(--ease), background var(--dur-1) var(--ease);
+  transition: color var(--dur-1) var(--ease);
 }
 
 .lang:hover {
@@ -128,101 +183,104 @@
 }
 
 .lang[aria-current='true'] {
-  color: var(--ink-black);
-  background: var(--gold);
+  color: var(--gold-lit);
 }
 
+/* The two icons on the right are plain marks on the photograph, as drawn. */
 .iconButton,
 .cart {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.35rem;
-  width: 40px;
-  height: 40px;
+  width: 38px;
+  height: 38px;
   padding: 0;
-  border: 1px solid var(--gold-hair);
+  border: 0;
   border-radius: var(--r-pill);
   color: var(--ivory);
-  background: rgba(14, 13, 11, 0.42);
+  background: transparent;
   cursor: pointer;
   text-decoration: none;
-  transition: border-color var(--dur-1) var(--ease), color var(--dur-1) var(--ease);
+  filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.6));
+  transition: color var(--dur-1) var(--ease);
 }
 
 .iconButton:hover,
 .cart:hover,
 .cart[data-active='true'] {
-  border-color: var(--gold);
   color: var(--gold-lit);
 }
 
-/* The cart is wider than the other buttons: it always carries its number. */
-.cart {
-  width: auto;
-  padding: 0 0.72rem 0 0.62rem;
-}
-
+/* The count rides on the bag rather than beside it, so the bar keeps its
+   spacing whether the basket is empty or full. */
 .cartCount {
-  min-width: 1.15rem;
-  padding: 0 0.28rem;
+  position: absolute;
+  top: -1px;
+  right: -3px;
+  min-width: 1.05rem;
+  padding: 0 0.22rem;
   border-radius: var(--r-pill);
   font-family: var(--font-body);
-  font-size: var(--step--2);
+  font-size: 0.62rem;
   font-weight: 700;
-  line-height: 1.5;
+  line-height: 1.7;
   text-align: center;
   color: var(--ink-black);
   background: var(--gold);
 }
 
-/* Zero is shown, not hidden — a button that changes width as you shop is worse
-   than a quiet zero. */
 .cartCount[data-empty='true'] {
-  color: var(--ivory-mute);
-  background: rgba(245, 241, 233, 0.12);
+  display: none;
 }
 
 /* ---------- the account panel ---------- */
 
+/*
+ * These carry an `account` prefix because they must: the screen pane above is
+ * called `.panel`, and when this dropdown was also called `.panel` the later
+ * rule won inside the same module and every screen was rendered as a 21rem
+ * absolutely-positioned box below the bar. Two things in one stylesheet may not
+ * share a name, however different their jobs look.
+ */
 .account {
   position: relative;
   flex: 0 0 auto;
 }
 
-.panel {
+.accountPanel {
   position: absolute;
-  top: calc(100% + 0.6rem);
+  top: calc(100% + 0.7rem);
   right: 0;
   z-index: 40;
   width: min(21rem, calc(100vw - 2rem));
   padding: 1rem 1.05rem 1.1rem;
   border: 1px solid var(--gold-hair);
-  border-radius: 6px;
-  background: rgba(8, 32, 21, 0.96);
-  backdrop-filter: blur(18px);
+  border-radius: 14px;
+  background: rgba(16, 11, 8, 0.93);
+  backdrop-filter: blur(20px);
   box-shadow: var(--shadow-panel);
 }
 
-.panelTitle {
+.accountTitle {
   margin: 0 0 0.3rem;
   font-family: var(--font-display);
   font-size: var(--step-1);
   color: var(--gold-lit);
 }
 
-.panelText {
+.accountText {
   margin: 0 0 0.85rem;
   font-size: var(--step--1);
   line-height: 1.55;
   color: var(--ivory-soft);
 }
 
-.panelForm + .panelForm {
+.accountForm + .accountForm {
   margin-top: 0.75rem;
 }
 
-.panelForm label {
+.accountForm label {
   display: block;
   margin-bottom: 0.3rem;
   font-size: var(--step--2);
@@ -232,12 +290,12 @@
   color: var(--ivory-mute);
 }
 
-.panelRow {
+.accountRow {
   display: flex;
   gap: 0.4rem;
 }
 
-.panelRow input {
+.accountRow input {
   flex: 1 1 auto;
   min-width: 0;
   padding: 0.5rem 0.65rem;
@@ -249,62 +307,42 @@
   background: rgba(0, 0, 0, 0.35);
 }
 
-.panelRow input:focus-visible {
+.accountRow input:focus-visible {
   outline: 2px solid var(--gold);
   outline-offset: 1px;
 }
 
-.panelError {
+.accountError {
   margin: 0.7rem 0 0;
   font-size: var(--step--1);
   color: var(--error);
 }
 
-/* ---------- the content row ---------- */
-
-.content {
-  position: relative;
-  min-width: 0;
-  min-height: 0;
-  overflow: hidden auto;
-  overscroll-behavior: contain;
-
-  /*
-   * A screen is not a page.
-   *
-   * The section rhythm in tokens.css was written for a document that scrolls
-   * for several thousand pixels; inside a frame 750 px tall the same figures
-   * put a guest three swipes away from the first sentence. Overriding the
-   * token here re-times every screen at once, including the ones still using
-   * the older section markup.
-   */
-  --section-y: clamp(1rem, 0.6rem + 1.2vw, 1.9rem);
-}
-
 /* ---------- the dock ---------- */
 
 .dock {
-  display: flex;
-  justify-content: center;
-  min-width: 0;
-  padding: 0.5rem var(--shell-gutter) 0.55rem;
+  position: absolute;
+  left: 50%;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + clamp(0.9rem, 0.5rem + 1.2vw, 1.9rem));
+  z-index: 30;
+  transform: translateX(-50%);
+  max-width: calc(100% - var(--shell-gutter) * 2);
 }
 
 .dockList {
   display: flex;
   align-items: stretch;
-  gap: 0.15rem;
-  max-width: 100%;
+  gap: 0.2rem;
   margin: 0;
-  padding: 0.3rem;
+  padding: 0.5rem 0.75rem;
   list-style: none;
   border: 1px solid var(--gold-hair);
   border-radius: var(--r-pill);
-  background: rgba(8, 30, 20, 0.72);
-  backdrop-filter: blur(16px) saturate(1.15);
-  box-shadow: 0 18px 44px -28px rgba(0, 0, 0, 0.95);
-  /* Below the width where seven labels fit, the dock scrolls sideways rather
-     than wrapping into two rows and eating the screen above it. */
+  background: rgba(14, 10, 7, 0.62);
+  backdrop-filter: blur(18px) saturate(1.1);
+  box-shadow: 0 24px 60px -32px rgba(0, 0, 0, 0.95);
+  /* Below the width where the labels fit, the dock scrolls sideways rather than
+     wrapping into two rows and eating the screen above it. */
   overflow-x: auto;
   scrollbar-width: none;
 }
@@ -317,37 +355,38 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.18rem;
-  min-width: 4.6rem;
-  padding: 0.4rem 0.6rem 0.3rem;
+  gap: 0.3rem;
+  min-width: 5rem;
+  padding: 0.5rem 0.75rem 0.4rem;
   border-radius: var(--r-pill);
-  color: var(--ivory-mute);
+  color: var(--ivory-soft);
   text-decoration: none;
   transition: color var(--dur-1) var(--ease), background var(--dur-1) var(--ease);
 }
 
 .dockItem:hover {
   color: var(--ivory);
-  background: rgba(245, 241, 233, 0.06);
+  background: rgba(245, 241, 233, 0.07);
 }
 
 .dockItem[aria-current='page'] {
   color: var(--gold-lit);
-  background: rgba(239, 177, 92, 0.14);
 }
 
 .dockLabel {
   font-family: var(--font-body);
   font-size: var(--step--2);
-  font-weight: 600;
-  letter-spacing: 0.04em;
+  font-weight: 500;
+  letter-spacing: 0.03em;
   white-space: nowrap;
 }
 
-/* The second mark on the current item, so it does not rest on colour alone. */
+/* The gold dot under the current item, as drawn — a second mark so the state
+   does not rest on colour alone. */
 .dockDot {
   width: 4px;
   height: 4px;
+  margin-top: -1px;
   border-radius: 50%;
   background: transparent;
 }
@@ -359,14 +398,18 @@
 /* ---------- the footer ---------- */
 
 .footer {
+  position: absolute;
+  left: var(--shell-gutter);
+  bottom: calc(env(safe-area-inset-bottom, 0px) + clamp(0.7rem, 0.4rem + 0.9vw, 1.4rem));
+  z-index: 30;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: center;
-  gap: 0.4rem;
-  padding: 0 var(--shell-gutter) calc(0.5rem + env(safe-area-inset-bottom, 0px));
+  gap: 0.45rem;
+  max-width: 34%;
   font-size: var(--step--2);
   color: var(--ivory-mute);
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.7);
 }
 
 .footer a {
@@ -376,7 +419,6 @@
 
 .footer a:hover {
   color: var(--gold-lit);
-  text-decoration: underline;
 }
 
 .dot {
@@ -392,48 +434,40 @@
 
 /* ---------- phone ---------- */
 
+@media (max-width: 860px) {
+  /* The screen-name pill would collide with the logo and the icons. */
+  .here {
+    display: none;
+  }
+}
+
 @media (max-width: 720px) {
   .shell {
-    --shell-bar-h: 58px;
-    --shell-dock-h: 68px;
+    --shell-top: 62px;
+    --shell-bottom: 96px;
   }
 
   .brand img {
-    height: 24px;
+    height: 28px;
   }
 
-  /* Seven labels do not fit at 390px, so the dock keeps the icons and drops to
-     a narrower rhythm; it still scrolls if a language runs long. */
   .dockItem {
-    min-width: 3.9rem;
-    padding: 0.35rem 0.4rem 0.28rem;
+    min-width: 4rem;
+    padding: 0.4rem 0.45rem 0.3rem;
   }
 
   .dockLabel {
     font-size: 0.62rem;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.01em;
   }
 
-  /* The languages stay on the phone — they are the first thing a guest who does
-     not read German looks for — but they lose their padding to make room. */
-  .langs {
-    padding: 2px;
-  }
-
-  .lang {
-    padding: 0.2rem 0.34rem;
-    font-size: 0.64rem;
-    letter-spacing: 0.02em;
-  }
-
-  .iconButton,
-  .cart {
-    width: 36px;
-    height: 36px;
-  }
-
-  .cart {
-    width: auto;
-    padding: 0 0.5rem 0 0.42rem;
+  /* The legal line moves out of the dock's way entirely. */
+  .footer {
+    left: 0;
+    right: 0;
+    bottom: 0.35rem;
+    max-width: none;
+    justify-content: center;
+    font-size: 0.6rem;
   }
 }

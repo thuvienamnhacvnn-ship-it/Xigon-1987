@@ -5,7 +5,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import styles from './AppShell.module.css';
 import { fill, type Dictionary } from '@/lib/dictionary';
-import { hrefFor, localeShort, locales, switchPath, type Locale, type RouteKey } from '@/lib/i18n';
+import { dockKeyFrom, hrefFor, localeShort, locales, switchPath, type Locale, type RouteKey } from '@/lib/i18n';
 
 /**
  * The bar that never moves: the house on the left, the guest's own controls on
@@ -27,12 +27,17 @@ export function TopBar({
   current: RouteKey | null;
 }) {
   const pathname = usePathname();
+  const here = screenName(dict, current);
 
   return (
     <header className={styles.bar}>
       <Link href={hrefFor(locale, 'experience')} className={styles.brand} aria-label={dict.brand.name}>
         <img src="/img/logo.png" alt="" width={104} height={35} />
       </Link>
+
+      {/* Which of the seven you are on, centred. Erleben is the room itself and
+          names itself; a label there would only sit on the picture. */}
+      {here && current !== 'experience' ? <p className={styles.here}>{here}</p> : null}
 
       <span className={styles.barSpacer} />
 
@@ -65,6 +70,34 @@ export function TopBar({
       </Link>
     </header>
   );
+}
+
+/**
+ * The name of the screen, in the guest's language.
+ *
+ * The screens that hang off a dock item — a dish, a basket, a checkout — borrow
+ * that item's name rather than inventing a second vocabulary for the same
+ * place, which is the same rule the dock's own highlight follows.
+ */
+function screenName(dict: Dictionary, current: RouteKey | null): string | null {
+  switch (dockKeyFrom(current)) {
+    case 'experience':
+      return dict.dock.experience;
+    case 'menu':
+      return dict.dock.menu;
+    case 'reserve':
+      return dict.dock.reserve;
+    case 'order':
+      return dict.dock.order;
+    case 'offers':
+      return dict.dock.offers;
+    case 'assistant':
+      return dict.dock.assistant;
+    case 'contact':
+      return dict.dock.contact;
+    default:
+      return null;
+  }
 }
 
 /**
@@ -127,13 +160,13 @@ function AccountButton({ locale, dict }: { locale: Locale; dict: Dictionary }) {
       </button>
 
       {open ? (
-        <div className={styles.panel} role="dialog" aria-label={dict.shell.accountTitle}>
-          <p className={styles.panelTitle}>{dict.shell.accountTitle}</p>
-          <p className={styles.panelText}>{dict.shell.accountIntro}</p>
+        <div className={styles.accountPanel} role="dialog" aria-label={dict.shell.accountTitle}>
+          <p className={styles.accountTitle}>{dict.shell.accountTitle}</p>
+          <p className={styles.accountText}>{dict.shell.accountIntro}</p>
 
-          <form className={styles.panelForm} onSubmit={(event) => lookup(event, 'reservation')}>
+          <form className={styles.accountForm} onSubmit={(event) => lookup(event, 'reservation')}>
             <label htmlFor="acc-res">{dict.shell.reservationCode}</label>
-            <div className={styles.panelRow}>
+            <div className={styles.accountRow}>
               <input id="acc-res" name="token" autoComplete="off" spellCheck={false} />
               <button type="submit" className="btn btn--gold">
                 {dict.shell.open}
@@ -141,9 +174,9 @@ function AccountButton({ locale, dict }: { locale: Locale; dict: Dictionary }) {
             </div>
           </form>
 
-          <form className={styles.panelForm} onSubmit={(event) => lookup(event, 'orderStatus')}>
+          <form className={styles.accountForm} onSubmit={(event) => lookup(event, 'orderStatus')}>
             <label htmlFor="acc-ord">{dict.shell.orderCode}</label>
-            <div className={styles.panelRow}>
+            <div className={styles.accountRow}>
               <input id="acc-ord" name="token" autoComplete="off" spellCheck={false} />
               <button type="submit" className="btn btn--gold">
                 {dict.shell.open}
@@ -152,7 +185,7 @@ function AccountButton({ locale, dict }: { locale: Locale; dict: Dictionary }) {
           </form>
 
           {error ? (
-            <p className={styles.panelError} role="alert">
+            <p className={styles.accountError} role="alert">
               {error}
             </p>
           ) : null}

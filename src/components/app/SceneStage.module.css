@@ -1,133 +1,49 @@
 /*
  * Erleben.
  *
- * The video is the screen — it fills the content row of the shell and nothing
- * boxes it in. Every other element on this screen floats on top of it, and the
- * copy sits in the left third where the house video is quietest.
+ * Nothing here has a background of its own beyond a gold hairline and a little
+ * smoked glass. The film is the design; everything on this screen is an
+ * instrument for looking at it.
  */
 .stage {
   position: relative;
-  display: grid;
-  /* status line · the words · the controls */
-  grid-template-rows: auto minmax(0, 1fr) auto;
   height: 100%;
-  min-height: 0;
-  overflow: hidden;
-  background: #000;
-}
-
-/*
- * The video is taken out of the flow on purpose.
- *
- * A <video> in a grid row reports its own intrinsic size — 848×478 for this
- * file — and a percentage height against an auto row is circular, so the row
- * grows to the film's natural height and pushes the controls off the bottom.
- * Absolute inset:0 makes it a backdrop with no say in the layout.
- */
-.video,
-.veil {
-  position: absolute;
-  inset: 0;
-}
-
-.video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  /*
-   * The house video is 848×478. Scaled to a desktop it is soft, so it is
-   * deliberately held a little dark and a little contrasty — a soft picture
-   * reads as atmosphere at this exposure and as a bad file at full brightness.
-   */
-  filter: contrast(1.04) saturate(1.05) brightness(0.86);
-}
-
-.veil {
-  /* Readable type over moving pictures needs a gradient, not a flat scrim. */
-  background:
-    linear-gradient(90deg, rgba(4, 22, 14, 0.88) 0%, rgba(4, 22, 14, 0.5) 38%, transparent 66%),
-    linear-gradient(0deg, rgba(4, 22, 14, 0.8) 0%, transparent 34%);
+  /* The film belongs to the shell and sits behind this layer, so the layer
+     itself must let the pointer through to nothing in particular. */
   pointer-events: none;
 }
 
-/* ---------- the words ---------- */
-
-.copy {
-  position: relative;
-  grid-row: 2;
-  align-self: center;
-  justify-self: start;
-  max-width: min(34rem, 52vw);
-  padding: 0 clamp(1.2rem, 0.4rem + 3.2vw, 4.5rem);
+.stage a,
+.stage button {
+  pointer-events: auto;
 }
 
-.eyebrow {
-  margin: 0 0 0.9rem;
-  font-family: var(--font-body);
-  font-size: var(--step--2);
-  font-weight: 600;
-  letter-spacing: var(--track-wide);
-  text-transform: uppercase;
-  color: var(--gold);
-}
-
-.title {
-  display: flex;
-  flex-direction: column;
-  margin: 0;
-  font-family: var(--font-display);
-  font-size: var(--step-4);
-  font-weight: 400;
-  line-height: 1.02;
-  color: var(--ivory);
-  text-shadow: 0 2px 30px rgba(0, 0, 0, 0.55);
-}
-
-.text {
-  margin: 1.1rem 0 0;
-  max-width: 28rem;
-  font-size: var(--step-0);
-  line-height: 1.6;
-  color: var(--ivory-soft);
-}
-
-.actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.7rem;
-  margin-top: 1.7rem;
-}
-
-/* ---------- the controls ---------- */
-
-.controls {
-  position: relative;
-  grid-row: 3;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0 clamp(1.2rem, 0.4rem + 3.2vw, 4.5rem) clamp(1rem, 0.6rem + 1.4vw, 2rem);
-}
+/* ---------- the scenes, top centre ---------- */
 
 .scenes {
+  position: absolute;
+  top: calc(env(safe-area-inset-top, 0px) + clamp(0.8rem, 0.5rem + 0.9vw, 1.35rem));
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
-  gap: 1px;
-  padding: 3px;
+  gap: 0.2rem;
+  padding: 0.28rem;
   border: 1px solid var(--gold-hair);
   border-radius: var(--r-pill);
-  background: rgba(8, 30, 20, 0.6);
-  backdrop-filter: blur(12px);
+  background: rgba(14, 10, 7, 0.5);
+  backdrop-filter: blur(16px);
+  pointer-events: auto;
 }
 
 .scene {
-  padding: 0.42rem 0.95rem;
+  padding: 0.5rem 1.55rem;
   border: 0;
   border-radius: var(--r-pill);
   font-family: var(--font-body);
-  font-size: var(--step--2);
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  color: var(--ivory-mute);
+  font-size: var(--step--1);
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  color: var(--ivory-soft);
   background: transparent;
   cursor: pointer;
   white-space: nowrap;
@@ -140,24 +56,148 @@
 
 .scene[aria-pressed='true'] {
   color: var(--ink-black);
-  background: var(--gold);
+  background: linear-gradient(180deg, var(--gold-lit), var(--gold-deep));
+  box-shadow: 0 2px 16px -4px rgba(239, 177, 92, 0.5);
 }
 
-.controlSpacer {
-  flex: 1 1 auto;
+/* ---------- the rail, left edge ---------- */
+
+.rail {
+  position: absolute;
+  left: clamp(1rem, 0.4rem + 2.2vw, 2.75rem);
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.railButton {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  width: 46px;
+  height: 46px;
+  padding: 0;
+  border: 1px solid var(--gold-hair);
+  border-radius: 50%;
+  color: var(--ivory);
+  background: rgba(14, 10, 7, 0.4);
+  backdrop-filter: blur(10px);
+  cursor: pointer;
+  text-decoration: none;
+  transition: border-color var(--dur-1) var(--ease), color var(--dur-1) var(--ease),
+    background var(--dur-1) var(--ease);
+}
+
+.railButton:hover {
+  border-color: var(--gold);
+  color: var(--gold-lit);
+  background: rgba(14, 10, 7, 0.68);
+}
+
+/* The guide is the one button on the rail that goes somewhere on this site, so
+   it is the one that carries a word. */
+.railAi {
+  border-color: var(--gold);
+  color: var(--gold-lit);
+}
+
+.railAi span {
+  font-family: var(--font-body);
+  font-size: 0.56rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+}
+
+.railRule {
+  width: 1px;
+  height: 2.2rem;
+  margin: 0.25rem 0;
+  background: var(--gold-hair);
+}
+
+.railWord {
+  font-family: var(--font-body);
+  font-size: var(--step--2);
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
+  color: var(--ivory-mute);
+  /* Reading upwards, so the word starts at the rule and runs down the frame. */
+  writing-mode: vertical-rl;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.8);
+}
+
+/* ---------- the bar hotspot ---------- */
+
+.hotspot {
+  position: absolute;
+  right: 11%;
+  top: 44%;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-decoration: none;
+}
+
+.hotspotMark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--gold);
+  border-radius: 50%;
+  font-family: var(--font-body);
+  font-size: 1.1rem;
+  font-weight: 300;
+  line-height: 1;
+  color: var(--gold-lit);
+  background: rgba(14, 10, 7, 0.45);
+  backdrop-filter: blur(8px);
+  transition: background var(--dur-1) var(--ease);
+}
+
+.hotspot:hover .hotspotMark {
+  background: var(--gold);
+  color: var(--ink-black);
+}
+
+.hotspotLabel {
+  padding: 0.35rem 0.85rem;
+  border-radius: var(--r-pill);
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  color: var(--ivory);
+  background: rgba(14, 10, 7, 0.62);
+  backdrop-filter: blur(12px);
+  white-space: nowrap;
+}
+
+/* ---------- the controls, bottom right ---------- */
+
+.controls {
+  position: absolute;
+  right: clamp(1rem, 0.4rem + 2.2vw, 2.75rem);
+  bottom: calc(env(safe-area-inset-bottom, 0px) + clamp(0.9rem, 0.5rem + 1.2vw, 1.9rem));
+  display: flex;
+  gap: 0.6rem;
 }
 
 .round {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 42px;
-  height: 42px;
+  width: 44px;
+  height: 44px;
   padding: 0;
   border: 1px solid var(--gold-hair);
   border-radius: 50%;
   color: var(--ivory);
-  background: rgba(8, 30, 20, 0.6);
+  background: rgba(14, 10, 7, 0.45);
   backdrop-filter: blur(12px);
   cursor: pointer;
   transition: border-color var(--dur-1) var(--ease), color var(--dur-1) var(--ease);
@@ -171,59 +211,62 @@
 /* ---------- the status line ---------- */
 
 .notice {
-  position: relative;
-  grid-row: 1;
-  justify-self: end;
-  margin: 1rem clamp(1.2rem, 0.4rem + 3.2vw, 4.5rem) 0;
-  padding: 0.4rem 0.8rem;
+  position: absolute;
+  top: calc(env(safe-area-inset-top, 0px) + 4.6rem);
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: min(28rem, calc(100vw - 2rem));
+  margin: 0;
+  padding: 0.45rem 0.9rem;
   border: 1px solid var(--gold-hair);
   border-radius: var(--r-pill);
   font-size: var(--step--2);
+  text-align: center;
   color: var(--ivory-soft);
-  background: rgba(8, 30, 20, 0.72);
+  background: rgba(14, 10, 7, 0.78);
   backdrop-filter: blur(12px);
 }
 
 /* ---------- phone ---------- */
 
-@media (max-width: 720px) {
-  .copy {
-    align-self: end;
-    max-width: none;
-    padding-bottom: 1.2rem;
+@media (max-width: 860px) {
+  /* There is no room beside a 390px frame for a rail and a picture both. */
+  .rail {
+    flex-direction: row;
+    left: 50%;
+    top: auto;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 6.6rem);
+    transform: translateX(-50%);
+    gap: 0.55rem;
   }
 
-  .veil {
-    background: linear-gradient(0deg, rgba(4, 22, 14, 0.92) 12%, rgba(4, 22, 14, 0.35) 55%, transparent 82%);
+  .railRule,
+  .railWord {
+    display: none;
   }
 
-  .title {
-    font-size: var(--step-3);
+  .railButton {
+    width: 40px;
+    height: 40px;
   }
 
-  /* Two buttons side by side overshoot 390px by a few pixels, which is worse
-     than one under the other: they get the full width instead. */
-  .actions > * {
-    flex: 1 1 100%;
-    justify-content: center;
-  }
-
-  .controls {
-    padding-bottom: 0.7rem;
+  /* The bar is somewhere off the side of a cropped frame; pointing at it would
+     be pointing at nothing. */
+  .hotspot {
+    display: none;
   }
 
   .scene {
-    padding: 0.36rem 0.7rem;
-    font-size: 0.66rem;
+    padding: 0.4rem 0.85rem;
+    font-size: var(--step--2);
   }
 
   .round {
-    width: 36px;
-    height: 36px;
+    width: 38px;
+    height: 38px;
   }
 
-  .notice {
-    justify-self: stretch;
-    text-align: center;
+  .controls {
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 6.9rem);
   }
 }

@@ -68,6 +68,8 @@ export const vi: Dictionary = {
     unmute: 'Bật tiếng',
     videoError: 'Trình duyệt này không phát được video. Quý khách đang xem ảnh tĩnh của nhà hàng.',
     loading: 'Đang tải cảnh …',
+    follow: 'Theo dõi XIGON',
+    barSpot: 'Quầy bar',
   },
 
   hero: {
@@ -134,6 +136,8 @@ export const vi: Dictionary = {
     pageOf: 'Trang {n} trên {total}',
     goToPage: 'Tới trang {n}',
     photoPending: 'Ảnh sẽ bổ sung',
+    demoLabel: 'Thực đơn demo · giá mẫu',
+    allergensAndDetails: 'Dị ứng & chi tiết',
   },
 
   dish: {
@@ -346,6 +350,12 @@ export const vi: Dictionary = {
     mapConsent: 'Tải bản đồ từ OpenStreetMap',
     mapNote: 'Khi tải bản đồ, trình duyệt sẽ kết nối tới OpenStreetMap.',
     hoursPending: 'Giờ mở cửa đang được xác nhận lại. Quý khách vui lòng gọi điện.',
+    wayToUs: 'Đường tới nhà hàng',
+    welcome: 'Những buổi tối đẹp bắt đầu từ một lần ghé thăm. Chúng tôi mong được đón quý khách.',
+    qrTitle: 'Chỉ đường bằng mã QR',
+    qrText: 'Quét bằng camera — chỉ đường sẽ mở trên điện thoại.',
+    qrRoute: 'Chỉ đường sang điện thoại',
+    qrAlt: 'Mã QR chỉ đường tới Nürnberger Str. 46',
   },
 
   footer: {

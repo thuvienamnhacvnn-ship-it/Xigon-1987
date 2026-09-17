@@ -1,179 +1,125 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useSyncExternalStore } from 'react';
 import styles from './SceneStage.module.css';
+import { SCENES, getRoom, send, setRoom, subscribe } from './room';
 import { hrefFor, type Locale } from '@/lib/i18n';
 import type { Dictionary } from '@/lib/dictionary';
 
-type SceneId = 'atmosphaere' | 'kueche' | 'bar';
-const SCENES: SceneId[] = ['atmosphaere', 'kueche', 'bar'];
-
 /**
- * The restaurant, full frame.
+ * Erleben.
  *
- * Three cuts from the house video. Only the chosen one is in the DOM, so the
- * browser never downloads two films to show one: switching scenes swaps the
- * <source> set and calls load(), and `preload="none"` keeps the other two off
- * the wire entirely until they are asked for.
+ * There is no headline here and no button asking for anything. The screen is
+ * the room — the film behind it belongs to the shell and keeps running across
+ * the whole visit — and all this component adds are the controls for looking
+ * around it.
  *
- * Autoplay is muted, because every browser blocks anything else, and the sound
- * control says which state it is in rather than which state it would go to.
- * If playback fails for any reason — codec, policy, a blocked file — the poster
- * stays and the notice explains it. A dead black rectangle would not.
+ * Mounting marks the guest as standing in the room, which is what starts the
+ * film; unmounting, on the way to any other screen, is what holds it on a frame.
  */
 export function SceneStage({ locale, dict }: { locale: Locale; dict: Dictionary }) {
-  const [scene, setScene] = useState<SceneId>('atmosphaere');
-  const [playing, setPlaying] = useState(true);
-  const [muted, setMuted] = useState(true);
-  const [failed, setFailed] = useState(false);
-  const [ready, setReady] = useState(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const room = useSyncExternalStore(subscribe, getRoom, getRoom);
 
-  // A new scene is a new film: reload the element and start it again.
   useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-    setReady(false);
-    setFailed(false);
-    video.load();
-    if (playing) {
-      void video.play().catch(() => {
-        /* Autoplay refused. The poster is already showing; say so honestly. */
-        setPlaying(false);
-      });
-    }
-
-    /*
-     * A watchdog, because the interesting failure is silent.
-     *
-     * A missing file fires `error` and a refused autoplay rejects the promise,
-     * and both of those we already handle. What neither covers is a browser
-     * that accepts the file and then never decodes a frame — no event, no
-     * error, `readyState` stuck at nothing. Left alone the screen says "loading"
-     * for as long as the guest is willing to look at it. After eight seconds we
-     * stop claiming to be loading and show the still instead.
-     */
-    const watchdog = window.setTimeout(() => {
-      if (video.readyState < 2) setFailed(true);
-    }, 8000);
-    return () => window.clearTimeout(watchdog);
-  }, [scene]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  function togglePlay() {
-    const video = videoRef.current;
-    if (!video) return;
-    if (video.paused) {
-      void video.play().then(() => setPlaying(true)).catch(() => setFailed(true));
-    } else {
-      video.pause();
-      setPlaying(false);
-    }
-  }
-
-  function toggleSound() {
-    const video = videoRef.current;
-    if (!video) return;
-    video.muted = !video.muted;
-    setMuted(video.muted);
-  }
+    setRoom({ active: true, playing: true });
+    return () => setRoom({ active: false });
+  }, []);
 
   return (
-    <section className={styles.stage} aria-label={dict.experience.scenes[scene]}>
-      <video
-        ref={videoRef}
-        className={styles.video}
-        poster={`/img/video/${scene}-poster.webp`}
-        autoPlay
-        muted={muted}
-        loop
-        playsInline
-        preload="none"
-        aria-label={dict.experience.scenes[scene]}
-        onPlaying={() => {
-          setReady(true);
-          setPlaying(true);
-        }}
-        onPause={() => setPlaying(false)}
-        onError={() => setFailed(true)}
-      >
-        {/*
-         * H.264 first, even though the VP9 file is slightly smaller.
-         *
-         * VP9 is decoded in software on older graphics hardware, and on the
-         * machine this was built on it froze the whole renderer — no video, no
-         * page, nothing. H.264 has a hardware path on everything from the last
-         * fifteen years. The webm stays as a fallback for the rare browser that
-         * cannot take the mp4; it costs nothing when it is not chosen.
-         */}
-        <source src={`/img/video/${scene}.mp4`} type="video/mp4" />
-        <source src={`/img/video/${scene}.webm`} type="video/webm" />
-      </video>
-
-      <div className={styles.veil} aria-hidden="true" />
-
-      {/* ---------- the words ---------- */}
-      <div className={styles.copy}>
-        <p className={styles.eyebrow}>{dict.experience.eyebrow}</p>
-        <h1 className={styles.title}>
-          {dict.experience.title.split('\n').map((line) => (
-            <span key={line}>{line}</span>
-          ))}
-        </h1>
-        <p className={styles.text}>{dict.experience.text}</p>
-
-        <div className={styles.actions}>
-          <Link href={hrefFor(locale, 'menu')} className="btn btn--gold">
-            {dict.experience.ctaMenu}
-          </Link>
-          <Link href={hrefFor(locale, 'reserve')} className="btn">
-            {dict.experience.ctaReserve}
-          </Link>
-        </div>
+    <section className={styles.stage} aria-label={dict.dock.experience}>
+      {/* ---------- the scenes, top centre ---------- */}
+      <div className={styles.scenes} role="group" aria-label={dict.experience.sceneLabel}>
+        {SCENES.map((id) => (
+          <button
+            key={id}
+            type="button"
+            className={styles.scene}
+            aria-pressed={id === room.scene}
+            onClick={() => setRoom({ scene: id, playing: true })}
+          >
+            {dict.experience.scenes[id]}
+          </button>
+        ))}
       </div>
 
-      {/* ---------- the controls ---------- */}
+      {/* ---------- the rail, left edge ---------- */}
+      <div className={styles.rail}>
+        <a
+          className={styles.railButton}
+          href="https://www.instagram.com/xigon1987/"
+          target="_blank"
+          rel="noreferrer noopener"
+          aria-label="Instagram"
+        >
+          <InstagramIcon />
+        </a>
+        <a
+          className={styles.railButton}
+          href="https://www.facebook.com/xigon1987/"
+          target="_blank"
+          rel="noreferrer noopener"
+          aria-label="Facebook"
+        >
+          <FacebookIcon />
+        </a>
+        <a
+          className={styles.railButton}
+          href="https://www.tiktok.com/@xigon1987"
+          target="_blank"
+          rel="noreferrer noopener"
+          aria-label="TikTok"
+        >
+          <TikTokIcon />
+        </a>
+
+        <Link
+          href={hrefFor(locale, 'assistant')}
+          className={`${styles.railButton} ${styles.railAi}`}
+          aria-label={dict.nav.assistant}
+        >
+          <BrainIcon />
+          <span>AI</span>
+        </Link>
+
+        <span className={styles.railRule} aria-hidden="true" />
+        <span className={styles.railWord}>{dict.experience.follow}</span>
+      </div>
+
+      {/* ---------- the bar, where it actually is in the shot ---------- */}
+      <Link href={hrefFor(locale, 'contact')} className={styles.hotspot}>
+        <span className={styles.hotspotMark} aria-hidden="true">
+          +
+        </span>
+        <span className={styles.hotspotLabel}>{dict.experience.barSpot}</span>
+      </Link>
+
+      {/* ---------- the controls, bottom right ---------- */}
       <div className={styles.controls}>
-        <div className={styles.scenes} role="group" aria-label={dict.experience.sceneLabel}>
-          {SCENES.map((id) => (
-            <button
-              key={id}
-              type="button"
-              className={styles.scene}
-              aria-pressed={id === scene}
-              onClick={() => setScene(id)}
-            >
-              {dict.experience.scenes[id]}
-            </button>
-          ))}
-        </div>
-
-        <span className={styles.controlSpacer} />
-
         <button
           type="button"
           className={styles.round}
-          onClick={togglePlay}
-          aria-label={playing ? dict.experience.pause : dict.experience.play}
+          onClick={() => send('toggle-play')}
+          aria-label={room.playing ? dict.experience.pause : dict.experience.play}
         >
-          {playing ? <PauseIcon /> : <PlayIcon />}
+          {room.playing ? <PauseIcon /> : <PlayIcon />}
         </button>
 
         <button
           type="button"
           className={styles.round}
-          onClick={toggleSound}
-          aria-label={muted ? dict.experience.unmute : dict.experience.mute}
+          onClick={() => send('toggle-sound')}
+          aria-label={room.muted ? dict.experience.unmute : dict.experience.mute}
         >
-          {muted ? <MutedIcon /> : <SoundIcon />}
+          {room.muted ? <MutedIcon /> : <SoundIcon />}
         </button>
       </div>
 
-      {failed ? (
+      {room.failed ? (
         <p className={styles.notice} role="status">
           {dict.experience.videoError}
         </p>
-      ) : !ready ? (
+      ) : !room.ready ? (
         <p className={styles.notice} role="status">
           {dict.experience.loading}
         </p>
@@ -215,6 +161,50 @@ function MutedIcon() {
     <svg {...box} aria-hidden="true">
       <path d="M4 9.5h3.4L12 5.4v13.2L7.4 14.5H4v-5Z" {...line} />
       <path d="m16 9.6 4.4 4.8M20.4 9.6 16 14.4" {...line} />
+    </svg>
+  );
+}
+
+function InstagramIcon() {
+  return (
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <rect x="3.2" y="3.2" width="17.6" height="17.6" rx="5" {...line} strokeWidth={1.4} />
+      <circle cx="12" cy="12" r="4.1" {...line} strokeWidth={1.4} />
+      <circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" />
+    </svg>
+  );
+}
+
+function FacebookIcon() {
+  return (
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M14.6 21v-7.6h2.6l.4-3h-3V8.5c0-.9.25-1.5 1.5-1.5H17.7V4.3A20 20 0 0 0 15.4 4.2c-2.3 0-3.9 1.4-3.9 4v2.2H8.9v3h2.6V21h3.1Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
+
+function TikTokIcon() {
+  return (
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M14.2 3h2.6a5 5 0 0 0 4.2 4.3v2.6a7.4 7.4 0 0 1-4.2-1.4v6.2a5.7 5.7 0 1 1-5.7-5.7c.3 0 .6 0 .9.1v2.7a3 3 0 1 0 2.2 2.9V3Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
+
+function BrainIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M9.5 4.2A2.7 2.7 0 0 0 6.8 7a2.6 2.6 0 0 0-1.6 4.5A2.7 2.7 0 0 0 6.8 16a2.7 2.7 0 0 0 2.7 2.8c.8 0 1.5-.4 2-.9V5.1c-.5-.5-1.2-.9-2-.9ZM14.5 4.2A2.7 2.7 0 0 1 17.2 7a2.6 2.6 0 0 1 1.6 4.5A2.7 2.7 0 0 1 17.2 16a2.7 2.7 0 0 1-2.7 2.8c-.8 0-1.5-.4-2-.9V5.1c.5-.5 1.2-.9 2-.9Z"
+        {...line}
+        strokeWidth={1.2}
+      />
     </svg>
   );
 }

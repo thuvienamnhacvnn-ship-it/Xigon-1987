@@ -89,6 +89,8 @@ const de = {
     videoError:
       'Das Video lässt sich in diesem Browser nicht abspielen. Sie sehen ein Standbild aus dem Restaurant.',
     loading: 'Szene wird geladen …',
+    follow: 'Folgen Sie XIGON',
+    barSpot: 'Die Bar',
   },
 
   hero: {
@@ -156,6 +158,8 @@ const de = {
     pageOf: 'Seite {n} von {total}',
     goToPage: 'Zu Seite {n}',
     photoPending: 'Foto folgt',
+    demoLabel: 'Demo-Menü · Beispielpreise',
+    allergensAndDetails: 'Allergene & Details',
   },
 
   dish: {
@@ -368,6 +372,12 @@ const de = {
     mapConsent: 'Karte von OpenStreetMap laden',
     mapNote: 'Beim Laden der Karte wird eine Verbindung zu OpenStreetMap aufgebaut.',
     hoursPending: 'Die Öffnungszeiten bestätigen wir gerade. Bitte rufen Sie kurz an.',
+    wayToUs: 'Dein Weg zu uns',
+    welcome: 'Gute Momente beginnen mit einem Besuch. Wir freuen uns auf Sie.',
+    qrTitle: 'Route als QR-Code',
+    qrText: 'Mit der Kamera scannen — die Route öffnet sich auf dem Telefon.',
+    qrRoute: 'Route aufs Smartphone',
+    qrAlt: 'QR-Code mit der Route zur Nürnberger Str. 46',
   },
 
   footer: {
@@ -478,6 +488,8 @@ const en: Dictionary = {
     unmute: 'Sound on',
     videoError: 'This browser cannot play the video. You are seeing a still from the restaurant.',
     loading: 'Loading the scene …',
+    follow: 'Follow XIGON',
+    barSpot: 'The bar',
   },
   hero: {
     eyebrow: 'Vietnamese. Sushi. Timeless.',
@@ -540,6 +552,8 @@ const en: Dictionary = {
     pageOf: 'Page {n} of {total}',
     goToPage: 'Go to page {n}',
     photoPending: 'Photo to follow',
+    demoLabel: 'Demo menu · sample prices',
+    allergensAndDetails: 'Allergens & details',
   },
   dish: {
     choose: 'Choice',
@@ -740,6 +754,12 @@ const en: Dictionary = {
     mapConsent: 'Load the map from OpenStreetMap',
     mapNote: 'Loading the map opens a connection to OpenStreetMap.',
     hoursPending: 'We are confirming our opening hours. Please give us a quick call.',
+    wayToUs: 'Your way to us',
+    welcome: 'Good evenings begin with a visit. We look forward to seeing you.',
+    qrTitle: 'The route as a QR code',
+    qrText: 'Scan it with the camera — the route opens on your phone.',
+    qrRoute: 'Route to your phone',
+    qrAlt: 'QR code with the route to Nürnberger Str. 46',
   },
   footer: {
     explore: 'Explore',
