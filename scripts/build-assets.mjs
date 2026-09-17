@@ -344,10 +344,16 @@ for (const file of readdirSync(join(SRC, 'dishes')).filter((f) => f.endsWith('.j
 /*
  * The restaurant's own showreel, cut into the three scenes the banner offers.
  *
- * Encoded at the source's own 848x478 rather than upscaled: stretching it to
- * 1080p would triple the file size and add no detail, and the browser scales it
- * to the viewport anyway. It is soft on a large screen — that is the footage,
- * not the encode, and a 1920x1080 master would fix it.
+ * Cut from the 4K master, not from the small preview file. The banner fills the
+ * whole window, so a 848x478 clip is being blown up to more than twice its
+ * width on an ordinary laptop and falls apart — which is exactly what it did.
+ * The master is 3840x2160, so the scenes are encoded down to 1080p and there is
+ * real detail to encode.
+ *
+ * `-ss` before `-i` seeks to the nearest keyframe, which is fast but can land a
+ * second or so early. These cuts are of a room, not of an action, so nobody can
+ * tell — and a frame-accurate seek would decode 4K from the start of the file
+ * three times over.
  *
  * Sound is kept in the file. The player starts muted, as browsers require, and
  * the guest can turn it on.
@@ -358,22 +364,36 @@ const SCENES_VIDEO = [
   { id: 'bar', start: 30, length: 14 },
 ];
 
-const showreel = join(SRC, 'video', 'xigon-banner.mp4');
-if (existsSync(showreel)) {
+/*
+ * The 4K master first; the small preview only if it is the only thing here.
+ * Both are the same 45 seconds of footage, so the cut points below hold either
+ * way — but one of them is worth watching full screen.
+ */
+const showreel = [
+  join(SRC, 'video', 'Xigon Home.mp4'),
+  join(SRC, 'video', 'xigon-home-4k.mp4'),
+  join(SRC, 'video', 'xigon-home-1080.mp4'),
+  join(SRC, 'video', 'xigon-banner.mp4'),
+].find((file) => existsSync(file));
+
+if (showreel) {
+  /* Down to 1080p, never up: an upscale costs bytes and adds nothing. */
+  const fit = "scale='min(1920,iw)':-2";
   manifest.video = {};
   for (const scene of SCENES_VIDEO) {
     const common = ['-ss', String(scene.start), '-t', String(scene.length), '-i', showreel];
 
-    ff([...common, '-c:v', 'libx264', '-crf', '23', '-preset', 'slow', '-pix_fmt', 'yuv420p',
-        '-c:a', 'aac', '-b:a', '96k', '-movflags', '+faststart',
+    ff([...common, '-vf', fit, '-c:v', 'libx264', '-crf', '21', '-preset', 'medium',
+        '-pix_fmt', 'yuv420p', '-profile:v', 'high', '-level', '4.1',
+        '-c:a', 'aac', '-b:a', '128k', '-movflags', '+faststart',
         join(OUT, 'video', `${scene.id}.mp4`)]);
 
-    ff([...common, '-c:v', 'libvpx-vp9', '-crf', '34', '-b:v', '0', '-row-mt', '1',
+    ff([...common, '-vf', fit, '-c:v', 'libvpx-vp9', '-crf', '32', '-b:v', '0', '-row-mt', '1',
         '-c:a', 'libopus', '-b:a', '96k', join(OUT, 'video', `${scene.id}.webm`)]);
 
     // a poster for the first frame, so the screen is never blank while loading
-    ff(['-ss', String(scene.start + 1), '-i', showreel, '-frames:v', '1',
-        '-c:v', 'libwebp', '-quality', '80', join(OUT, 'video', `${scene.id}-poster.webp`)]);
+    ff(['-ss', String(scene.start + 1), '-i', showreel, '-frames:v', '1', '-vf', fit,
+        '-c:v', 'libwebp', '-quality', '82', join(OUT, 'video', `${scene.id}-poster.webp`)]);
 
     manifest.video[scene.id] = { seconds: scene.length };
     console.log(`✓ video ${scene.id} (${scene.length}s)`);

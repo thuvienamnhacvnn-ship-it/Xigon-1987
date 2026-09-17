@@ -10,3 +10,9 @@ next-env.d.ts
 .DS_Store
 assets/video/xigon-home-1080.mp4
 assets/video/xigon-home-poster.webp
+
+# Video masters. The 4K showreel is 454 MB and the 1080p cut 43 MB; both are
+# build inputs, not source. `npm run assets` regenerates the scenes from
+# whichever master is present - see scripts/build-assets.mjs.
+assets/video/Xigon Home.mp4
+assets/video/xigon-home-4k.mp4
