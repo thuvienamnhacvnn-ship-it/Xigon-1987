@@ -4,6 +4,8 @@ import styles from './Admin.module.css';
 import { AdminLogin } from './AdminLogin';
 import { AdminBook } from './AdminBook';
 import { AdminChannels } from './AdminChannels';
+import { AdminOrders } from './AdminOrders';
+import { AdminPayments } from './AdminPayments';
 import { signOutAction } from '@/server/admin-actions';
 import { adminConfigured, isSignedIn } from '@/server/admin-auth';
 import { hrefFor, type Locale } from '@/lib/i18n';
@@ -29,7 +31,8 @@ export async function AdminView({
 }) {
   if (segments.length > 1) notFound();
   const page = segments[0] ?? 'reservierungen';
-  if (page !== 'reservierungen' && page !== 'kanaele') notFound();
+  const PAGES = ['reservierungen', 'bestellungen', 'zahlungen', 'kanaele'] as const;
+  if (!(PAGES as readonly string[]).includes(page)) notFound();
 
   const base = hrefFor(locale, 'admin');
 
@@ -77,6 +80,20 @@ export async function AdminView({
           >
             Reservierungen
           </Link>
+          <Link
+            href={`${base}/bestellungen`}
+            className={styles.tab}
+            aria-current={page === 'bestellungen' ? 'page' : undefined}
+          >
+            Bestellungen
+          </Link>
+          <Link
+            href={`${base}/zahlungen`}
+            className={styles.tab}
+            aria-current={page === 'zahlungen' ? 'page' : undefined}
+          >
+            Zahlungen
+          </Link>
           <Link href={`${base}/kanaele`} className={styles.tab} aria-current={page === 'kanaele' ? 'page' : undefined}>
             Kanäle
           </Link>
@@ -92,11 +109,10 @@ export async function AdminView({
         </form>
       </header>
 
-      {page === 'reservierungen' ? (
-        <AdminBook locale={locale} dict={dict} date={date} />
-      ) : (
-        <AdminChannels />
-      )}
+      {page === 'reservierungen' ? <AdminBook locale={locale} dict={dict} date={date} /> : null}
+      {page === 'bestellungen' ? <AdminOrders locale={locale} date={date} /> : null}
+      {page === 'zahlungen' ? <AdminPayments locale={locale} /> : null}
+      {page === 'kanaele' ? <AdminChannels /> : null}
     </div>
   );
 }

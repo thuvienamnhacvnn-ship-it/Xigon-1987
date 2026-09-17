@@ -4,7 +4,8 @@ import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import { requireAdmin, signIn, signOut } from './admin-auth';
 import { assignTable, createByStaff, setStaffNote, setStatus } from './admin';
-import { reservationStatuses } from '@/db/schema';
+import { markPaid, setOrderStatus } from './admin-orders';
+import { orderStatuses, reservationStatuses } from '@/db/schema';
 import { hrefFor, locales, type Locale } from '@/lib/i18n';
 
 /**
@@ -132,4 +133,62 @@ export async function createBookingAction(
   return result.ok
     ? { status: 'saved', reference: result.reference, seated: result.tableId !== null }
     : { status: 'invalid' };
+}
+
+/* --------------------------------------------------------------- orders --- */
+
+function ordersPath(locale: Locale, date: string) {
+  return `${hrefFor(locale, 'admin')}/bestellungen?date=${date}`;
+}
+
+const orderStatusSchema = z.object({
+  id: z.coerce.number().int().positive(),
+  status: z.enum(orderStatuses),
+  date: dateSchema,
+  locale: localeSchema,
+});
+
+export async function setOrderStatusAction(formData: FormData): Promise<void> {
+  await requireAdmin();
+  const parsed = orderStatusSchema.safeParse({
+    id: formData.get('id'),
+    status: formData.get('status'),
+    date: formData.get('date'),
+    locale: formData.get('locale'),
+  });
+  if (!parsed.success) return;
+
+  await setOrderStatus(parsed.data.id, parsed.data.status);
+  revalidatePath(ordersPath(parsed.data.locale, parsed.data.date));
+  revalidatePath(`${hrefFor(parsed.data.locale, 'admin')}/zahlungen`);
+}
+
+const markPaidSchema = z.object({
+  id: z.coerce.number().int().positive(),
+  reference: z.string().trim().max(120).optional().nullable(),
+  date: dateSchema,
+  locale: localeSchema,
+});
+
+/**
+ * Writes down that the money arrived.
+ *
+ * Deliberately not called `pay`. Nothing in this system can take a payment —
+ * no provider is connected — and a button named for something it does not do is
+ * how a member of staff ends up believing a card was charged. What it records
+ * is a person at the counter saying they saw it happen.
+ */
+export async function markOrderPaidAction(formData: FormData): Promise<void> {
+  await requireAdmin();
+  const parsed = markPaidSchema.safeParse({
+    id: formData.get('id'),
+    reference: formData.get('reference'),
+    date: formData.get('date'),
+    locale: formData.get('locale'),
+  });
+  if (!parsed.success) return;
+
+  await markPaid(parsed.data.id, parsed.data.reference ?? null);
+  revalidatePath(ordersPath(parsed.data.locale, parsed.data.date));
+  revalidatePath(`${hrefFor(parsed.data.locale, 'admin')}/zahlungen`);
 }
