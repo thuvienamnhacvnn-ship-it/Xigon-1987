@@ -6,7 +6,7 @@ import '@/styles/tokens.css';
 import '@/styles/base.css';
 import { AppShell } from '@/components/app/AppShell';
 import { getDictionary } from '@/lib/dictionary';
-import { isLocale, locales, routeKeyFrom, routes, type Locale } from '@/lib/i18n';
+import { isLocale, locales, routes, type Locale } from '@/lib/i18n';
 import { RESTAURANT } from '@/lib/restaurant';
 import { CART_COUNT_COOKIE } from '@/lib/cart-cookie';
 
@@ -72,12 +72,6 @@ export default async function LocaleLayout({
     );
   }
 
-  /*
-   * The shell needs to know which screen it is framing, and the layout only
-   * sees the path — the page that matched the segments is rendered below it.
-   */
-  const current = routeKeyFrom(locale as Locale, pathname);
-
   return (
     <html lang={locale}>
       <body data-demo={RESTAURANT.demoMode ? 'true' : undefined} data-app="true">
@@ -85,14 +79,17 @@ export default async function LocaleLayout({
           {dict.nav.skip}
         </a>
 
+        {/*
+          * Which screen is current is worked out inside the shell, from the
+          * path. This layout does not re-run when the guest moves between two
+          * screens that share it, so anything about "where we are" computed
+          * here would be frozen at whatever they opened first.
+          */}
         <AppShell
           locale={locale as Locale}
           dict={dict}
           cartCount={cartCount}
           demoMode={RESTAURANT.demoMode}
-          current={current}
-          /* Erleben fills the frame with video; anything behind it is waste. */
-          bare={current === 'experience'}
         >
           {children}
         </AppShell>
