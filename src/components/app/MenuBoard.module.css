@@ -7,6 +7,9 @@
  */
 .board {
   display: grid;
+  /* minmax(0, …) again: without it the row of seven filter pills sets the
+     column's minimum width and the whole screen widens past the phone. */
+  grid-template-columns: minmax(0, 1fr);
   grid-template-rows: auto auto minmax(0, 1fr) auto;
   gap: clamp(0.7rem, 0.3rem + 1.2vw, 1.4rem);
   height: 100%;

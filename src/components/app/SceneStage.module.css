@@ -201,6 +201,13 @@
     font-size: var(--step-3);
   }
 
+  /* Two buttons side by side overshoot 390px by a few pixels, which is worse
+     than one under the other: they get the full width instead. */
+  .actions > * {
+    flex: 1 1 100%;
+    justify-content: center;
+  }
+
   .controls {
     padding-bottom: 0.7rem;
   }

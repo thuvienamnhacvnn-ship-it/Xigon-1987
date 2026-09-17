@@ -18,6 +18,16 @@
   position: relative;
   z-index: 0;
   display: grid;
+  /*
+   * The column is minmax(0, 1fr), not 1fr.
+   *
+   * A grid item's automatic minimum size is its min-content width, so with a
+   * plain 1fr any screen holding something unbreakable — a row of seven filter
+   * pills, a wide form — silently widens the whole column past the viewport.
+   * Horizontal overflow is hidden here, so the excess is not scrolled to, it is
+   * simply gone. This one keyword is what makes the filters wrap on a phone.
+   */
+  grid-template-columns: minmax(0, 1fr);
   grid-template-rows: var(--shell-bar-h) minmax(0, 1fr) auto auto;
   /*
    * Small viewport units, not 100vh: on iOS the address bar makes 100vh taller
@@ -68,6 +78,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  min-width: 0;
   padding: 0 var(--shell-gutter);
   padding-top: env(safe-area-inset-top, 0px);
   border-bottom: 1px solid var(--gold-hair);
@@ -253,6 +264,7 @@
 
 .content {
   position: relative;
+  min-width: 0;
   min-height: 0;
   overflow: hidden auto;
   overscroll-behavior: contain;
@@ -274,6 +286,7 @@
 .dock {
   display: flex;
   justify-content: center;
+  min-width: 0;
   padding: 0.5rem var(--shell-gutter) 0.55rem;
 }
 

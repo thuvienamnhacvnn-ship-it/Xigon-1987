@@ -4,6 +4,7 @@
  */
 .board {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   grid-template-rows: minmax(0, 1fr) auto;
   gap: clamp(0.7rem, 0.3rem + 1.2vw, 1.4rem);
   height: 100%;
