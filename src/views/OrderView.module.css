@@ -1,9 +1,10 @@
 /*
  * Bestellen.
  *
- * Two ways to get the food, drawn as two cards of equal weight even though only
- * one of them is switched on — the shape of the screen should not change the
- * day delivery is turned on.
+ * A photograph carries the heading, each way of getting the food has a picture
+ * of its own, and the three steps underneath answer the question most guests
+ * actually have. The earlier version was two hairline boxes on a dark panel,
+ * which read as an empty folder with a few words in it.
  */
 .screen {
   --screen-w: var(--screen-mid);
@@ -11,42 +12,85 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   grid-template-rows: auto minmax(0, 1fr) auto;
-  gap: clamp(0.9rem, 0.5rem + 1.2vw, 1.8rem);
+  gap: clamp(0.8rem, 0.4rem + 1.1vw, 1.5rem);
   height: 100%;
-  padding: clamp(1rem, 0.6rem + 1.2vw, 1.8rem) 0;
+  min-height: 0;
+  /* The sheet around this screen supplies the glass, not the margin. Without
+     this the last line of type sits on the panel's own border. */
+  padding: clamp(0.8rem, 0.4rem + 1vw, 1.4rem);
 }
 
-/* ---------- the head ---------- */
+/* ---------- the banner ---------- */
 
-.head {
+.banner {
   position: relative;
+  display: grid;
+  place-items: center;
+  min-height: clamp(116px, 16vh, 180px);
+  overflow: hidden;
+  border: 1px solid var(--gold-hair);
+  border-radius: var(--glass-r);
+}
+
+.bannerImg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/*
+ * The photograph is dimmed here rather than behind the panel, because on this
+ * screen the type sits directly on it. A serif heading landing on a lit lamp is
+ * unreadable at any weight.
+ */
+.bannerVeil {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(70% 90% at 50% 50%, rgba(6, 4, 3, 0.62), rgba(6, 4, 3, 0.86)),
+    linear-gradient(180deg, rgba(6, 4, 3, 0.4), rgba(6, 4, 3, 0.78));
+}
+
+.bannerCopy {
+  position: relative;
+  padding: clamp(1rem, 0.6rem + 1.4vw, 1.9rem);
   text-align: center;
 }
 
 .title {
-  margin: 0.3rem 0 0;
+  margin: 0.25rem 0 0;
   font-family: var(--font-display);
-  font-size: clamp(1.7rem, 1rem + 2vw, 2.9rem);
+  font-size: clamp(1.8rem, 1.1rem + 2.2vw, 3.1rem);
   font-weight: 400;
-  line-height: 1.04;
+  line-height: 1.02;
   color: var(--ivory);
 }
 
 .lede {
-  margin: 0.5rem 0 0;
+  max-width: 44ch;
+  margin: 0.6rem auto 0;
   font-weight: var(--weight-quiet);
   font-size: var(--step-0);
+  line-height: 1.5;
   color: var(--ivory-soft);
 }
 
-/* The rule under the heading is drawn, not a border: a border cannot carry a
-   diamond in its middle. */
 .headRule {
   position: relative;
   display: block;
-  width: min(240px, 60%);
-  margin: 0.9rem auto 0;
-  opacity: 0.4;
+  width: min(220px, 60%);
+  margin: 0.8rem auto 0;
+  opacity: 0.5;
+}
+
+.branch {
+  top: -14%;
+  right: -1.5rem;
+  width: clamp(110px, 12vw, 180px);
+  transform: scaleX(-1);
+  opacity: 0.1;
 }
 
 /* ---------- the two ways ---------- */
@@ -54,41 +98,72 @@
 .options {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  align-content: center;
-  gap: clamp(0.9rem, 0.5rem + 1.2vw, 1.8rem);
+  gap: clamp(0.8rem, 0.4rem + 1.1vw, 1.5rem);
   min-height: 0;
 }
 
 .option {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.55rem;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
   min-width: 0;
-  padding: clamp(1.2rem, 0.8rem + 1.4vw, 2.2rem);
+  min-height: 0;
+  overflow: hidden;
 }
 
-/*
- * The one that is off is not hidden and not greyed into illegibility. A guest
- * who came for delivery is owed a plain answer, and an answer they cannot read
- * is not one.
- */
+ /*
+    A band of fixed height, not a ratio.
+    
+    Given `aspect-ratio` the picture takes its height from the card's width, so
+    on a wide screen it grew until it had eaten the row meant for the words and
+    the button — the card showed a photograph and nothing else. A height that
+    answers to the window instead leaves the body its room at every size.
+  */
+.optionImg {
+  width: 100%;
+  height: clamp(84px, 13vh, 150px);
+  object-fit: cover;
+}
+
+/* The one that is off keeps its picture but loses its colour, which says
+   "not now" without making the card unreadable. */
+.option:not([data-on='true']) .optionImg {
+  filter: grayscale(0.85) brightness(0.5);
+}
+
 .option:not([data-on='true']) .mark {
   color: var(--ivory-mute);
   border-color: var(--gold-hair);
 }
 
+/*
+ * The round mark straddles the seam between the photograph and the words, so
+ * the card reads as one object rather than a picture with a caption under it.
+ */
 .mark {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 68px;
-  height: 68px;
-  margin-bottom: 0.3rem;
+  position: absolute;
+  top: clamp(3.4rem, 9vh, 6rem);
+  left: clamp(1rem, 0.6rem + 1.2vw, 1.8rem);
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 62px;
+  height: 62px;
   border: 1px solid var(--gold);
   border-radius: 50%;
   color: var(--gold-lit);
+  background: linear-gradient(180deg, rgba(20, 14, 9, 0.96), rgba(12, 9, 6, 0.98));
+}
+
+.optionBody {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  min-height: 0;
+  /* Room on the left for the mark hanging over the seam. */
+  padding: clamp(1.6rem, 1.2rem + 1.4vw, 2.4rem) clamp(1rem, 0.6rem + 1.2vw, 1.8rem)
+    clamp(1rem, 0.6rem + 1.2vw, 1.6rem);
 }
 
 .optionTitle {
@@ -110,8 +185,8 @@
 .facts {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.35rem 1.1rem;
-  margin: 0.2rem 0 0;
+  gap: 0.3rem 1rem;
+  margin: 0.15rem 0 0;
   padding: 0;
   list-style: none;
   font-size: var(--step--2);
@@ -130,12 +205,11 @@
 
 .action {
   margin-top: auto;
-  padding-top: 0.2rem;
 }
 
 .off {
   margin: 0;
-  padding: 0.5rem 0.85rem;
+  padding: 0.45rem 0.8rem;
   border-left: 2px solid var(--gold-deep);
   font-weight: var(--weight-quiet);
   font-size: var(--step--1);
@@ -143,37 +217,86 @@
   background: rgba(239, 177, 92, 0.06);
 }
 
-.note {
+/* ---------- what actually happens ---------- */
+
+.how {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.howTitle {
   margin: 0;
+  font-size: var(--step--2);
+  font-weight: var(--weight-body);
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
+  color: var(--gold-deep);
+}
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(0.6rem, 0.3rem + 0.9vw, 1.2rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.step {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+}
+
+.stepMark {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 26px;
+  height: 26px;
+  border: 1px solid var(--gold-hair);
+  border-radius: 50%;
+  font-family: var(--font-body);
+  font-size: var(--step--2);
+  color: var(--gold);
+}
+
+.stepBody {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
   font-weight: var(--weight-quiet);
   font-size: var(--step--2);
-  text-align: center;
+  line-height: 1.45;
   color: var(--ivory-mute);
 }
 
-/* ---------- the gilding ---------- */
-
-.cornerTop {
-  top: -0.4rem;
-  left: -1.2rem;
-  width: clamp(70px, 8vw, 118px);
+.stepBody b {
+  font-weight: var(--weight-body);
+  font-size: var(--step--1);
+  color: var(--ivory);
 }
 
-.branch {
-  top: 12%;
-  right: -2.4rem;
-  width: clamp(110px, 13vw, 200px);
-  transform: scaleX(-1);
+.note {
+  margin: 0.2rem 0 0;
+  font-weight: var(--weight-quiet);
+  font-size: var(--step--2);
+  color: var(--ivory-mute);
 }
 
 /* ---------- narrower ---------- */
 
-@media (max-width: 860px) {
-  .options {
-    grid-template-columns: minmax(0, 1fr);
-    align-content: start;
+@media (max-width: 900px) {
+  .screen {
+    grid-template-rows: auto auto auto;
     overflow-y: auto;
     overscroll-behavior: contain;
+  }
+
+  .options,
+  .steps {
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .branch {
@@ -181,7 +304,8 @@
   }
 
   .mark {
-    width: 54px;
-    height: 54px;
+    width: 52px;
+    height: 52px;
+    top: clamp(3rem, 9vh, 4.6rem);
   }
 }

@@ -262,6 +262,15 @@ export const vi: Dictionary = {
     pickupOff: 'Nhận tại quán chưa mở.',
     deliveryOff: 'Giao hàng chưa mở.',
     closed: 'Đặt món trực tuyến chưa mở. Quý khách vui lòng gọi điện.',
+    lede: 'Cùng một bếp, đựng trong hộp thay vì bày trên bàn. Quý khách chọn, chúng tôi nấu đúng giờ.',
+    howTitle: 'Cách đặt',
+    step1: 'Chọn món',
+    step1Text: 'Mọi món trên thực đơn mà bếp có thể gói mang đi.',
+    step2: 'Chọn giờ',
+    step2Text: 'Mỗi mười lăm phút chỉ nhận đúng số đơn bếp làm kịp.',
+    step3: 'Tới lấy',
+    step3Text: 'Nürnberger Str. 46. Thanh toán tại quầy.',
+    pickupLead: 'Sớm nhất sau {n} phút',
   },
 
   cart: {
