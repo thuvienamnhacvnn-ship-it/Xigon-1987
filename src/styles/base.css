@@ -255,7 +255,7 @@ a { color: inherit; text-decoration: none; }
  * of unbalanced.
  */
 .legacy-sheet {
-  --screen-w: min(76vw, 1460px);
+  --screen-w: var(--screen-mid);
 }
 
 /* A gold capsule: the one action a screen actually wants. */

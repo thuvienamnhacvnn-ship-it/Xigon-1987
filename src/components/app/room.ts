@@ -21,15 +21,35 @@ export const SCENES: SceneId[] = ['atmosphaere', 'kueche', 'bar'];
 export type RoomState = {
   scene: SceneId;
   /**
-   * Whether the guest is standing in the room — that is, on Erleben.
+   * How far into the scene the film has got.
    *
-   * The film plays there and is paused everywhere else. On the other screens it
-   * is still the background, held on a frame, because a moving picture behind a
-   * price list is something people ask you to turn off.
+   * Kept so that rebuilding the page — which is what changing language does —
+   * can put it back where it was rather than starting again. Whether the film
+   * should be running at all is read from the path by the backdrop, not stored:
+   * a flag two screens can write during the same render is a flag that ends up
+   * wrong.
    */
-  active: boolean;
-  playing: boolean;
+  at: number;
+  /**
+   * Whether the guest wants the film running — an intention, not a reading.
+   *
+   * It used to mirror the element: `onPlaying` set it true, `onPause` set it
+   * false, and the effect that drives the element watched it. That is a loop,
+   * and during a language switch — where one element is torn down while another
+   * is built — the loop settled on stopped. Nothing but the play button writes
+   * this now, so nothing can argue with it.
+   */
+  wanted: boolean;
   muted: boolean;
+  /**
+   * Whether the film is actually moving, for the button's icon only.
+   *
+   * Never read by the effect that drives the element — that reads `wanted`.
+   * Keeping the two apart is the whole point: one is what the guest asked for,
+   * the other is what the browser is doing about it, and a button that showed
+   * the first while the second disagreed would be lying.
+   */
+  running: boolean;
   /** The browser accepted the file and then never produced a frame. */
   failed: boolean;
   ready: boolean;
@@ -37,9 +57,10 @@ export type RoomState = {
 
 let state: RoomState = {
   scene: 'atmosphaere',
-  active: false,
-  playing: false,
+  at: 0,
+  wanted: true,
   muted: true,
+  running: false,
   failed: false,
   ready: false,
 };

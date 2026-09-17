@@ -7,6 +7,7 @@
  * is left over, which on a desktop window is half the screen.
  */
 .board {
+  --screen-w: var(--screen-wide);
   display: grid;
   /* minmax(0, …) so a long offer title cannot widen the screen past the phone. */
   grid-template-columns: minmax(0, 1fr);
@@ -58,7 +59,7 @@
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: clamp(0.7rem, 0.3rem + 1.1vw, 1.3rem);
-  width: min(100%, 1120px);
+  width: 100%;
   margin: 0;
   padding: 0;
   list-style: none;

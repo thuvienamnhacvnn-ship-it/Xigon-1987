@@ -7,7 +7,7 @@
  * follow from a label to its field.
  */
 .board {
-  --screen-w: min(55.5vw, 1066px);
+  --screen-w: var(--screen-narrow);
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   grid-template-rows: auto auto minmax(0, 1fr);
@@ -26,7 +26,7 @@
  */
 @media (max-width: 1450px) {
   .board {
-    --screen-w: min(92vw, 1066px);
+    --screen-w: min(92vw, 1180px);
   }
 }
 
@@ -600,7 +600,7 @@
 
 @media (max-width: 900px) {
   .board {
-    --screen-w: min(94vw, 1066px);
+    --screen-w: min(94vw, 1180px);
     grid-template-rows: auto auto minmax(0, 1fr);
   }
 

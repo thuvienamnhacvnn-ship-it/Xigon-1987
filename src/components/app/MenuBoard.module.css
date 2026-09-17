@@ -7,7 +7,7 @@
  */
 /* 75.8% of the window, measured — see docs/MOCKUP-GEOMETRY.md. */
 .board {
-  --screen-w: min(76vw, 1460px);
+  --screen-w: var(--screen-mid);
   position: relative;
   display: grid;
   /* minmax(0, …) again: without it the row of seven filter pills sets the

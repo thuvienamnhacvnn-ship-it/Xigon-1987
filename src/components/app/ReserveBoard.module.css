@@ -6,7 +6,7 @@
  * the widest of the seven. See docs/MOCKUP-GEOMETRY.md.
  */
 .board {
-  --screen-w: min(94vw, 1800px);
+  --screen-w: var(--screen-wide);
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: clamp(0.8rem, 0.4rem + 1.2vw, 1.6rem);

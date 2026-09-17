@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useSyncExternalStore } from 'react';
+import { useSyncExternalStore } from 'react';
 import styles from './SceneStage.module.css';
 import { SCENES, getRoom, send, setRoom, subscribe } from './room';
 import { hrefFor, type Locale } from '@/lib/i18n';
@@ -21,10 +21,14 @@ import type { Dictionary } from '@/lib/dictionary';
 export function SceneStage({ locale, dict }: { locale: Locale; dict: Dictionary }) {
   const room = useSyncExternalStore(subscribe, getRoom, getRoom);
 
-  useEffect(() => {
-    setRoom({ active: true, playing: true });
-    return () => setRoom({ active: false });
-  }, []);
+  /*
+   * Arriving does not have to ask for anything.
+   *
+   * Whether the film runs is `wanted` — the guest's own choice, which defaults
+   * to yes and survives every navigation — and whether it can run is the path,
+   * which the backdrop reads for itself. A screen announcing its own arrival is
+   * what put the two in a race during a language switch.
+   */
 
   return (
     <section className={styles.stage} aria-label={dict.dock.experience}>
@@ -36,7 +40,7 @@ export function SceneStage({ locale, dict }: { locale: Locale; dict: Dictionary 
             type="button"
             className={styles.scene}
             aria-pressed={id === room.scene}
-            onClick={() => setRoom({ scene: id, playing: true })}
+            onClick={() => setRoom({ scene: id, wanted: true })}
           >
             {dict.experience.scenes[id]}
           </button>
@@ -100,9 +104,9 @@ export function SceneStage({ locale, dict }: { locale: Locale; dict: Dictionary 
           type="button"
           className={styles.round}
           onClick={() => send('toggle-play')}
-          aria-label={room.playing ? dict.experience.pause : dict.experience.play}
+          aria-label={room.running ? dict.experience.pause : dict.experience.play}
         >
-          {room.playing ? <PauseIcon /> : <PlayIcon />}
+          {room.running ? <PauseIcon /> : <PlayIcon />}
         </button>
 
         <button

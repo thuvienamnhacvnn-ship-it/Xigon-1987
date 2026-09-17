@@ -113,6 +113,20 @@
   --measure-text: 60ch;
 
   /* the fixed black rail down the left edge, from the template */
+  /*
+   * Three widths, and only three.
+   *
+   * The drawings measure anywhere from 55% of the window to 94%, and built to
+   * the letter that is what they gave: a checkout the size of a postcard next
+   * to a booking screen running wall to wall, and nothing on the site looking
+   * like it belongs with anything else. These keep the measured intent — a form
+   * is narrow, a split screen is wide — inside a band tight enough that moving
+   * between screens does not feel like moving between sites.
+   */
+  --screen-wide: min(88vw, 1640px);
+  --screen-mid: min(78vw, 1460px);
+  --screen-narrow: min(64vw, 1180px);
+
   --rail-w: 168px;
 
   --r-sm: 2px;

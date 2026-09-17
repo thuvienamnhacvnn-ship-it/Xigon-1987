@@ -8,6 +8,7 @@
  * to stay where the guest last saw it.
  */
 .board {
+  --screen-w: var(--screen-wide);
   display: grid;
   grid-template-columns: minmax(0, 52fr) minmax(0, 48fr);
   /* A fraction row, not auto: it is what gives the two cards a definite height

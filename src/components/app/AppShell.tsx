@@ -54,7 +54,7 @@ export function AppShell({
        * Erleben so that moving to the card and back does not restart the
        * restaurant's evening: it stops on a frame and goes on again.
        */}
-      <RoomBackdrop />
+      <RoomBackdrop locale={locale} pathname={pathname} />
 
       <main id="main" className={`${styles.content} screen-panel`} data-bare={bare ? 'true' : undefined}>
         {children}
