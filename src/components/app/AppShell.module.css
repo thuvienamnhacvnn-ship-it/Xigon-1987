@@ -362,11 +362,13 @@
 .dockList {
   display: flex;
   align-items: stretch;
-  gap: 0.15rem;
+  gap: 0.1rem;
   margin: 0;
-  padding: 0.32rem 0.55rem;
+  padding: 0.2rem 0.4rem;
   list-style: none;
-  border: 1px solid var(--gold-hair);
+  /* The hairline is plainly visible in the drawing — it is what makes the bar
+     read as one object rather than a smudge over the floor. */
+  border: 1px solid rgba(239, 177, 92, 0.45);
   border-radius: var(--r-pill);
   background: rgba(14, 10, 7, 0.62);
   backdrop-filter: blur(18px) saturate(1.1);
@@ -385,9 +387,14 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.22rem;
-  min-width: 6.4rem;
-  padding: 0.34rem 0.9rem 0.3rem;
+  gap: 0.18rem;
+  /*
+   * Each item is about 6.8% of the window in both drawings — six items across
+   * 42% in one, seven across 47% in the other. Built narrower, the labels crowd
+   * and the bar stops looking like the drawing however right its height is.
+   */
+  min-width: clamp(4.2rem, 6.8vw, 8.6rem);
+  padding: 0.26rem 0.55rem 0.22rem;
   border-radius: var(--r-pill);
   color: var(--ivory-soft);
   text-decoration: none;
@@ -395,21 +402,31 @@
 }
 
 .dockItem:hover {
-  color: var(--ivory);
-  background: rgba(245, 241, 233, 0.07);
-}
-
- /* Drawing 1 fills the current item — a gold capsule, dark type — rather than
-    only tinting it. It is the strongest mark on the screen and it should be:
-    the dock is the only navigation the site has. */
-.dockItem[aria-current='page'] {
   color: var(--ink-black);
   background: linear-gradient(180deg, var(--gold-lit), var(--gold-deep));
 }
 
+/* Hovering the screen you are already on should not promise a journey. */
 .dockItem[aria-current='page']:hover {
-  color: var(--ink-black);
-  background: linear-gradient(180deg, var(--gold-lit), var(--gold));
+  color: var(--gold-lit);
+  background: rgba(239, 177, 92, 0.12);
+}
+
+ /*
+  * Read the states off the drawings again, carefully.
+  *
+  * Drawing 1 shows a filled gold capsule on Reservieren — but the dot sits
+  * under Erleben, and Erleben is the screen being shown. The capsule is the
+  * hover, not the current item; Bestellen beside it carries a hairline outline,
+  * which is the same thing a step weaker. Every other drawing agrees: the
+  * current item is gold icon, gold label and a gold dot, and nothing more.
+  *
+  * Filling the current item instead made the bar shout the one thing the guest
+  * already knows.
+  */
+.dockItem[aria-current='page'] {
+  color: var(--gold-lit);
+  background: transparent;
 }
 
 .dockLabel {
@@ -433,8 +450,7 @@
 }
 
 .dockItem[aria-current='page'] .dockDot {
-  background: var(--ink-black);
-  opacity: 0.55;
+  background: var(--gold);
 }
 
 /* ---------- the footer ---------- */
