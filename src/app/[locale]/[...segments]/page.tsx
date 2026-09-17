@@ -12,7 +12,6 @@ import { LegalView } from '@/views/LegalView';
 import { MenuView } from '@/views/MenuView';
 import { OffersView } from '@/views/OffersView';
 import { OrderStatusView } from '@/views/OrderStatusView';
-import { OrderView } from '@/views/OrderView';
 import { PromoAdminView } from '@/views/PromoAdminView';
 import { ReservationView } from '@/views/ReservationView';
 import { ReserveView } from '@/views/ReserveView';
@@ -118,12 +117,16 @@ export default async function SectionPage({ params, searchParams }: Props) {
       return <AssistantView locale={locale} dict={dict} />;
     case 'dish':
       return sheet(<DishView locale={locale} dict={dict} slug={decodeURIComponent(second)} />);
+    /*
+     * Bestellen opens on the basket, as drawing 3 has it, and /warenkorb is the
+     * same screen under its own name. The board owns its frame and its width,
+     * so neither goes through the legacy sheet.
+     */
     case 'order':
-      return sheet(<OrderView locale={locale} dict={dict} />);
     case 'cart':
-      return sheet(<CartView locale={locale} dict={dict} />);
+      return <CartView locale={locale} dict={dict} />;
     case 'checkout':
-      return sheet(<CheckoutView locale={locale} dict={dict} />);
+      return sheet(<CheckoutView locale={locale} dict={dict} query={query} />);
     case 'orderStatus':
       return sheet(<OrderStatusView locale={locale} dict={dict} token={decodeURIComponent(second)} />);
     case 'reserve':

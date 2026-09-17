@@ -43,6 +43,13 @@
       "when": 1789658801327,
       "tag": "0005_illegal_satana",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1789660304964,
+      "tag": "0006_sour_union_jack",
+      "breakpoints": true
     }
   ]
 }

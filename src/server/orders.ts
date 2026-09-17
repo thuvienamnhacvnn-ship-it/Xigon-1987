@@ -3,7 +3,7 @@ import 'server-only';
 import { randomBytes, randomInt } from 'node:crypto';
 import { and, asc, eq, inArray, lt } from 'drizzle-orm';
 import { db } from '@/db/client';
-import { cartItems, dishVariants, dishes, orderItems, orders, type OrderStatus } from '@/db/schema';
+import { cartItems, carts, dishVariants, dishes, orderItems, orders, type OrderStatus } from '@/db/schema';
 import { OPERATING_HOURS, RESTAURANT } from '@/lib/restaurant';
 import { isoDateInBerlin } from '@/lib/dates';
 import { taxIncludedCents } from '@/lib/money';
@@ -268,6 +268,16 @@ export async function placeOrder(input: PlaceInput, flags: Flags): Promise<Place
    */
   const onCollection = input.paymentMethod === 'on_collection';
 
+  /*
+   * The basket's note, read here rather than inside the transaction — a query
+   * on the outer handle while a PGlite transaction is open deadlocks silently.
+   */
+  const [basket] = await db
+    .select({ note: carts.note })
+    .from(carts)
+    .where(eq(carts.id, input.cartId))
+    .limit(1);
+
   const created = await db.transaction(async (tx) => {
     const [order] = await tx
       .insert(orders)
@@ -284,6 +294,7 @@ export async function placeOrder(input: PlaceInput, flags: Flags): Promise<Place
         postalCode: input.postalCode?.trim().slice(0, 10) || null,
         city: input.city?.trim().slice(0, 80) || null,
         addressNote: input.addressNote?.trim().slice(0, 300) || null,
+        guestNote: basket?.note ?? null,
         locale: input.locale,
         slotDate: input.slotDate,
         slotMinute: input.slotMinute,

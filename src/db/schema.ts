@@ -369,6 +369,13 @@ export const carts = pgTable(
   {
     id: serial('id').primaryKey(),
     token: varchar('token', { length: 64 }).notNull(),
+    /**
+     * What the guest wrote under the basket: no coriander, extra chilli, a
+     * nut allergy. It belongs to the basket rather than to a line because that
+     * is how it is asked for, and it is carried onto the order — a field that
+     * takes an allergy and drops it is worse than no field at all.
+     */
+    note: text('note'),
     createdAt: createdAt(),
     updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
   },
@@ -432,6 +439,8 @@ export const orders = pgTable(
     postalCode: varchar('postal_code', { length: 10 }),
     city: text('city'),
     addressNote: text('address_note'),
+    /** The basket's note, carried through so the kitchen reads what the guest wrote. */
+    guestNote: text('guest_note'),
     locale: varchar('locale', { length: 2 }).notNull().default('de'),
 
     /** The promised slot, as a local date plus minutes past midnight. */

@@ -10,11 +10,12 @@
  */
 import { and, eq, like, or, sql } from 'drizzle-orm';
 import { db } from '../src/db/client';
-import { channelEvents, orders, reservationHolds, reservations } from '../src/db/schema';
+import { cartItems, carts, channelEvents, orders, reservationHolds, reservations } from '../src/db/schema';
 import { applyBooking } from '../src/server/channels/intake';
 import { availability, cancelReservation, confirmReservation, holdSlot } from '../src/server/reservations';
 import { getCatalogue, priceFor } from '../src/server/menu';
-import { expireUnpaidOrders, slotsFor } from '../src/server/orders';
+import { expireUnpaidOrders, placeOrder, slotsFor } from '../src/server/orders';
+import { getFlags } from '../src/server/settings';
 import { isoDateInBerlin, addDays } from '../src/lib/dates';
 import { RESTAURANT } from '../src/lib/restaurant';
 
@@ -186,7 +187,9 @@ check(
 const swept = await db
   .select({ status: orders.status })
   .from(orders)
-  .where(like(orders.name, 'SMOKE%'));
+  /* Only the orders this check wrote: a run that died before its cleanup
+     leaves other SMOKE rows behind, and they are not what is being asked. */
+  .where(like(orders.name, 'SMOKE unpaid%'));
 check(
   'and the order is marked cancelled rather than left hanging',
   swept.length > 0 && swept.every((row) => row.status === 'cancelled'),
@@ -194,6 +197,63 @@ check(
 );
 
 await expireUnpaidOrders();
+
+/*
+ * The line a guest writes under the basket has to reach the kitchen.
+ *
+ * "Ohne Koriander" is a preference; "Erdnussallergie" is not, and a field that
+ * takes one and drops it on the way to the order is worse than no field. This
+ * walks the whole path — basket note, order, stored row — rather than trusting
+ * that the column is wired up.
+ */
+console.log(`\nthe note under the basket`);
+const [noteCart] = await db
+  .insert(carts)
+  .values({ token: `SMOKE-note-${Date.now()}`, note: 'SMOKE Erdnussallergie' })
+  .returning();
+
+const orderable = catalogue.find((dish) => dish.variants.some((variant) => variant.orderable));
+const orderableVariant = orderable?.variants.find((variant) => variant.orderable);
+
+if (orderable && orderableVariant) {
+  await db.insert(cartItems).values({
+    cartId: noteCart.id,
+    dishId: orderable.id,
+    variantId: orderableVariant.id,
+    quantity: 1,
+    addedPriceCents: orderableVariant.priceCents,
+  });
+
+  const free = (await slotsFor(date)).find((slot) => !slot.full);
+  const placed = await placeOrder(
+    {
+      cartId: noteCart.id,
+      locale: 'de',
+      fulfilment: 'pickup',
+      paymentMethod: 'on_collection',
+      name: 'SMOKE note',
+      email: 'smoke@example.com',
+      phone: '000',
+      slotDate: date,
+      slotMinute: free?.minute ?? 0,
+      idempotencyKey: `SMOKE-note-${Date.now()}`,
+    },
+    await getFlags(),
+  );
+
+  check('an order can be placed from a basket carrying a note', placed.ok, placed);
+
+  if (placed.ok) {
+    const [row] = await db
+      .select({ guestNote: orders.guestNote })
+      .from(orders)
+      .where(eq(orders.token, placed.token))
+      .limit(1);
+    check('and the note is on the order the kitchen reads', row?.guestNote === 'SMOKE Erdnussallergie', row?.guestNote);
+  }
+}
+
+await db.delete(carts).where(like(carts.token, 'SMOKE-%'));
 
 /* ---------------------------------------------------------------- cleanup */
 await db.delete(orders).where(like(orders.name, 'SMOKE%'));

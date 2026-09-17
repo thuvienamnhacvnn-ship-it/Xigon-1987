@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
-import { addToCart, openCart, readCart, setLineQuantity } from './cart';
+import { addToCart, openCart, readCart, setCartNote, setLineQuantity } from './cart';
 import { availability, cancelReservation, confirmReservation, holdSlot } from './reservations';
 import { placeOrder, quoteCart, slotsFor } from './orders';
 import { getFlags } from './settings';
@@ -60,6 +60,20 @@ export async function setQuantityAction(formData: FormData): Promise<void> {
   await setLineQuantity(lineId, quantity);
   const locale = localeSchema.safeParse(formData.get('locale'));
   if (locale.success) revalidatePath(hrefFor(locale.data, 'cart'));
+}
+
+/**
+ * The note under the basket.
+ *
+ * Saved on its own rather than with the order, because the guest writes it
+ * before they reach the checkout and a page reload in between must not lose an
+ * allergy. It revalidates nothing: the field the guest is typing in already
+ * holds the text, and repainting the screen under their cursor would move it.
+ */
+export async function setCartNoteAction(note: string): Promise<void> {
+  const parsed = z.string().max(300).safeParse(note);
+  if (!parsed.success) return;
+  await setCartNote(parsed.data);
 }
 
 /* ------------------------------------------------------------ reservations */

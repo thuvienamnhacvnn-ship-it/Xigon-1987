@@ -1,0 +1,637 @@
+/*
+ * Bestellen — the basket, built to drawing 3.
+ *
+ * The numbers here are measured off that drawing rather than judged by eye,
+ * which is the difference between this version and the three before it. At
+ * 1920 the panel is 1336 wide (69.6%) and 674 tall, the summary card beside the
+ * lines is 398 of that, a dish photograph is 233 × 157, and the stepper is a
+ * 166 × 46 pill. Everything below is those figures expressed in clamps so they
+ * hold their proportions down to a phone.
+ */
+.board {
+  --screen-w: min(69.6vw, 1336px);
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+  height: 100%;
+  min-height: 0;
+  padding: clamp(1rem, 0.5rem + 1.5vw, 2.2rem);
+}
+
+.columns {
+  display: grid;
+  /* The lines, then the card. 1 : 0.44 is the drawing's split. */
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.44fr);
+  gap: clamp(0.9rem, 0.4rem + 1.3vw, 1.9rem);
+  min-height: 0;
+}
+
+/* ---------- the lines ---------- */
+
+.left {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+.head {
+  flex: 0 0 auto;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 1.1rem + 2.1vw, 3.5rem);
+  font-weight: 400;
+  line-height: 1.02;
+  color: var(--ivory);
+}
+
+.subtitle {
+  margin: 0.35rem 0 0;
+  font-weight: var(--weight-quiet);
+  font-size: var(--step--1);
+  color: var(--ivory-mute);
+}
+
+/*
+ * The list scrolls inside itself rather than growing the page: the dock has to
+ * stay where the guest last saw it, and a basket with nine things in it must
+ * not push the total off the screen.
+ */
+.lines {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  /* A hairline in the panel's own gold rather than the platform's grey bar,
+     which sat on the dark glass like a scratch. */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(239, 177, 92, 0.38) transparent;
+  margin: clamp(0.8rem, 0.4rem + 1vw, 1.5rem) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lines::-webkit-scrollbar {
+  width: 6px;
+}
+
+.lines::-webkit-scrollbar-thumb {
+  border-radius: 3px;
+  background: rgba(239, 177, 92, 0.38);
+}
+
+.lines::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.line {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto auto;
+  align-items: center;
+  gap: clamp(0.7rem, 0.3rem + 1vw, 1.6rem);
+  padding: clamp(0.5rem, 0.2rem + 0.7vw, 1rem) 0;
+}
+
+/* A hairline between the lines, not around them — the drawing has no boxes in
+   this column. */
+.line + .line {
+  border-top: 1px solid rgba(239, 177, 92, 0.16);
+}
+
+/*
+ * 233 × 157 at 1920 × 1080, which is the drawing — expressed against the
+ * window's height as well as its width. Sized by width alone the picture kept
+ * its full height on a short laptop screen and pushed the second line under
+ * the fold; tied to the height it shrinks with the room it has.
+ */
+.thumb {
+  display: block;
+  flex: 0 0 auto;
+  width: clamp(84px, min(21.6vh, 13.5vw), 233px);
+  height: clamp(56px, min(14.5vh, 9.1vw), 157px);
+  overflow: hidden;
+  border-radius: calc(var(--glass-r) * 0.7);
+  background: #140e09;
+}
+
+.thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.name {
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 0.8rem + 0.9vw, 1.75rem);
+  font-weight: 400;
+  line-height: 1.15;
+  color: var(--ivory);
+}
+
+.name:hover {
+  color: var(--gold-lit);
+}
+
+.detail,
+.variant {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  margin: 0;
+  font-weight: var(--weight-quiet);
+  font-size: var(--step--1);
+  line-height: 1.45;
+  color: var(--ivory-mute);
+}
+
+.variant {
+  -webkit-line-clamp: 1;
+  color: var(--ivory-soft);
+}
+
+.lineNote {
+  margin: 0.1rem 0 0;
+  font-weight: var(--weight-quiet);
+  font-size: var(--step--2);
+  color: var(--ivory-soft);
+}
+
+/* The unit price in gold with its unit under it, as the drawing has it — the
+   figure a guest checks against the menu, not the one they are charged. */
+.unit {
+  display: flex;
+  flex-direction: column;
+  gap: 0.05rem;
+  margin: 0.4rem 0 0;
+  font-size: clamp(1rem, 0.75rem + 0.6vw, 1.35rem);
+  color: var(--gold-lit);
+}
+
+.unit span {
+  font-weight: var(--weight-quiet);
+  font-size: var(--step--2);
+  color: var(--ivory-mute);
+}
+
+.warn {
+  margin: 0.3rem 0 0;
+  font-size: var(--step--2);
+  color: #e8b27a;
+}
+
+/* ---------- the stepper ---------- */
+
+.stepper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.2rem;
+  width: clamp(112px, 8.6vw, 166px);
+  padding: 0.25rem;
+  border: var(--edge-w) solid var(--gold-hair);
+  border-radius: var(--r-pill);
+  background: rgba(20, 14, 9, 0.5);
+}
+
+.step {
+  display: grid;
+  place-items: center;
+  width: clamp(26px, 2vw, 38px);
+  height: clamp(26px, 2vw, 38px);
+  border: 0;
+  border-radius: 50%;
+  font-size: var(--step-0);
+  color: var(--ivory-soft);
+  background: transparent;
+  cursor: pointer;
+  transition: color var(--dur-1) var(--ease), background var(--dur-1) var(--ease);
+}
+
+.step:hover {
+  color: var(--gold-lit);
+  background: rgba(239, 177, 92, 0.12);
+}
+
+.count {
+  flex: 1 1 auto;
+  text-align: center;
+  font-size: var(--step-0);
+  /* Tabular, or the pill twitches every time the number changes width. */
+  font-variant-numeric: tabular-nums;
+  color: var(--ivory);
+}
+
+.lineTotal {
+  margin: 0;
+  min-width: 5.5ch;
+  text-align: right;
+  font-size: clamp(1rem, 0.75rem + 0.6vw, 1.35rem);
+  font-variant-numeric: tabular-nums;
+  color: var(--ivory);
+}
+
+.removeForm {
+  display: flex;
+}
+
+.remove {
+  display: grid;
+  place-items: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  border: 0;
+  border-radius: 50%;
+  color: var(--ivory-mute);
+  background: transparent;
+  cursor: pointer;
+  transition: color var(--dur-1) var(--ease), background var(--dur-1) var(--ease);
+}
+
+.remove:hover {
+  color: #e8a07a;
+  background: rgba(232, 160, 122, 0.12);
+}
+
+/* ---------- nothing in it yet ---------- */
+
+.empty {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 1rem;
+  min-height: 0;
+  font-weight: var(--weight-quiet);
+  font-size: var(--step-0);
+  color: var(--ivory-soft);
+}
+
+.empty p {
+  margin: 0;
+}
+
+/* ---------- what the guest writes ---------- */
+
+.wishes {
+  flex: 0 0 auto;
+  margin-top: clamp(0.6rem, 0.3rem + 0.8vw, 1.1rem);
+}
+
+.wishesLabel {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin-bottom: 0.45rem;
+  font-weight: var(--weight-quiet);
+  font-size: var(--step--1);
+  color: var(--ivory-soft);
+}
+
+.wishesSaved {
+  font-size: var(--step--2);
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
+  color: var(--gold-deep);
+}
+
+.wishesInput {
+  width: 100%;
+  padding: 0.85rem 1.1rem;
+  border: var(--edge-w) solid rgba(239, 177, 92, 0.24);
+  border-radius: calc(var(--glass-r) * 0.7);
+  font-family: inherit;
+  font-weight: var(--weight-quiet);
+  font-size: var(--step--1);
+  color: var(--ivory);
+  background: rgba(12, 9, 6, 0.55);
+}
+
+.wishesInput::placeholder {
+  color: rgba(245, 241, 233, 0.34);
+}
+
+.wishesInput:focus-visible {
+  outline: none;
+  border-color: var(--gold);
+}
+
+.back {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin-top: clamp(0.7rem, 0.4rem + 0.9vw, 1.3rem);
+  font-size: var(--step--1);
+  color: var(--ivory-soft);
+}
+
+.back:hover {
+  color: var(--gold-lit);
+}
+
+/* ---------- the card beside the lines ---------- */
+
+.summary {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.7rem, 0.35rem + 0.8vw, 1.15rem);
+  min-width: 0;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: clamp(0.9rem, 0.5rem + 1.1vw, 1.6rem);
+  border: var(--edge-w) solid rgba(239, 177, 92, 0.3);
+  border-radius: var(--glass-r);
+  background: rgba(16, 11, 7, 0.55);
+}
+
+.ways {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem;
+}
+
+.way {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.75rem 0.7rem;
+  border: var(--edge-w) solid rgba(239, 177, 92, 0.22);
+  border-radius: calc(var(--glass-r) * 0.7);
+  text-align: left;
+  color: var(--ivory-mute);
+  background: rgba(10, 7, 4, 0.4);
+  cursor: pointer;
+  transition: border-color var(--dur-1) var(--ease), color var(--dur-1) var(--ease);
+}
+
+.way[data-on] {
+  border-color: var(--gold);
+  color: var(--ivory);
+  background: rgba(239, 177, 92, 0.08);
+}
+
+.way[data-on] svg {
+  color: var(--gold-lit);
+}
+
+/* Off, but still legible: a guest who wants delivery is told, not left to
+   wonder whether they missed the button. */
+.way[data-off] {
+  cursor: default;
+  opacity: 0.55;
+}
+
+.wayText {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.25;
+}
+
+.wayText b {
+  font-weight: var(--weight-body);
+  font-size: var(--step--1);
+  color: inherit;
+}
+
+.wayText small {
+  font-weight: var(--weight-quiet);
+  font-size: var(--step--2);
+  color: var(--ivory-mute);
+}
+
+/* ---------- the hour ---------- */
+
+.time {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding-top: clamp(0.6rem, 0.3rem + 0.7vw, 1rem);
+  border-top: 1px solid rgba(239, 177, 92, 0.16);
+}
+
+.timeLabel {
+  font-weight: var(--weight-quiet);
+  font-size: var(--step--1);
+  color: var(--ivory-soft);
+}
+
+.timeControl {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0 0.9rem;
+  border: var(--edge-w) solid rgba(239, 177, 92, 0.28);
+  border-radius: calc(var(--glass-r) * 0.7);
+  color: var(--gold-deep);
+  background: rgba(10, 7, 4, 0.45);
+}
+
+.timeControl select {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 0.8rem 0;
+  border: 0;
+  /* The chevron beside it is drawn; the platform's own arrow would be a second
+     one, in the wrong colour. */
+  appearance: none;
+  font-family: inherit;
+  font-size: var(--step--1);
+  color: var(--ivory);
+  background: transparent;
+  cursor: pointer;
+}
+
+.timeControl select:focus-visible {
+  outline: none;
+}
+
+.timeControl option {
+  color: #f5f1e9;
+  background: #140e09;
+}
+
+.timeNone {
+  font-weight: var(--weight-quiet);
+  font-size: var(--step--2);
+  color: var(--ivory-mute);
+}
+
+/* ---------- the figures ---------- */
+
+.sums {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding-top: clamp(0.6rem, 0.3rem + 0.7vw, 1rem);
+  border-top: 1px solid rgba(239, 177, 92, 0.16);
+}
+
+.sumRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 0;
+  font-weight: var(--weight-quiet);
+  font-size: var(--step--1);
+  color: var(--ivory-soft);
+}
+
+.sumRow span:last-child {
+  font-variant-numeric: tabular-nums;
+  color: var(--ivory);
+}
+
+.grand {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.8rem;
+  margin: 0.35rem 0 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 0.9rem + 1.1vw, 2.1rem);
+  font-weight: 400;
+  color: var(--gold-lit);
+}
+
+.grand span:last-child {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.tax {
+  margin: 0;
+  font-weight: var(--weight-quiet);
+  font-size: var(--step--2);
+  color: var(--ivory-mute);
+}
+
+.checkout {
+  justify-content: center;
+  width: 100%;
+  margin-top: 0.2rem;
+}
+
+/* A gold button on an empty basket is a promise the screen cannot keep. */
+.checkout[aria-disabled='true'] {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.closed {
+  margin: 0;
+  padding: 0.6rem 0.8rem;
+  border-left: 2px solid var(--gold-deep);
+  font-weight: var(--weight-quiet);
+  font-size: var(--step--2);
+  color: var(--ivory-soft);
+  background: rgba(239, 177, 92, 0.06);
+}
+
+/* ---------- the payment marks ---------- */
+
+.marks {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.9rem;
+  margin: 0.15rem 0 0;
+}
+
+/*
+ * Wordmarks, not the providers' artwork. A traced logo would be a trademark
+ * reproduction and a stronger claim than this site can make — none of these
+ * companies has been signed up.
+ */
+.mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  font-weight: var(--weight-body);
+  letter-spacing: 0.01em;
+  opacity: 0.9;
+}
+
+.mark[data-tone='paypal'] { color: #7aa7e8; }
+.mark[data-tone='visa'] { color: #8fa9e6; font-style: italic; letter-spacing: 0.08em; }
+.mark[data-tone='mastercard'] { color: #e8a97a; font-size: var(--step--2); }
+
+/* Two overlapping circles, which is a shape rather than a logo. */
+.mcRings {
+  display: inline-block;
+  width: 26px;
+  height: 16px;
+  border-radius: 8px;
+  background:
+    radial-gradient(circle 8px at 8px 8px, rgba(232, 122, 90, 0.85) 98%, transparent 100%),
+    radial-gradient(circle 8px at 18px 8px, rgba(232, 178, 90, 0.85) 98%, transparent 100%);
+}
+
+.fine {
+  margin: 0;
+  font-weight: var(--weight-quiet);
+  font-size: 0.66rem;
+  line-height: 1.4;
+  color: var(--ivory-mute);
+}
+
+/* ---------- narrower ---------- */
+
+@media (max-width: 1100px) {
+  .line {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas:
+      'thumb body bin'
+      'thumb step total';
+    row-gap: 0.6rem;
+  }
+
+  .thumb { grid-area: thumb; }
+  .body { grid-area: body; }
+  .stepper { grid-area: step; }
+  .lineTotal { grid-area: total; }
+  .removeForm { grid-area: bin; align-self: start; }
+}
+
+@media (max-width: 900px) {
+  .board {
+    /* The whole screen is one column on a phone, and it scrolls as one thing
+       rather than as two panes that each scroll separately. */
+    grid-template-rows: minmax(0, 1fr);
+  }
+
+  .columns {
+    grid-template-columns: minmax(0, 1fr);
+    grid-auto-rows: min-content;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .lines,
+  .summary {
+    overflow: visible;
+  }
+
+  .left {
+    min-height: 0;
+  }
+}

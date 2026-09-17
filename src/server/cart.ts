@@ -1,7 +1,7 @@
 import 'server-only';
 
 import { randomBytes } from 'node:crypto';
-import { and, asc, eq } from 'drizzle-orm';
+import { and, asc, eq, inArray } from 'drizzle-orm';
 import { cookies } from 'next/headers';
 import { db } from '@/db/client';
 import { cartItems, carts, dishVariants, dishes } from '@/db/schema';
@@ -26,6 +26,12 @@ export type CartLine = {
   slug: string;
   name: string;
   variantLabel: string;
+  /**
+   * The line under the name on the basket screen: what the dish is, in the
+   * kitchen's own words. The description where there is one, otherwise the
+   * ingredients — a basket line with only a name reads as a receipt.
+   */
+  detail: string | null;
   quantity: number;
   note: string | null;
   unitPriceCents: number;
@@ -47,6 +53,8 @@ export type CartLine = {
 
 export type Cart = {
   token: string;
+  /** What the guest wrote under the basket — allergies, "no coriander". */
+  note: string | null;
   lines: CartLine[];
   itemCount: number;
   subtotalCents: number;
@@ -55,7 +63,7 @@ export type Cart = {
   problems: { kind: 'sold_out' | 'not_orderable' | 'price_changed'; name: string }[];
 };
 
-const EMPTY: Cart = { token: '', lines: [], itemCount: 0, subtotalCents: 0, taxCents: 0, problems: [] };
+const EMPTY: Cart = { token: '', note: null, lines: [], itemCount: 0, subtotalCents: 0, taxCents: 0, problems: [] };
 
 function newToken() {
   return randomBytes(24).toString('base64url');
@@ -94,16 +102,30 @@ export async function openCart(): Promise<{ id: number; token: string }> {
   return { id: row.id, token };
 }
 
-/** Keeps the header badge in step without a database read on every page. */
+/**
+ * Keeps the header badge in step without a database read on every page.
+ *
+ * The badge is a mirror of the basket, never the basket itself, so it is not
+ * worth failing a whole order over. Away from a request — a script, a sweep,
+ * a test — there is no jar to write into and Next throws; the basket in the
+ * database is still right, and the next page the guest opens sets the cookie.
+ */
 async function writeCountCookie(count: number) {
-  const jar = await cookies();
-  jar.set(CART_COUNT_COOKIE, String(count), {
-    httpOnly: false,
-    sameSite: 'lax',
-    secure: process.env.NODE_ENV === 'production',
-    path: '/',
-    maxAge: CART_MAX_AGE_SECONDS,
-  });
+  try {
+    /* `cookies()` throws where there is no request, and it throws on the way
+       in rather than returning a rejected promise — so this has to be a
+       try/catch, not a `.catch()`. */
+    const jar = await cookies();
+    jar.set(CART_COUNT_COOKIE, String(count), {
+      httpOnly: false,
+      sameSite: 'lax',
+      secure: process.env.NODE_ENV === 'production',
+      path: '/',
+      maxAge: CART_MAX_AGE_SECONDS,
+    });
+  } catch {
+    /* No request to write into. The basket is still correct. */
+  }
 }
 
 export async function readCart(locale: Locale, token?: string | null): Promise<Cart> {
@@ -121,6 +143,24 @@ export async function readCart(locale: Locale, token?: string | null): Promise<C
     .where(eq(cartItems.cartId, cart.id))
     .orderBy(asc(cartItems.id));
 
+  /*
+   * How many ways each of these dishes can be ordered.
+   *
+   * A dish with one variant has a label like "Portion", which says nothing a
+   * guest did not already know — the basket printed it under every line and it
+   * read as filler. Where there is a real choice ("klein"/"groß", "mit Ente")
+   * the line has to show which one was picked.
+   */
+  const dishIds = [...new Set(rows.map((row) => row.dish.id))];
+  const variantRows = dishIds.length
+    ? await db
+        .select({ dishId: dishVariants.dishId })
+        .from(dishVariants)
+        .where(inArray(dishVariants.dishId, dishIds))
+    : [];
+  const variantCount = new Map<number, number>();
+  for (const row of variantRows) variantCount.set(row.dishId, (variantCount.get(row.dishId) ?? 0) + 1);
+
   const lines: CartLine[] = rows.map(({ item, dish, variant }) => {
     const unitPriceCents = variant.priceCents;
     return {
@@ -129,7 +169,14 @@ export async function readCart(locale: Locale, token?: string | null): Promise<C
       variantId: variant.id,
       slug: dish.slug,
       name: tr(locale, { de: dish.nameDe, en: dish.nameEn, vi: dish.nameVi }),
-      variantLabel: tr(locale, { de: variant.labelDe, en: variant.labelEn, vi: variant.labelVi }),
+      variantLabel:
+        (variantCount.get(dish.id) ?? 1) > 1
+          ? tr(locale, { de: variant.labelDe, en: variant.labelEn, vi: variant.labelVi })
+          : '',
+      detail:
+        tr(locale, { de: dish.descriptionDe, en: dish.descriptionEn, vi: dish.descriptionVi }) ||
+        tr(locale, { de: dish.ingredientsDe, en: dish.ingredientsEn, vi: dish.ingredientsVi }) ||
+        null,
       quantity: item.quantity,
       note: item.note,
       unitPriceCents,
@@ -152,6 +199,7 @@ export async function readCart(locale: Locale, token?: string | null): Promise<C
 
   return {
     token: cart.token,
+    note: cart.note,
     lines,
     itemCount: lines.reduce((total, line) => total + line.quantity, 0),
     subtotalCents,
@@ -230,6 +278,24 @@ export async function setLineQuantity(lineId: number, quantity: number): Promise
   const count = await countItems(cart.id);
   await writeCountCookie(count);
   return count;
+}
+
+/**
+ * The line the guest writes under the basket.
+ *
+ * It is only ever stored on a basket that already exists: a note with nothing
+ * to eat beside it is not an order, and minting a cart row for one would leave
+ * the database full of empty baskets carrying stray sentences.
+ */
+export async function setCartNote(note: string): Promise<void> {
+  const token = await currentCartToken();
+  if (!token) return;
+
+  const trimmed = note.trim().slice(0, 300);
+  await db
+    .update(carts)
+    .set({ note: trimmed || null, updatedAt: new Date() })
+    .where(eq(carts.token, token));
 }
 
 export async function clearCart(cartId: number) {

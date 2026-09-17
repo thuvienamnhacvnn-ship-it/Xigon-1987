@@ -289,6 +289,17 @@ export const vi: Dictionary = {
     priceChanged: 'Một mức giá đã thay đổi. Quý khách kiểm tra lại tổng mới.',
     soldOut: 'Rất tiếc, {name} đã hết và được bỏ khỏi giỏ.',
     items: '{n} món',
+    heading: 'Giỏ hàng của bạn',
+    sample: 'Đơn đặt mẫu',
+    perPortion: 'mỗi phần',
+    wishes: 'Yêu cầu cho đơn hàng',
+    wishesPlaceholder: 'ví dụ: không rau mùi, thêm cay, dị ứng …',
+    wishesSaved: 'Đã lưu',
+    pickupTime: 'Giờ lấy món',
+    chooseTime: 'Chọn giờ',
+    taxIncluded: 'đã gồm VAT',
+    pickupHere: 'Lấy tại quán',
+    comingSoon: 'Sắp có',
   },
 
   checkout: {

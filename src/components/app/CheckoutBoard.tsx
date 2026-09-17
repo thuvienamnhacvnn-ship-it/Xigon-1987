@@ -37,6 +37,7 @@ export function CheckoutBoard({
   cart,
   today,
   initialSlots,
+  preferredMinute,
   pickupEnabled,
   deliveryEnabled,
   demoMode,
@@ -47,6 +48,8 @@ export function CheckoutBoard({
   cart: Cart;
   today: string;
   initialSlots: Slot[];
+  /** The hour picked on the basket screen, when it is still free. */
+  preferredMinute?: number | null;
   pickupEnabled: boolean;
   deliveryEnabled: boolean;
   demoMode: boolean;
@@ -67,7 +70,7 @@ export function CheckoutBoard({
 
   const [slots, setSlots] = useState<Slot[]>(initialSlots);
   const [slotMinute, setSlotMinute] = useState<number | null>(
-    initialSlots.find((slot) => !slot.full)?.minute ?? null,
+    preferredMinute ?? initialSlots.find((slot) => !slot.full)?.minute ?? null,
   );
 
   const [error, setError] = useState<string | null>(null);
