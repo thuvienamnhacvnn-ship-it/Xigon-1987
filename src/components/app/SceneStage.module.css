@@ -63,6 +63,7 @@
 /* ---------- the mark in the middle of the film ---------- */
 
 /* Nothing on a wide screen: the corner of the bar carries it there, as drawn. */
+.bannerMarkWrap,
 .bannerMark {
   display: none;
 }
@@ -245,18 +246,38 @@
    * it read as the logo printed twice, slightly out of register. Up here it
    * sits on the dark awning in every scene.
    */
-  .bannerMark {
+  /*
+   * A soft pool of shadow under the mark.
+   *
+   * The film is a lit shopfront and the restaurant's own neon crosses the frame
+   * as the scenes change, so on the bright frames the logo simply vanished into
+   * it. A drop-shadow alone was not enough — it draws an edge, not a ground.
+   * This is wide and very soft, so on the dark frames it reads as nothing at
+   * all rather than as a panel laid over the room.
+   */
+  .bannerMarkWrap {
     position: absolute;
     left: 50%;
     top: 27%;
     transform: translate(-50%, -50%);
+    display: grid;
+    place-items: center;
+    width: min(86vw, 420px);
+    height: min(46vw, 230px);
+    background: radial-gradient(
+      closest-side,
+      rgba(6, 4, 3, 0.72),
+      rgba(6, 4, 3, 0.45) 55%,
+      rgba(6, 4, 3, 0) 100%
+    );
+    pointer-events: none;
+  }
+
+  .bannerMark {
     display: block;
     width: min(54vw, 260px);
     height: auto;
-    /* The film behind it is a lit shopfront; without its own shadow the mark
-       disappears into the neon on the brightest frames. */
-    filter: drop-shadow(0 6px 26px rgba(0, 0, 0, 0.85));
-    pointer-events: none;
+    filter: drop-shadow(0 4px 18px rgba(0, 0, 0, 0.9));
   }
 
   /*
@@ -287,8 +308,18 @@
     top: calc(env(safe-area-inset-top, 0px) + 4.2rem);
   }
 
+  /*
+   * The status line drops to the foot of the room.
+   *
+   * At the top it landed on the mark in the middle of the film — and it is the
+   * line that says the film is not playing, so the two appeared together every
+   * time. Down here it sits above the social row, where it reads as a note
+   * about the picture rather than as damage to the logo.
+   */
   .notice {
-    top: calc(env(safe-area-inset-top, 0px) + 7.6rem);
+    top: auto;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 9.8rem);
+    max-width: calc(100vw - 2.4rem);
   }
 
   /* Play and sound move above the bar so a thumb reaching for them does not

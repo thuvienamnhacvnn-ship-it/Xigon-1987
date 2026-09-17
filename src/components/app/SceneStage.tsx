@@ -56,7 +56,9 @@ export function SceneStage({ locale, dict }: { locale: Locale; dict: Dictionary 
        * what a sign outside a restaurant is for. The shell hides its own
        * corner copy at this width so the logo is not shown twice.
        */}
-      <img className={styles.bannerMark} src="/img/logo.png" alt="XIGON 1987" />
+      <span className={styles.bannerMarkWrap}>
+        <img className={styles.bannerMark} src="/img/logo.png" alt="XIGON 1987" />
+      </span>
 
       {/* ---------- the rail: left edge on a wide screen, a row above the
            bar on a phone ---------- */}
