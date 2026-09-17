@@ -12,7 +12,13 @@
  *
  * PGlite lets one process hold the data directory, so stop the service first:
  *
- *   systemctl stop xigon1987 && npx tsx scripts/unlock-admin.ts && systemctl start xigon1987
+ *   systemctl stop xigon1987
+ *   npm run admin:unlock
+ *   systemctl start xigon1987
+ *
+ * It goes through `npm run` rather than bare `tsx` because everything under
+ * `src/server` imports `server-only`, which throws outside Next — the script
+ * tsconfig maps that import to a stub.
  */
 import { eq } from 'drizzle-orm';
 import { db } from '../src/db/client';

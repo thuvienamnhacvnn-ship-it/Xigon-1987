@@ -15,7 +15,8 @@
     "db:reset": "node -e \"require('fs').rmSync('.data/pg',{recursive:true,force:true});require('fs').mkdirSync('.data/pg',{recursive:true})\" && npm run db:migrate && npm run db:seed",
     "smoke": "tsx --tsconfig tsconfig.scripts.json scripts/smoke.ts",
     "qr": "node scripts/build-qr.mjs",
-    "map": "node scripts/build-map.mjs"
+    "map": "node scripts/build-map.mjs",
+    "admin:unlock": "tsx --tsconfig tsconfig.scripts.json scripts/unlock-admin.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.124.0",
