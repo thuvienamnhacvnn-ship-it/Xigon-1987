@@ -15,10 +15,17 @@ npm run dev          # http://localhost:3060
 
 ## What it does
 
+It is an application, not a page that scrolls. Seven screens sit in one fixed
+frame: the bar at the top and the dock at the bottom never move, only the middle
+changes, and every screen has its own URL — `/de/erleben`, `/de/speisekarte`,
+`/de/reservieren`, `/de/bestellen`, `/de/angebote`, `/de/ki-berater`,
+`/de/kontakt`. Back, Forward and a pasted link all work. Because the frame has a
+fixed height, screens with more content than fits **paginate**; they do not grow.
+
 | | |
 |---|---|
-| **Banner** | The restaurant's own dining-room photograph, with the dish on a separate transparent layer that rotates through five plates. Swapping the dish touches nothing else. |
-| **Menu** | 21 dishes in 7 categories. Four signature plates on the home page; the rest as photograph, name and price, with a full page per dish. Search, category and dietary filters run in the browser. |
+| **Erleben** | The restaurant's own video, full frame, cut into three scenes — Atmosphäre, Küche, Bar. Play, pause, sound, and an honest still with a notice when the browser will not play it. |
+| **Menu** | 33 dishes in 7 categories, three large photographs to a page with real page numbers. Search and category filters run in the browser against the rows the server sent. |
 | **Dish page** | Photograph, description, ingredients, portions with prices, allergen statement, quantity, a note for the kitchen, add to basket. |
 | **Table booking** | Availability computed live against tables, existing bookings and other guests' holds. Choosing a time takes a short hold on a specific table; the guest sees the countdown. Cancellation by link. |
 | **Collection** | Basket, times limited by kitchen capacity per slot, checkout, an order page reachable only by its own link. |
@@ -78,6 +85,14 @@ booking is recorded even when nothing is free — without a table, flagged, and
 counted at the top of the day's list for a person to resolve. Dropping it or
 silently double-booking are both worse than an awkward row in the book.
 
+**Twelve dishes exist so that twelve photographs have a home.** The restaurant
+supplied 111 food photographs and a card of 21 dishes, and the two sets do not
+line up. A photograph is attached to a dish only where it genuinely shows that
+dish; the rest of the photographs became dishes of their own, named after what
+is in the picture. Ten dishes on the card have no photograph and show an empty
+frame saying so, because borrowing another dish's picture is the one thing a
+guest would certainly take for a promise.
+
 **No facade photograph exists.** None of the restaurant's own channels has one.
 The banner uses the interior instead; the photos on review sites belong to their
 photographers.
@@ -88,8 +103,12 @@ photographers.
 
 ```
 src/
-  app/[locale]/            layout, home page, and one catch-all that dispatches
-                           every other page by this locale's own slug
+  app/[locale]/            layout (the shell), a redirect from the bare locale
+                           to Erleben, and one catch-all that dispatches every
+                           screen by this locale's own slug
+  components/app/          the shell: TopBar, Dock, AppShell, and one board per
+                           screen (SceneStage, MenuBoard, OfferBoard,
+                           AssistantBoard)
   app/api/assistant/       the menu guide's endpoint
   components/              the interface
   views/                   one file per page, rendered by the dispatcher
@@ -130,6 +149,21 @@ see `scripts/build-assets.mjs`.
 transition leaves `isPending` stuck true in React 19, which disables the whole
 form. The forms here use a plain busy flag, and successful submits redirect from
 the server rather than calling `router.push` from the client.
+
+**Grid columns are `minmax(0, 1fr)`, never `1fr`.** A grid item's automatic
+minimum size is its min-content width, so a plain `1fr` lets one unbreakable row
+— seven filter pills, a wide form — set the minimum width of the whole screen.
+The shell hides horizontal overflow, so the excess is not scrolled to, it is
+simply gone. Every screen's outermost grid spells the column out.
+
+**A video that never decodes fires no event.** A missing file fires `error` and
+a refused autoplay rejects the play promise, and both are handled. What neither
+covers is a browser that accepts the file and then stalls at `readyState 0`
+forever — which is what happens on the machine this was built on, whose
+graphics driver cannot decode video in Chrome at all. Without a watchdog the
+screen says "loading" indefinitely, so `SceneStage` gives it eight seconds and
+then shows the still. H.264 is offered before VP9 for the same reason: VP9 is
+decoded in software on older hardware and froze the whole renderer here.
 
 **`content-visibility: auto` is not used.** On a section thousands of pixels
 tall it makes the page unscrollable: the placeholder height and the real height
