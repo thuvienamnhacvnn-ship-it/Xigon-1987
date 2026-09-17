@@ -4,7 +4,9 @@
  * Three columns and a footer rule, inside the shell's pane of glass: what we
  * know, where it is, and the code that carries it to a phone.
  */
+/* 85% of the window, measured — see docs/MOCKUP-GEOMETRY.md. */
 .screen {
+  --screen-w: min(85vw, 1632px);
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   grid-template-rows: minmax(0, 1fr) auto;

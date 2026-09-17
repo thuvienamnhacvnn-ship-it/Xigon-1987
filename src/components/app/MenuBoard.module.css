@@ -282,7 +282,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.6rem;
+  gap: 0.5rem;
   margin-top: auto;
   padding-top: 0.55rem;
 }
@@ -300,6 +300,7 @@
 .detailLink {
   font-family: var(--font-body);
   font-size: var(--step--1);
+  white-space: nowrap;
   color: var(--gold);
   text-decoration: underline;
   text-underline-offset: 3px;

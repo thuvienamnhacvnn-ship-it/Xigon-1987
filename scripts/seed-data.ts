@@ -725,4 +725,25 @@ export const PROMOTIONS = [
     published: true,
     sort: 1,
   },
+  /*
+   * The third offer, so the row reads as a set rather than as two cards and a
+   * gap. The drawing shows a gift box with a ribbon; no such photograph exists,
+   * so it takes the bar instead — which is what the voucher actually buys. A
+   * picture of something the restaurant does not have would be the wrong kind
+   * of placeholder.
+   */
+  {
+    slug: 'genuss-verschenken',
+    titleDe: 'Genuss verschenken',
+    titleEn: 'Give an evening',
+    titleVi: 'Tặng một buổi tối',
+    bodyDe: 'Ein Abend bei uns als Geschenk — Betrag und Anlass sprechen wir mit Ihnen ab. Demo-Inhalt.',
+    bodyEn: 'An evening with us as a gift — the amount and the occasion we agree with you. Demo content.',
+    bodyVi: 'Tặng một buổi tối tại nhà hàng — số tiền và dịp sẽ trao đổi cùng quý khách. Nội dung demo.',
+    imagePath: '/img/scene/lanterns-bar-1280.webp',
+    imageWidth: 1280,
+    imageHeight: 719,
+    published: true,
+    sort: 2,
+  },
 ];

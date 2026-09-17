@@ -1,0 +1,631 @@
+/*
+ * Kasse.
+ *
+ * The narrowest of the seven screens: 55.5% of the window, measured off the
+ * drawing — 1066px at 1920. See docs/MOCKUP-GEOMETRY.md. It is a form, not a
+ * catalogue, and a form stretched across the whole window is a form nobody can
+ * follow from a label to its field.
+ */
+.board {
+  --screen-w: min(55.5vw, 1066px);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto auto minmax(0, 1fr);
+  gap: clamp(0.6rem, 0.35rem + 0.8vw, 1.1rem);
+  height: 100%;
+  min-height: 0;
+  padding: clamp(1rem, 0.6rem + 1.2vw, 1.9rem) clamp(1rem, 0.5rem + 1.3vw, 2rem)
+    clamp(0.9rem, 0.5rem + 1.1vw, 1.6rem);
+}
+
+/*
+ * Below about 1450px, 55.5% of the window is under 800px and the two columns
+ * start squeezing the payment rows onto two lines each. The share the drawing
+ * gives is a share of a large screen; on a smaller one the screen takes the
+ * width it needs instead of the width it was measured at.
+ */
+@media (max-width: 1450px) {
+  .board {
+    --screen-w: min(92vw, 1066px);
+  }
+}
+
+.head {
+  min-width: 0;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 1rem + 1.9vw, 2.8rem);
+  font-weight: 400;
+  line-height: 1.05;
+  color: var(--ivory);
+}
+
+.subtitle {
+  margin: 0.3rem 0 0;
+  font-size: var(--step--1);
+  letter-spacing: 0.03em;
+  color: var(--ivory-mute);
+}
+
+/* ---------- the three marks ---------- */
+
+.steps {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.stepItem {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+/* Drawn by the item rather than by an element of its own, so it cannot end up
+   on the wrong side of a mark when the row wraps. */
+.stepItem + .stepItem::before {
+  content: '';
+  width: clamp(1rem, 2.4vw, 2.6rem);
+  height: 1px;
+  background: var(--gold-hair);
+}
+
+.stepMark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--gold-hair);
+  border-radius: 50%;
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  color: var(--ivory-mute);
+}
+
+.stepLabel {
+  font-size: var(--step--1);
+  color: var(--ivory-mute);
+  white-space: nowrap;
+}
+
+.stepItem[data-state='done'] .stepMark {
+  border-color: var(--gold);
+  color: var(--gold-lit);
+}
+
+.stepItem[data-state='now'] .stepMark {
+  border-color: var(--gold);
+  color: var(--ink-black);
+  background: linear-gradient(180deg, var(--gold-lit), var(--gold-deep));
+}
+
+.stepItem[data-state='now'] .stepLabel {
+  color: var(--gold-lit);
+}
+
+/* ---------- the two columns ---------- */
+
+.columns {
+  display: grid;
+  /* minmax(0, …) on both: a payment row with its marks is unbreakable, and
+     given `1fr` it sets the column's minimum and widens the screen past the
+     phone — where the overflow is hidden rather than scrolled to. */
+  grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr);
+  gap: clamp(0.9rem, 0.5rem + 1.3vw, 1.9rem);
+  min-height: 0;
+}
+
+.left {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.9rem, 0.5rem + 1vw, 1.5rem);
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  min-width: 0;
+}
+
+.groupTitle {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--step-1);
+  font-weight: 400;
+  color: var(--ivory);
+}
+
+/* ---------- name, e-mail, telephone ---------- */
+
+.rows {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+/* The label sits beside its field, as drawn, not above it. */
+.row {
+  display: grid;
+  grid-template-columns: minmax(0, 7rem) minmax(0, 1fr);
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.rowLabel {
+  font-size: var(--step--1);
+  color: var(--ivory-soft);
+}
+
+.rowInput {
+  width: 100%;
+  min-width: 0;
+  padding: 0.8rem 1.05rem;
+  border: 1px solid var(--gold-hair);
+  border-radius: 12px;
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  color: var(--ivory);
+  background: rgba(0, 0, 0, 0.3);
+  transition: border-color var(--dur-1) var(--ease);
+}
+
+.rowInput::placeholder {
+  color: var(--ivory-mute);
+  opacity: 0.75;
+}
+
+.rowInput:hover,
+.rowInput:focus {
+  border-color: var(--gold);
+}
+
+.rowInput[aria-invalid='true'] {
+  border-color: var(--error);
+}
+
+/* ---------- the four ways to pay ---------- */
+
+.methods {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.method {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.55rem 0.6rem;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background var(--dur-1) var(--ease);
+}
+
+.method:hover {
+  background: rgba(239, 177, 92, 0.06);
+}
+
+.method[data-chosen] {
+  background: rgba(239, 177, 92, 0.09);
+}
+
+/* A row the browser cannot honour reads as unavailable and does not respond —
+   a wallet button that does nothing is worse than no wallet button. */
+.method[data-off] {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.method[data-off]:hover {
+  background: transparent;
+}
+
+.methodDot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border: 1px solid var(--gold-hair);
+  border-radius: 50%;
+}
+
+.method[data-chosen] .methodDot {
+  border-color: var(--gold);
+}
+
+.method[data-chosen] .methodDot::after {
+  content: '';
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, var(--gold-lit), var(--gold-deep));
+}
+
+/* The focus ring belongs on the row; the radio itself is visually hidden. */
+.method:focus-within .methodDot {
+  outline: 2px solid var(--gold-lit);
+  outline-offset: 2px;
+}
+
+.methodLabel {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  font-size: var(--step--1);
+  color: var(--ivory);
+}
+
+.methodReason {
+  font-size: var(--step--2);
+  line-height: 1.4;
+  color: var(--ivory-mute);
+}
+
+.methodMarks {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/*
+ * Wordmarks, not the providers' artwork — see the note in the component. The
+ * colour is enough to recognise the choice; the shape is ours.
+ */
+.mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.18rem 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 6px;
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.mark[data-tone='paypal'] { color: #7aa7e8; }
+.mark[data-tone='visa'] { color: #8fa9e6; font-style: italic; }
+.mark[data-tone='mastercard'] { color: #e8a97a; }
+.mark[data-tone='apple'] { color: var(--ivory); }
+.mark[data-tone='google'] { color: #9dbbe8; }
+.mark[data-tone='counter'] { color: var(--ivory-mute); font-weight: 500; }
+
+/* Two overlapping discs — the shape the card scheme is known by, drawn rather
+   than copied. */
+.mcRings {
+  width: 20px;
+  height: 12px;
+  border-radius: 6px;
+  background:
+    radial-gradient(circle 6px at 6px 6px, #d05a4a 0 6px, transparent 6px),
+    radial-gradient(circle 6px at 14px 6px, rgba(233, 165, 76, 0.85) 0 6px, transparent 6px);
+}
+
+.honest {
+  margin: 0.2rem 0 0;
+  font-size: var(--step--2);
+  line-height: 1.5;
+  color: var(--ivory-mute);
+}
+
+/* ---------- the nested card ---------- */
+
+/*
+ * A second frame inside the panel, as drawn — the only place on the screen
+ * where one surface sits on another, and the reason the totals read as a
+ * receipt rather than as more of the form.
+ */
+.summary {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden auto;
+  overscroll-behavior: contain;
+  padding: clamp(0.9rem, 0.5rem + 1.1vw, 1.5rem);
+  border: 1px solid var(--gold-hair);
+  border-radius: var(--glass-r);
+  background: rgba(0, 0, 0, 0.26);
+  scrollbar-width: thin;
+}
+
+.summaryTitle {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--step-2);
+  font-weight: 400;
+  color: var(--ivory);
+}
+
+.fulfil {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--ivory);
+}
+
+.fulfilText {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.fulfilTitle {
+  font-size: var(--step-0);
+  color: var(--ivory);
+}
+
+.fulfilLine {
+  font-size: var(--step--2);
+  color: var(--ivory-mute);
+}
+
+.fulfilSwitch {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 0.5rem;
+}
+
+.time {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.7rem;
+}
+
+.timeLabel {
+  font-size: var(--step--1);
+  color: var(--ivory-soft);
+}
+
+.timeControl {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0 0.8rem;
+  border: 1px solid var(--gold-hair);
+  border-radius: 12px;
+  color: var(--gold);
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.timeControl:focus-within {
+  border-color: var(--gold);
+}
+
+.timeControl select {
+  padding: 0.5rem 0;
+  border: 0;
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  font-variant-numeric: tabular-nums;
+  color: var(--ivory);
+  background: transparent;
+}
+
+.timeControl select:focus-visible {
+  outline: none;
+}
+
+.timeControl select option {
+  color: var(--ivory);
+  background: #15100b;
+}
+
+.timeNone {
+  font-size: var(--step--2);
+  text-align: right;
+  color: var(--error);
+}
+
+/* ---------- the lines ---------- */
+
+.lines {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  margin: 0.3rem 0 0;
+  padding: 0 0 0.75rem;
+  /* The rule above "Gesamt" in the drawing. */
+  border-bottom: 1px solid var(--gold-hair);
+  list-style: none;
+}
+
+.line {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-size: var(--step--1);
+  color: var(--ivory);
+}
+
+.lineName {
+  min-width: 0;
+}
+
+/* The leader dots between a dish and its price, so the eye crosses the gap. */
+.lineDots {
+  flex: 1 1 auto;
+  height: 1px;
+  margin-bottom: 0.25em;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--gold-hair) 0 2px,
+    transparent 2px 6px
+  );
+}
+
+.linePrice {
+  flex: 0 0 auto;
+  font-variant-numeric: tabular-nums;
+  color: var(--ivory);
+}
+
+.totalRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.8rem;
+}
+
+.totalLabel {
+  font-family: var(--font-display);
+  font-size: var(--step-1);
+  color: var(--ivory);
+}
+
+.totalValue {
+  font-family: var(--font-body);
+  font-size: clamp(1.15rem, 0.8rem + 1vw, 1.7rem);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--gold);
+}
+
+.totalTax {
+  margin: -0.45rem 0 0;
+  font-size: var(--step--2);
+  text-align: right;
+  color: var(--ivory-mute);
+}
+
+/* ---------- the terms ---------- */
+
+.accept {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.65rem;
+  cursor: pointer;
+}
+
+.accept input {
+  width: 19px;
+  height: 19px;
+  margin: 0.2rem 0 0;
+  accent-color: var(--gold);
+}
+
+.acceptBody {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.acceptTitle {
+  font-size: var(--step--1);
+  color: var(--ivory);
+}
+
+.acceptText {
+  font-size: var(--step--2);
+  line-height: 1.5;
+  color: var(--ivory-mute);
+}
+
+.acceptLink {
+  color: var(--gold);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.acceptLink:hover {
+  color: var(--gold-lit);
+}
+
+.error {
+  margin: 0;
+  font-size: var(--step--1);
+  color: var(--error);
+}
+
+.submit {
+  width: 100%;
+}
+
+.next,
+.demo,
+.fine {
+  margin: 0;
+  font-size: var(--step--2);
+  line-height: 1.5;
+  text-align: center;
+  color: var(--ivory-mute);
+}
+
+.fine {
+  text-align: left;
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  margin-top: auto;
+  padding-top: 0.5rem;
+  font-size: var(--step--1);
+  color: var(--ivory);
+  transition: color var(--dur-1) var(--ease);
+}
+
+.back:hover {
+  color: var(--gold-lit);
+}
+
+/* ---------- narrower ---------- */
+
+@media (max-width: 900px) {
+  .board {
+    --screen-w: min(94vw, 1066px);
+    grid-template-rows: auto auto minmax(0, 1fr);
+  }
+
+  /* One column, and the whole thing scrolls as one: two separate scrolling
+     panes side by side is a phone gesture nobody wins. */
+  .columns {
+    grid-template-columns: minmax(0, 1fr);
+    grid-auto-rows: min-content;
+    overflow: hidden auto;
+    overscroll-behavior: contain;
+  }
+
+  .left,
+  .summary {
+    overflow: visible;
+  }
+
+  .row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.3rem;
+  }
+
+  .method {
+    grid-template-columns: auto minmax(0, 1fr);
+    row-gap: 0.35rem;
+  }
+
+  .methodMarks {
+    grid-column: 2;
+  }
+}

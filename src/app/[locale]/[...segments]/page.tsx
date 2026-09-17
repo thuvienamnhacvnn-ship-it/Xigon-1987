@@ -95,6 +95,14 @@ export default async function SectionPage({ params, searchParams }: Props) {
   const key = matchRoute(locale, head, Boolean(second));
   if (!key) notFound();
 
+  /*
+   * The screens still written in the older markup get their sheet of glass
+   * here rather than each growing one of its own. Angebote and the guide are
+   * deliberately not on this list: the drawings build those from separate
+   * cards, and a frame around a frame is what made them read as billboards.
+   */
+  const sheet = (node: React.ReactNode) => <div className="glass screen-sheet legacy-sheet">{node}</div>;
+
   switch (key) {
     case 'experience':
       return <ExperienceView locale={locale} dict={dict} />;
@@ -105,29 +113,29 @@ export default async function SectionPage({ params, searchParams }: Props) {
     case 'assistant':
       return <AssistantView locale={locale} dict={dict} />;
     case 'dish':
-      return <DishView locale={locale} dict={dict} slug={decodeURIComponent(second)} />;
+      return sheet(<DishView locale={locale} dict={dict} slug={decodeURIComponent(second)} />);
     case 'order':
-      return <OrderView locale={locale} dict={dict} />;
+      return sheet(<OrderView locale={locale} dict={dict} />);
     case 'cart':
-      return <CartView locale={locale} dict={dict} />;
+      return sheet(<CartView locale={locale} dict={dict} />);
     case 'checkout':
-      return <CheckoutView locale={locale} dict={dict} />;
+      return sheet(<CheckoutView locale={locale} dict={dict} />);
     case 'orderStatus':
-      return <OrderStatusView locale={locale} dict={dict} token={decodeURIComponent(second)} />;
+      return sheet(<OrderStatusView locale={locale} dict={dict} token={decodeURIComponent(second)} />);
     case 'reserve':
       return <ReserveView locale={locale} dict={dict} query={query} />;
     case 'reservation':
-      return <ReservationView locale={locale} dict={dict} token={decodeURIComponent(second)} />;
+      return sheet(<ReservationView locale={locale} dict={dict} token={decodeURIComponent(second)} />);
     case 'restaurant':
-      return <RestaurantView locale={locale} dict={dict} />;
+      return sheet(<RestaurantView locale={locale} dict={dict} />);
     case 'contact':
       return <ContactView locale={locale} dict={dict} />;
     case 'imprint':
     case 'privacy':
     case 'orderTerms':
-      return <LegalView locale={locale} dict={dict} kind={key} />;
+      return sheet(<LegalView locale={locale} dict={dict} kind={key} />);
     case 'promoAdmin':
-      return <PromoAdminView locale={locale} dict={dict} />;
+      return sheet(<PromoAdminView locale={locale} dict={dict} />);
     default:
       notFound();
   }

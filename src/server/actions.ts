@@ -149,6 +149,9 @@ export async function slotsAction(date: string) {
 const checkoutSchema = z.object({
   locale: localeSchema,
   fulfilment: z.enum(['pickup', 'delivery']),
+  // The method the guest picked, not an amount. Prices are read from the menu
+  // in `placeOrder`; nothing the browser sends can influence what is charged.
+  paymentMethod: z.enum(['paypal', 'card', 'wallet', 'on_collection']),
   name: z.string().trim().min(2).max(120),
   email: z.string().trim().email().max(160),
   phone: z.string().trim().min(5).max(40),

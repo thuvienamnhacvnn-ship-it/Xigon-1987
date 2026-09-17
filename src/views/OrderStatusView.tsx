@@ -109,6 +109,15 @@ export async function OrderStatusView({
 
             {order.status === 'rejected' ? <p className={styles.warn}>{dict.orderStatus.rejectedNote}</p> : null}
 
+            {/*
+             * "Awaiting payment" on its own reads as a bill on its way. It is
+             * not: no provider is connected, so the status says what the guest
+             * chose, and this line says what actually has to happen.
+             */}
+            {order.status === 'awaiting_payment' ? (
+              <p className={styles.warn}>{dict.orderStatus.awaitingNote}</p>
+            ) : null}
+
             <div className={styles.footRow}>
               <a href={phoneHref(RESTAURANT.phone)} className="btn btn--sm">
                 {dict.contact.call} {RESTAURANT.phone}

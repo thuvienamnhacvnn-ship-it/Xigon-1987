@@ -36,7 +36,7 @@ export function Dock({
 
   return (
     <nav className={styles.dock} aria-label={dict.nav.menu}>
-      <ul className={styles.dockList}>
+      <ul className={`${styles.dockList} glass-edge`}>
         {ITEMS.map((item) => {
           const active = item.key === owner;
           const Icon = item.icon;

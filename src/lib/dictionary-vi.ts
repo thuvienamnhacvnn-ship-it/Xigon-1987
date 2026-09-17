@@ -302,6 +302,37 @@ export const vi: Dictionary = {
     outsideZone: 'Mã bưu chính này nằm ngoài khu vực giao hàng.',
     quoteExpired: 'Lựa chọn của quý khách đã hết hạn. Chúng tôi đã tính lại giá.',
     error: 'Không hoàn tất được đơn hàng. Chưa có khoản nào bị trừ.',
+
+    secureTitle: 'Thanh toán an toàn',
+    demoLabel: 'Trang thanh toán demo',
+    stepCart: 'Giỏ hàng',
+    stepContact: 'Thông tin liên hệ',
+    stepPayment: 'Thanh toán',
+    namePlaceholder: 'ví dụ: Nguyễn Văn An',
+    emailPlaceholder: 'ví dụ: ten@vidu.com',
+    phonePlaceholder: 'ví dụ: +49 151 12345678',
+    payMethod: 'Hình thức thanh toán',
+    payPaypal: 'PayPal',
+    payCard: 'Thẻ tín dụng / ghi nợ',
+    payWallet: 'Apple Pay / Google Pay',
+    payOnCollection: 'Trả khi đến lấy',
+    walletChecking: 'Đang kiểm tra …',
+    walletUnavailable: 'Thiết bị này không hỗ trợ ví điện tử.',
+    summary: 'Đơn của quý khách',
+    pickupHere: 'Nhận tại nhà hàng · {when}',
+    today: 'Hôm nay',
+    collectionTime: 'Giờ đến lấy',
+    acceptTitle: 'Đồng ý điều kiện',
+    acceptText: 'Quý khách đã đọc {terms} và đồng ý.',
+    termsShort: 'điều kiện đặt hàng',
+    mustAccept: 'Quý khách vui lòng xác nhận điều kiện đặt hàng trước.',
+    continueTo: 'Tiếp tục với {method}',
+    sendOrder: 'Gửi đơn hàng',
+    confirmNext: 'Thanh toán sẽ xác nhận ở bước sau',
+    payOnPickup: 'Quý khách trả tiền tại nhà hàng khi đến lấy.',
+    noProvider:
+      'Chưa kết nối cổng thanh toán nào. Lựa chọn của quý khách được ghi vào đơn, chưa trừ tiền, và thanh toán tại nhà hàng.',
+    backToCart: 'Quay lại giỏ hàng',
   },
 
   orderStatus: {
@@ -324,6 +355,8 @@ export const vi: Dictionary = {
       cancelled: 'Đã huỷ',
     },
     rejectedNote: 'Chúng tôi không thể tiếp nhận đơn này. Khoản đã thanh toán sẽ được hoàn lại.',
+    awaitingNote:
+      'Quý khách chọn thanh toán trực tuyến. Chưa kết nối cổng thanh toán nào nên chưa trừ tiền — quý khách vui lòng trả tại nhà hàng khi đến lấy.',
   },
 
   assistant: {

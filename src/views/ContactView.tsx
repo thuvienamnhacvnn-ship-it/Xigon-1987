@@ -20,7 +20,7 @@ export function ContactView({ locale, dict }: { locale: Locale; dict: Dictionary
   )}`;
 
   return (
-    <div className={styles.screen}>
+    <div className={`glass screen-sheet ${styles.screen}`}>
       <div className={styles.columns}>
         {/* ---------- what we know ---------- */}
         <section className={styles.facts}>

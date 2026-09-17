@@ -39,7 +39,16 @@ function berlinMinuteNow(): number {
   );
 }
 
+/*
+ * `awaiting_payment` counts against a slot like any other order.
+ *
+ * With no provider connected it is where every order that chose PayPal, a card
+ * or a wallet comes to rest — a real order the kitchen has been asked to cook.
+ * Left out of this list the same six o'clock would be sold as often as it was
+ * asked for.
+ */
 const ACTIVE_ORDER_STATUSES: OrderStatus[] = [
+  'awaiting_payment',
   'placed',
   'accepted',
   'preparing',
@@ -161,10 +170,19 @@ export async function quoteCart(cartId: number, locale: Locale, fulfilment: 'pic
   };
 }
 
+/**
+ * What the guest said they would like to pay with.
+ *
+ * A choice, not a charge. No provider is connected, so none of these moves any
+ * money; `placeOrder` records which one was picked and nothing else.
+ */
+export type PaymentMethod = 'paypal' | 'card' | 'wallet' | 'on_collection';
+
 export type PlaceInput = {
   cartId: number;
   locale: Locale;
   fulfilment: 'pickup' | 'delivery';
+  paymentMethod: PaymentMethod;
   name: string;
   email: string;
   phone: string;
@@ -213,16 +231,26 @@ export async function placeOrder(input: PlaceInput, flags: Flags): Promise<Place
 
   const token = randomBytes(24).toString('base64url');
 
+  /*
+   * Nothing here takes money, because there is nothing to take it with.
+   *
+   * Paying on collection is settled at the counter, so that order is complete
+   * the moment it is written — `placed`. The other three are not: the guest
+   * asked to pay through a provider, and until one is connected the truthful
+   * record is an order still waiting for a payment that has not happened. The
+   * method is kept so the restaurant can see what was asked for, and `paidAt`
+   * stays null because nobody has paid.
+   */
+  const onCollection = input.paymentMethod === 'on_collection';
+
   const created = await db.transaction(async (tx) => {
     const [order] = await tx
       .insert(orders)
       .values({
         token,
         reference: reference(),
-        // Payment has not been connected. The order is recorded as placed and
-        // the restaurant takes payment on collection, rather than pretending a
-        // card was charged.
-        status: 'placed',
+        status: onCollection ? 'placed' : 'awaiting_payment',
+        paymentProvider: onCollection ? null : input.paymentMethod,
         fulfilment: input.fulfilment,
         name: input.name.trim().slice(0, 120),
         email: input.email.trim().slice(0, 160),
