@@ -1,7 +1,7 @@
 import 'server-only';
 
 import { randomBytes, randomInt } from 'node:crypto';
-import { and, asc, eq, inArray } from 'drizzle-orm';
+import { and, asc, eq, inArray, lt } from 'drizzle-orm';
 import { db } from '@/db/client';
 import { cartItems, dishVariants, dishes, orderItems, orders, type OrderStatus } from '@/db/schema';
 import { OPERATING_HOURS, RESTAURANT } from '@/lib/restaurant';
@@ -57,6 +57,28 @@ const ACTIVE_ORDER_STATUSES: OrderStatus[] = [
 ];
 
 /**
+ * Releases slots held by orders that were never paid for.
+ *
+ * The counterpart of `expireHolds()` on the reservations side, and needed for
+ * the same reason: something has to be able to say no eventually. An order that
+ * chose PayPal and then went nowhere sits in `awaiting_payment` and counts
+ * against a slot exactly like a real one, so without this the fourth abandoned
+ * basket closes that quarter of an hour for good — and with no provider
+ * connected, every one of them is abandoned.
+ *
+ * It cancels rather than deletes. The row is what the restaurant looks at when
+ * a guest rings up about an order they thought they had placed, and a row that
+ * quietly vanished cannot answer that question.
+ */
+export async function expireUnpaidOrders(): Promise<void> {
+  const deadline = new Date(Date.now() - RESTAURANT.orderPaymentWindowMinutes * 60_000);
+  await db
+    .update(orders)
+    .set({ status: 'cancelled', updatedAt: new Date() })
+    .where(and(eq(orders.status, 'awaiting_payment'), lt(orders.createdAt, deadline)));
+}
+
+/**
  * The times the kitchen can still promise today.
  *
  * Capacity is per slot, not per day: a kitchen that accepts forty orders for
@@ -69,6 +91,9 @@ export async function slotsFor(date: string): Promise<Slot[]> {
 
   const isToday = date === isoDateInBerlin();
   const earliest = isToday ? berlinMinuteNow() + RESTAURANT.orderLeadTimeMinutes : opens;
+
+  // Before counting what is taken, let go of what was never paid for.
+  await expireUnpaidOrders();
 
   const taken = await db
     .select({ slotMinute: orders.slotMinute })

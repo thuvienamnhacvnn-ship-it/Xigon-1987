@@ -58,6 +58,16 @@ export const RESTAURANT = {
   orderCutoffMinutes: 30,
   orderSlotMinutes: 15,
   orderSlotCapacity: 4,
+  /**
+   * How long an unpaid order may hold a slot.
+   *
+   * It has to be finite. A slot is a real quarter of an hour of a real
+   * kitchen's evening, and an order that stopped at "awaiting payment" is one
+   * nobody is cooking. Without a limit four abandoned baskets close 19:00 for
+   * every guest who comes after them, permanently — and with no payment
+   * provider connected yet, every such order is abandoned by definition.
+   */
+  orderPaymentWindowMinutes: 30,
   deliveryMinimumCents: 2000,
 
   sourceUrl: 'https://www.1987xigon.de/kontakt/',

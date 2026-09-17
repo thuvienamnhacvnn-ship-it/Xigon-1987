@@ -10,12 +10,13 @@
  */
 import { and, eq, like, or, sql } from 'drizzle-orm';
 import { db } from '../src/db/client';
-import { channelEvents, reservationHolds, reservations } from '../src/db/schema';
+import { channelEvents, orders, reservationHolds, reservations } from '../src/db/schema';
 import { applyBooking } from '../src/server/channels/intake';
 import { availability, cancelReservation, confirmReservation, holdSlot } from '../src/server/reservations';
 import { getCatalogue, priceFor } from '../src/server/menu';
-import { slotsFor } from '../src/server/orders';
+import { expireUnpaidOrders, slotsFor } from '../src/server/orders';
 import { isoDateInBerlin, addDays } from '../src/lib/dates';
+import { RESTAURANT } from '../src/lib/restaurant';
 
 let failures = 0;
 
@@ -144,7 +145,58 @@ const slots = await slotsFor(date);
 check('a future date offers collection times', slots.length > 0, slots.length);
 check('slot times run in order', slots.every((slot, index) => index === 0 || slot.minute > slots[index - 1].minute));
 
+/*
+ * An unpaid order must not hold a slot for ever.
+ *
+ * With no payment provider connected every card and wallet order stops at
+ * `awaiting_payment`, and those count against the kitchen exactly like real
+ * ones. Four abandoned baskets would close a quarter of an hour permanently if
+ * nothing let go of them, so this checks that something does.
+ */
+const slotMinute = slots[0]?.minute ?? 0;
+const stale = new Date(Date.now() - (RESTAURANT.orderPaymentWindowMinutes + 5) * 60_000);
+
+for (let index = 0; index < RESTAURANT.orderSlotCapacity; index += 1) {
+  await db.insert(orders).values({
+    token: `SMOKE-${index}-${Date.now()}`,
+    reference: `SMOKE${index}${Date.now() % 100000}`,
+    status: 'awaiting_payment',
+    fulfilment: 'pickup',
+    name: 'SMOKE unpaid',
+    email: 'smoke@example.com',
+    phone: '000',
+    locale: 'de',
+    slotDate: date,
+    slotMinute,
+    subtotalCents: 1000,
+    taxCents: 160,
+    totalCents: 1000,
+    paymentProvider: 'paypal',
+    createdAt: stale,
+  });
+}
+
+const blocked = await slotsFor(date);
+check(
+  'an abandoned payment does not keep a slot closed',
+  blocked.find((slot) => slot.minute === slotMinute)?.full === false,
+  blocked.find((slot) => slot.minute === slotMinute)?.full,
+);
+
+const swept = await db
+  .select({ status: orders.status })
+  .from(orders)
+  .where(like(orders.name, 'SMOKE%'));
+check(
+  'and the order is marked cancelled rather than left hanging',
+  swept.length > 0 && swept.every((row) => row.status === 'cancelled'),
+  swept.map((row) => row.status).join(','),
+);
+
+await expireUnpaidOrders();
+
 /* ---------------------------------------------------------------- cleanup */
+await db.delete(orders).where(like(orders.name, 'SMOKE%'));
 await db.delete(reservations).where(or(like(reservations.name, 'SMOKE%'), like(reservations.externalId, 'SMOKE-%')));
 await db.delete(channelEvents).where(sql`true`);
 await db.delete(reservationHolds).where(sql`true`);
