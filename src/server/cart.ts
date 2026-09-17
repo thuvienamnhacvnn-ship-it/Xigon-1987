@@ -6,6 +6,7 @@ import { cookies } from 'next/headers';
 import { db } from '@/db/client';
 import { cartItems, carts, dishVariants, dishes } from '@/db/schema';
 import { CART_COOKIE, CART_COUNT_COOKIE, CART_MAX_AGE_SECONDS } from '@/lib/cart-cookie';
+import { secureCookies } from './cookie-security';
 import { taxIncludedCents } from '@/lib/money';
 import { tr, type Locale } from '@/lib/i18n';
 import { RESTAURANT } from '@/lib/restaurant';
@@ -95,7 +96,7 @@ export async function openCart(): Promise<{ id: number; token: string }> {
   jar.set(CART_COOKIE, token, {
     httpOnly: true,
     sameSite: 'lax',
-    secure: process.env.NODE_ENV === 'production',
+    secure: await secureCookies(),
     path: '/',
     maxAge: CART_MAX_AGE_SECONDS,
   });
@@ -119,7 +120,7 @@ async function writeCountCookie(count: number) {
     jar.set(CART_COUNT_COOKIE, String(count), {
       httpOnly: false,
       sameSite: 'lax',
-      secure: process.env.NODE_ENV === 'production',
+      secure: await secureCookies(),
       path: '/',
       maxAge: CART_MAX_AGE_SECONDS,
     });

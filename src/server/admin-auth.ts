@@ -3,6 +3,7 @@ import 'server-only';
 import { createHmac, randomBytes, timingSafeEqual } from 'node:crypto';
 import { cookies, headers } from 'next/headers';
 import { hit } from './rate-limit';
+import { secureCookies } from './cookie-security';
 
 /**
  * Who is allowed into the back office.
@@ -62,7 +63,7 @@ export async function signIn(password: string): Promise<'ok' | 'wrong' | 'not_co
   jar.set(COOKIE, `${payload}.${sign(payload, key)}`, {
     httpOnly: true,
     sameSite: 'lax',
-    secure: process.env.NODE_ENV === 'production',
+    secure: await secureCookies(),
     path: '/',
     maxAge: MAX_AGE_SECONDS,
   });

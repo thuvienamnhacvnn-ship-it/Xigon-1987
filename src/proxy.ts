@@ -30,6 +30,15 @@ export default function proxy(request: NextRequest) {
   return NextResponse.redirect(url);
 }
 
+/*
+ * Everything served as a file rather than a page has to be listed here.
+ *
+ * Anything not excluded gets a locale pushed in front of it, and a file has no
+ * locale — `/uploads/promo/x.webp` became `/de/uploads/promo/x.webp` and
+ * answered 404, which meant every picture an admin uploaded for an offer was
+ * broken on the live site while looking perfectly fine in the back office.
+ * A new folder under `public/` needs a new name in this list.
+ */
 export const config = {
-  matcher: ['/((?!api|_next|img|fonts|favicon.ico|robots.txt|sitemap.xml).*)'],
+  matcher: ['/((?!api|_next|img|fonts|uploads|favicon.ico|robots.txt|sitemap.xml).*)'],
 };
