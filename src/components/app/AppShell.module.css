@@ -544,3 +544,117 @@
     font-size: 0.6rem;
   }
 }
+
+/* ------------------------------------------------- the sign, struck --- */
+
+/*
+ * The mark in the corner thrown across the middle of the room.
+ *
+ * It is the restaurant's own neon in the photograph, so it behaves like neon:
+ * a cold tube does not come on, it strikes — dark, a stutter of light, dark
+ * again, then it holds and breathes. The keyframes below are that, timed by
+ * ear rather than evenly, because an evenly spaced flicker reads as a fault
+ * in the page instead of a sign warming up.
+ */
+.flare {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  /* The room dims a little behind it, the way it would. */
+  background: radial-gradient(60% 55% at 50% 50%, rgba(6, 4, 3, 0.55), rgba(6, 4, 3, 0.86));
+  animation: flare-room 260ms var(--ease) both;
+}
+
+.flareMark {
+  width: auto;
+  /* About ten times the mark in the bar, and never taller than the room. */
+  height: min(46vh, 420px);
+  animation: flare-strike 1.5s steps(1, end) both, flare-breathe 3.4s 1.5s ease-in-out infinite;
+}
+
+@keyframes flare-room {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/*
+ * `steps(1, end)` on purpose: a tube snaps between states, it does not fade
+ * between them. Interpolating these would give a soft pulse, which is a
+ * different thing entirely and not what a sign does.
+ */
+@keyframes flare-strike {
+  0% {
+    opacity: 0;
+    filter: brightness(0.2) drop-shadow(0 0 0 rgba(247, 217, 164, 0));
+  }
+  6% {
+    opacity: 1;
+    filter: brightness(2.6) drop-shadow(0 0 60px rgba(247, 217, 164, 0.9));
+  }
+  11% {
+    opacity: 0.08;
+    filter: brightness(0.3);
+  }
+  17% {
+    opacity: 1;
+    filter: brightness(2.1) drop-shadow(0 0 44px rgba(247, 217, 164, 0.8));
+  }
+  21% {
+    opacity: 0.15;
+    filter: brightness(0.35);
+  }
+  26% {
+    opacity: 1;
+    filter: brightness(1.7) drop-shadow(0 0 34px rgba(247, 217, 164, 0.75));
+  }
+  33% {
+    opacity: 0.45;
+    filter: brightness(0.7);
+  }
+  38% {
+    opacity: 1;
+    filter: brightness(1.9) drop-shadow(0 0 40px rgba(247, 217, 164, 0.85));
+  }
+  46% {
+    opacity: 0.7;
+    filter: brightness(1);
+  }
+  52%,
+  100% {
+    opacity: 1;
+    filter: brightness(1.35) drop-shadow(0 0 30px rgba(247, 217, 164, 0.65));
+  }
+}
+
+/* Once it has settled it breathes, the way a tube does on a cold evening. */
+@keyframes flare-breathe {
+  0%,
+  100% {
+    filter: brightness(1.35) drop-shadow(0 0 30px rgba(247, 217, 164, 0.65));
+  }
+  50% {
+    filter: brightness(1.6) drop-shadow(0 0 46px rgba(247, 217, 164, 0.85));
+  }
+}
+
+/*
+ * Asked for less motion, the sign is simply lit. Someone who cannot take a
+ * flicker should still see what the others are looking at.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .flare {
+    animation: none;
+  }
+
+  .flareMark {
+    animation: none;
+    filter: brightness(1.35) drop-shadow(0 0 30px rgba(247, 217, 164, 0.65));
+  }
+}

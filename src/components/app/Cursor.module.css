@@ -1,70 +1,60 @@
 /*
- * The pointer trail.
+ * The pointer light.
  *
- * Every point is fixed at the origin and moved with `translate3d`, so the
- * browser composites them without laying the page out again — animating
- * `left`/`top` fourteen times a frame is what makes an effect like this feel
- * cheap on anything but a new machine.
+ * Fixed at the origin and moved with `translate3d`, so the browser composites
+ * it without laying the page out again.
  */
-.trail {
+.glow {
   position: fixed;
-  inset: 0;
-  z-index: 60;
-  pointer-events: none;
+  top: 0;
+  left: 0;
+  z-index: 55;
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
   opacity: 0;
-  transition: opacity var(--dur-2) var(--ease);
+  pointer-events: none;
+  will-change: transform;
+
+  /*
+   * `screen` adds light rather than painting over. A flat gold disc at any
+   * opacity is a disc; blended, it lifts whatever is underneath — the glass
+   * brightens, the photographs barely notice, which is what a lamp does.
+   */
+  mix-blend-mode: screen;
+  background: radial-gradient(
+    circle closest-side,
+    rgba(247, 217, 164, 0.2) 0%,
+    rgba(239, 177, 92, 0.11) 38%,
+    rgba(239, 177, 92, 0.04) 64%,
+    rgba(239, 177, 92, 0) 100%
+  );
+  transition:
+    opacity var(--dur-3) var(--ease),
+    width var(--dur-2) var(--ease),
+    height var(--dur-2) var(--ease);
 }
 
-.trail[data-on='true'] {
+.glow[data-on='true'] {
   opacity: 1;
 }
 
-.point {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: var(--size, 8px);
-  height: var(--size, 8px);
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 248, 232, 1) 0%, rgba(239, 177, 92, 0.85) 45%, rgba(239, 177, 92, 0) 72%);
-  opacity: var(--fade, 0.5);
-  will-change: transform;
+/* Over something pressable the pool tightens and warms — the difference is
+   small on purpose; it should be felt rather than watched. */
+.glow[data-live='true'] {
+  width: 210px;
+  height: 210px;
+  background: radial-gradient(
+    circle closest-side,
+    rgba(255, 244, 214, 0.34) 0%,
+    rgba(247, 217, 164, 0.18) 40%,
+    rgba(239, 177, 92, 0.05) 68%,
+    rgba(239, 177, 92, 0) 100%
+  );
 }
 
-/*
- * The head is a ring, not a blob: it is the one that has to say "this can be
- * pressed", and a ring can open around a thing without covering it.
- */
-.head {
-  background: none;
-  border: 1px solid rgba(239, 177, 92, 0.85);
-  box-shadow:
-    0 0 12px rgba(239, 177, 92, 0.45),
-    inset 0 0 8px rgba(239, 177, 92, 0.25);
-  transition:
-    width var(--dur-2) var(--ease),
-    height var(--dur-2) var(--ease),
-    border-color var(--dur-1) var(--ease),
-    background var(--dur-2) var(--ease);
-}
-
-.trail[data-live='true'] .head {
-  width: 52px;
-  height: 52px;
-  border-color: var(--gold-lit);
-  background: rgba(239, 177, 92, 0.12);
-  box-shadow:
-    0 0 24px rgba(239, 177, 92, 0.5),
-    inset 0 0 14px rgba(239, 177, 92, 0.22);
-}
-
-/*
- * A pointer that is not a mouse has nothing to chase, and a guest who asked for
- * less motion asked for this. The component checks both before it starts; these
- * make sure nothing is painted even for the instant before it does.
- */
 @media (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce) {
-  .trail {
+  .glow {
     display: none;
   }
 }

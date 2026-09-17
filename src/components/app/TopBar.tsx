@@ -28,12 +28,40 @@ export function TopBar({
 }) {
   const pathname = usePathname();
   const here = screenName(dict, current);
+  const [flare, setFlare] = useState(false);
 
   return (
     <header className={styles.bar}>
-      <Link href={hrefFor(locale, 'experience')} className={styles.brand} aria-label={dict.brand.name}>
+      <Link
+        href={hrefFor(locale, 'experience')}
+        className={styles.brand}
+        aria-label={dict.brand.name}
+        onMouseEnter={() => setFlare(true)}
+        onMouseLeave={() => setFlare(false)}
+        onFocus={() => setFlare(true)}
+        onBlur={() => setFlare(false)}
+      >
         <img src="/img/logo.png" alt="" width={104} height={35} />
       </Link>
+
+      {/*
+       * The sign, struck.
+       *
+       * The mark in the corner is a photograph of the restaurant's own neon, so
+       * touching it lights the real thing: the same image thrown across the
+       * middle of the room at ten times the size, flickering the way a cold
+       * tube does before it settles.
+       *
+       * `aria-hidden`, and gone the moment the pointer leaves. It says nothing
+       * the corner has not already said — a guest reading with a screen reader
+       * is not missing anything, and one who has asked for less motion gets the
+       * mark without the flicker.
+       */}
+      {flare ? (
+        <div className={styles.flare} aria-hidden="true">
+          <img src="/img/logo.png" alt="" className={styles.flareMark} />
+        </div>
+      ) : null}
 
       {/* Which of the seven you are on, centred. Erleben is the room itself and
           names itself; a label there would only sit on the picture. */}
