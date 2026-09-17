@@ -102,6 +102,7 @@ const guestSchema = z.object({
   email: z.string().trim().email().max(160),
   phone: z.string().trim().min(5).max(40),
   occasion: z.string().trim().max(120).optional().nullable(),
+  seatingPreference: z.enum(['dining', 'bar']).optional().nullable(),
   note: z.string().trim().max(500).optional().nullable(),
   locale: localeSchema,
 });

@@ -235,6 +235,13 @@ const de = {
     manageHint: 'Über den Link in der E-Mail können Sie Ihre Reservierung ändern oder absagen.',
     disabled: 'Online-Reservierung ist derzeit nicht aktiviert. Bitte rufen Sie uns an.',
     live: 'Verfügbarkeit in Echtzeit',
+    tableWaits: 'Dein Tisch\nwartet.',
+    tableLines: ['Gute Gespräche.', 'Besondere Momente.', 'Immer ein Platz für dich.'],
+    seating: 'Sitzbereich (optional)',
+    seatingDining: 'Innenbereich',
+    seatingBar: 'Bar',
+    seatingNote: 'Wir notieren Ihren Wunsch. Ein bestimmter Platz lässt sich nicht zusagen.',
+    hoursProvisional: 'Die Öffnungszeiten sind noch vorläufig.',
   },
 
   reservation: {
@@ -624,6 +631,13 @@ const en: Dictionary = {
     manageHint: 'Use the link in the email to change or cancel your booking.',
     disabled: 'Online booking is not switched on yet. Please give us a call.',
     live: 'Live availability',
+    tableWaits: 'Your table\nis waiting.',
+    tableLines: ['Good conversation.', 'Evenings worth keeping.', 'Always a seat for you.'],
+    seating: 'Seating area (optional)',
+    seatingDining: 'Dining room',
+    seatingBar: 'Bar',
+    seatingNote: 'We note your wish. A particular seat cannot be promised.',
+    hoursProvisional: 'The opening hours are still provisional.',
   },
   reservation: {
     title: 'Your booking',

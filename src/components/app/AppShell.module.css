@@ -10,8 +10,18 @@
 .shell {
   --shell-gutter: clamp(1rem, 0.4rem + 2.2vw, 2.75rem);
   /* What the content must keep clear at each end for the floating furniture. */
-  --shell-top: clamp(64px, 5.2vw, 96px);
-  --shell-bottom: clamp(92px, 7.4vw, 124px);
+  --shell-top: clamp(60px, 11vh, 112px);
+  --shell-bottom: clamp(94px, 16.5vh, 170px);
+  /*
+   * The widest a screen may be — not the width every screen takes.
+   *
+   * Measured off the drawings (docs/MOCKUP-GEOMETRY.md): the bands run from
+   * 75.8% of the window for the card to 93.7% for the booking screen, so each
+   * screen sets its own `--screen-w` and this is only the outer limit. Forcing
+   * them all to one width is what made the cards look cramped and the type
+   * oversized.
+   */
+  --shell-measure: min(94vw, 1820px);
 
   position: relative;
   isolation: isolate;
@@ -47,7 +57,7 @@
  * prices. Erleben has no panel and gets the room at full strength.
  */
 .shell:not([data-bare='true']) .backdropVideo {
-  filter: brightness(0.62) saturate(0.95);
+  filter: brightness(0.5) saturate(0.92);
   transform: scale(1.03);
   transition: filter var(--dur-3) var(--ease), transform var(--dur-3) var(--ease);
 }
@@ -84,17 +94,13 @@
   padding: 0;
 }
 
-.panel {
-  position: relative;
-  min-width: 0;
-  min-height: 0;
-  overflow: hidden auto;
-  overscroll-behavior: contain;
-  border: 1px solid var(--gold-hair);
-  border-radius: clamp(16px, 1.6vw, 26px);
-  background: rgba(18, 13, 9, 0.5);
-  backdrop-filter: blur(22px) saturate(1.08);
-  box-shadow: 0 50px 110px -60px rgba(0, 0, 0, 0.95);
+/*
+ * A screen declares its own width through `--screen-w`; without one it gets the
+ * outer limit. Either way it is centred, and the restaurant shows down the sides.
+ */
+.content > * {
+  width: min(100%, var(--screen-w, var(--shell-measure)));
+  margin-inline: auto;
 }
 
 /* ---------- the top bar ---------- */
@@ -430,6 +436,20 @@
   border: 1px solid var(--gold-hair);
   border-radius: var(--r-pill);
   color: var(--gold);
+}
+
+.footQr {
+  display: block;
+  margin-left: 0.5rem;
+  padding: 3px;
+  border-radius: 5px;
+  background: rgba(245, 241, 233, 0.9);
+  opacity: 0.72;
+  transition: opacity var(--dur-1) var(--ease);
+}
+
+.footQr:hover {
+  opacity: 1;
 }
 
 /* ---------- phone ---------- */

@@ -213,6 +213,13 @@ export const vi: Dictionary = {
     manageHint: 'Quý khách đổi hoặc huỷ đặt bàn qua liên kết trong e-mail.',
     disabled: 'Đặt bàn trực tuyến chưa mở. Quý khách vui lòng gọi điện.',
     live: 'Chỗ trống theo thời gian thực',
+    tableWaits: 'Bàn của quý khách\nđang đợi.',
+    tableLines: ['Những câu chuyện hay.', 'Những khoảnh khắc đáng nhớ.', 'Luôn có chỗ cho quý khách.'],
+    seating: 'Khu vực ngồi (không bắt buộc)',
+    seatingDining: 'Trong nhà',
+    seatingBar: 'Quầy bar',
+    seatingNote: 'Chúng tôi ghi nhận mong muốn của quý khách, nhưng không thể hứa chắc một chỗ cụ thể.',
+    hoursProvisional: 'Giờ mở cửa hiện vẫn là tạm thời.',
   },
 
   reservation: {

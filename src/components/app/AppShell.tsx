@@ -46,14 +46,17 @@ export function AppShell({
        */}
       <RoomBackdrop />
 
-      <main id="main" className={styles.content} data-bare={bare ? 'true' : undefined}>
-        {/*
-         * One pane of smoked glass, supplied by the shell rather than by each
-         * screen. It is what makes the seven screens feel like seven views of
-         * one room instead of seven pages, and it is the only thing on the site
-         * allowed to scroll — screens that fit are expected to paginate.
-         */}
-        {bare ? children : <div className={`${styles.panel} screen-panel`}>{children}</div>}
+      {/*
+       * The shell frames; it does not draw.
+       *
+       * It supplies a band of the window — clear of the bar above and the dock
+       * below, and no wider than the eye can read across — and each screen
+       * builds its own furniture inside it. One screen is a single pane of
+       * glass, another is three separate cards on the photograph, and a shared
+       * wrapper would make the second impossible.
+       */}
+      <main id="main" className={`${styles.content} screen-panel`} data-bare={bare ? 'true' : undefined}>
+        {children}
       </main>
 
       <TopBar locale={locale} dict={dict} cartCount={cartCount} current={current} />
@@ -72,6 +75,16 @@ export function AppShell({
           <span className={styles.dot}>·</span>
           <Link href={hrefFor(locale, 'privacy')}>{dict.footer.privacy}</Link>
           {demoMode ? <span className={styles.demo}>{dict.shell.demoBadge}</span> : null}
+
+          {/*
+           * The code in the corner is the one in the drawings, and it is real:
+           * it opens directions to Nürnberger Str. 46. It is generated into the
+           * repository by `npm run qr` rather than fetched from a QR service,
+           * because such a service would see every scan and every page view.
+           */}
+          <Link href={hrefFor(locale, 'contact')} className={styles.footQr} aria-label={dict.contact.qrTitle}>
+            <img src="/img/qr/route.svg" alt="" width={34} height={34} />
+          </Link>
         </footer>
       ) : null}
     </div>

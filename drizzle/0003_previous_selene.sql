@@ -1,0 +1,1 @@
+ALTER TABLE "reservations" ADD COLUMN "seating_preference" varchar(24);

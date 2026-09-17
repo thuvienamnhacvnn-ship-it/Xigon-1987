@@ -233,6 +233,16 @@ export const reservations = pgTable(
     email: text('email').notNull(),
     phone: text('phone').notNull(),
     occasion: text('occasion'),
+    /*
+     * Where the guest would like to sit, if they said.
+     *
+     * A preference, not an allocation. The floor plan in this database is a
+     * placeholder, so the booking engine cannot honestly promise a seat at the
+     * bar; it records the wish and the staff honour it or explain why not. The
+     * form says as much, because a request a guest believes is a guarantee is
+     * worse than not asking.
+     */
+    seatingPreference: varchar('seating_preference', { length: 24 }),
     note: text('note'),
     /** Written by staff, never shown to the guest. */
     staffNote: text('staff_note'),

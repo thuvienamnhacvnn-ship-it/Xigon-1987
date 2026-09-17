@@ -5,17 +5,20 @@
  * Only the middle row can give, so the filters and the numbers are always where
  * the guest left them — no hunting for the pager after looking at a photograph.
  */
+/* 75.8% of the window, measured — see docs/MOCKUP-GEOMETRY.md. */
 .board {
+  --screen-w: min(76vw, 1460px);
   position: relative;
   display: grid;
   /* minmax(0, …) again: without it the row of seven filter pills sets the
      column's minimum width and the whole screen widens past the phone. */
   grid-template-columns: minmax(0, 1fr);
   grid-template-rows: auto auto minmax(0, 1fr) auto;
-  gap: clamp(0.6rem, 0.3rem + 1vw, 1.2rem);
+  gap: clamp(0.55rem, 0.3rem + 0.9vw, 1.05rem);
   height: 100%;
-  /* The glass is the shell's; this only sets the rhythm inside it. */
-  padding: clamp(1rem, 0.5rem + 1.6vw, 2.1rem) clamp(1rem, 0.5rem + 1.8vw, 2.4rem);
+  height: 100%;
+  padding: clamp(1rem, 0.6rem + 1.2vw, 1.7rem) clamp(1rem, 0.5rem + 1.3vw, 1.9rem)
+    clamp(0.9rem, 0.5rem + 1.1vw, 1.5rem);
 }
 
 .head {
@@ -25,7 +28,7 @@
 .title {
   margin: 0;
   font-family: var(--font-display);
-  font-size: clamp(1.9rem, 1.1rem + 2.4vw, 3.3rem);
+  font-size: clamp(1.6rem, 1rem + 1.9vw, 2.8rem);
   font-weight: 400;
   line-height: 1.05;
   letter-spacing: 0;
@@ -128,6 +131,7 @@
 
 .grid {
   display: grid;
+  align-content: start;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: clamp(0.7rem, 0.3rem + 1.2vw, 1.4rem);
   min-height: 0;
@@ -138,18 +142,23 @@
 
  /* The plates sit on the panel itself — no second frame around each one, as
     drawn. Only the photograph has an edge. */
+ /*
+    A fixed ratio, not a share of the leftover height. Given a row of `1fr` the
+    photograph grows with the window until a plate of sushi is the size of a
+    table, which is exactly what the drawings do not do.
+  */
 .card {
-  display: grid;
-  grid-template-rows: minmax(0, 1fr) auto;
+  display: flex;
+  flex-direction: column;
   min-height: 0;
 }
 
 .photo {
   position: relative;
   display: block;
-  min-height: 0;
+  aspect-ratio: 16 / 10;
   overflow: hidden;
-  border-radius: 12px;
+  border-radius: var(--glass-r);
   background: #120c08;
 }
 
@@ -221,9 +230,9 @@
   gap: 0.8rem;
   margin: 0;
   font-family: var(--font-display);
-  font-size: var(--step-2);
+  font-size: var(--step-1);
   font-weight: 400;
-  line-height: 1.15;
+  line-height: 1.2;
 }
 
 .name a {
@@ -363,18 +372,23 @@
 
 /* ---------- page numbers ---------- */
 
+ /*
+    Three tracks rather than an absolutely-positioned basket. Floated into the
+    corner it landed on top of the third plate's own button at narrower widths;
+    given a track of its own it cannot.
+  */
 .foot {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: center;
   gap: 1rem;
 }
 
 .pager {
+  grid-column: 2;
   display: flex;
   align-items: center;
   gap: 0.9rem;
-  margin: 0 auto;
 }
 
 .pageCount {
@@ -387,9 +401,8 @@
 /* The basket sits in the corner of the panel, as drawn, so the guest can see
    what they have gathered without leaving the card. */
 .basket {
-  position: absolute;
-  right: clamp(1rem, 0.5rem + 1.8vw, 2.4rem);
-  bottom: clamp(1rem, 0.5rem + 1.6vw, 2.1rem);
+  grid-column: 3;
+  justify-self: end;
   display: inline-flex;
   align-items: center;
   gap: 0.55rem;

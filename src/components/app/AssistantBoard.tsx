@@ -2,28 +2,32 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import styles from './AssistantBoard.module.css';
-import { ChefAvatar } from '@/components/ChefAvatar';
 import type { Suggestion } from '@/lib/suggestion';
 import { formatMoney } from '@/lib/money';
 import { hrefFor, type Locale } from '@/lib/i18n';
-import { PRICE_NOTE } from '@/lib/price-note';
 import type { Dictionary } from '@/lib/dictionary';
+import { addToCartAction } from '@/server/actions';
 
-type Message =
-  | { role: 'user'; text: string }
-  | { role: 'assistant'; text: string; suggestions?: Suggestion[] };
+type Message = {
+  role: 'user' | 'assistant';
+  text: string;
+  /* Stamped when the message is made, never during render: the guest's clock is
+     the only one on this screen and the server has no business guessing it. */
+  at: Date;
+  suggestions?: Suggestion[];
+};
 
 /**
  * KI-Berater.
  *
- * The same guide as the floating panel, given the whole screen: the talking on
- * the left, the plates it named on the right. Splitting them is the point — in
- * the panel a suggestion scrolls out of sight the moment the next question is
- * asked, and a guest comparing three dishes had to scroll back for the prices.
+ * Two cards rather than one panel: the talking on the left, the one plate it
+ * last named on the right. Splitting them is the point — in a single column a
+ * suggestion scrolls out of sight the moment the next question is asked, and a
+ * guest who wanted the price had to scroll back for it.
  *
  * Every card here was resolved by the server against the published catalogue,
- * so the name, the variant and the price are the card's own. Nothing is added
- * to a basket unless the guest presses the button.
+ * so the name, the variant and the price are the card's own. Nothing reaches a
+ * basket unless the guest presses the button.
  */
 export function AssistantBoard({ locale, dict }: { locale: Locale; dict: Dictionary }) {
   const [input, setInput] = useState('');
@@ -36,14 +40,19 @@ export function AssistantBoard({ locale, dict }: { locale: Locale; dict: Diction
 
   const logRef = useRef<HTMLDivElement>(null);
 
-  // The right column follows the latest proposal; an older one still readable
-  // in the log would be answering a question the guest has moved on from.
-  const shown = useMemo(() => {
+  const clock = useMemo(
+    () => new Intl.DateTimeFormat(locale, { hour: '2-digit', minute: '2-digit' }),
+    [locale],
+  );
+
+  // The right card follows the latest proposal; an older one still readable in
+  // the log would be answering a question the guest has moved on from.
+  const plate = useMemo(() => {
     for (let index = messages.length - 1; index >= 0; index -= 1) {
       const message = messages[index];
-      if (message.role === 'assistant' && message.suggestions?.length) return message.suggestions;
+      if (message.role === 'assistant' && message.suggestions?.length) return message.suggestions[0];
     }
-    return [];
+    return null;
   }, [messages]);
 
   useEffect(() => {
@@ -54,7 +63,7 @@ export function AssistantBoard({ locale, dict }: { locale: Locale; dict: Diction
     const question = text.trim();
     if (!question || busy) return;
 
-    setMessages((prev) => [...prev, { role: 'user', text: question }]);
+    setMessages((prev) => [...prev, { role: 'user', text: question, at: new Date() }]);
     setInput('');
     setBusy(true);
     setError(null);
@@ -74,7 +83,10 @@ export function AssistantBoard({ locale, dict }: { locale: Locale; dict: Diction
 
       const body = (await response.json()) as { answer: string; suggestions?: Suggestion[]; threadId?: string };
       if (body.threadId) setThreadId(body.threadId);
-      setMessages((prev) => [...prev, { role: 'assistant', text: body.answer, suggestions: body.suggestions }]);
+      setMessages((prev) => [
+        ...prev,
+        { role: 'assistant', text: body.answer, suggestions: body.suggestions, at: new Date() },
+      ]);
     } catch {
       // A provider outage must never take the menu with it.
       setError(dict.assistant.unavailable);
@@ -83,45 +95,65 @@ export function AssistantBoard({ locale, dict }: { locale: Locale; dict: Diction
     }
   }
 
+  /*
+   * There is no cart endpoint, and there should not be one.
+   *
+   * Everything that changes a basket goes through the server action the rest of
+   * the site uses, so a price, an availability check and a sold-out flag are
+   * decided in exactly one place. A second path through a REST route would be a
+   * second set of rules to keep in step, and the first time they drifted a guest
+   * would be charged yesterday's price.
+   */
   async function add(suggestion: Suggestion) {
-    await fetch('/api/cart/items', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ dishId: suggestion.dishId, variantId: suggestion.variantId, quantity: 1, locale }),
-    }).catch(() => undefined);
+    const form = new FormData();
+    form.set('locale', locale);
+    form.set('dishId', suggestion.dishId);
+    form.set('variantId', suggestion.variantId);
+    form.set('quantity', '1');
+
+    setBusy(true);
+    const result = await addToCartAction({ status: 'idle' }, form);
+    setBusy(false);
+
+    if (result.status !== 'added') {
+      setError(dict.dish.notOnline);
+      return;
+    }
     window.location.assign(hrefFor(locale, 'cart'));
   }
 
   return (
     <div className={styles.board}>
       {/* ---------- the conversation ---------- */}
-      <section className={styles.talk} aria-label={dict.assistant.role}>
+      <section className={`glass ${styles.talk}`} aria-label={dict.assistant.role}>
         <header className={styles.head}>
-          <ChefAvatar size={40} className={styles.headAvatar} />
+          <span className={styles.headMark}>
+            <BrainMark size={28} />
+          </span>
           <span className={styles.headText}>
             <span className={styles.headName}>{dict.assistant.name}</span>
-            <span className={styles.headRole}>{dict.assistant.role}</span>
+            <span className={styles.headRole}>
+              {dict.assistant.role} · {dict.shell.demoBadge}
+            </span>
           </span>
         </header>
 
+        {/* The one box on this screen allowed to scroll. */}
         <div className={styles.log} ref={logRef} role="log" aria-live="polite">
-          {messages.length === 0 ? (
-            <>
-              <p className={styles.intro}>{dict.assistant.intro}</p>
-              <div className={styles.prompts}>
-                {dict.assistant.prompts.map((prompt) => (
-                  <button key={prompt} type="button" className={styles.prompt} onClick={() => void send(prompt)}>
-                    {prompt}
-                  </button>
-                ))}
-              </div>
-            </>
-          ) : null}
+          {messages.length === 0 ? <p className={styles.intro}>{dict.assistant.intro}</p> : null}
 
           {messages.map((message, index) => (
-            <p key={index} className={message.role === 'user' ? styles.userMsg : styles.botMsg}>
-              {message.text}
-            </p>
+            <div key={index} className={message.role === 'user' ? styles.rowUser : styles.rowBot}>
+              <span className={styles.rowMark}>
+                {message.role === 'user' ? <GuestMark /> : <BrainMark size={19} />}
+              </span>
+              <div className={styles.rowBody}>
+                <p className={message.role === 'user' ? styles.userMsg : styles.botMsg}>{message.text}</p>
+                <time className={styles.stamp} dateTime={message.at.toISOString()}>
+                  {clock.format(message.at)}
+                </time>
+              </div>
+            </div>
           ))}
 
           {busy ? <p className={styles.intro}>{dict.assistant.thinking}</p> : null}
@@ -130,6 +162,33 @@ export function AssistantBoard({ locale, dict }: { locale: Locale; dict: Diction
               {error}
             </p>
           ) : null}
+
+          {/* Three ways in, for a guest who does not know what to ask a menu. */}
+          <div className={styles.prompts}>
+            {dict.assistant.prompts.map((prompt) => (
+              <button
+                key={prompt}
+                type="button"
+                className={`ghost ${styles.prompt}`}
+                disabled={busy}
+                onClick={() => void send(prompt)}
+              >
+                {prompt}
+              </button>
+            ))}
+          </div>
+
+          {/*
+           * The allergen caveat rides at the foot of the log rather than under
+           * the field: the log is scrolled to its end after every answer, so
+           * this is the line the guest is looking at when they read a dish.
+           */}
+          <p className={styles.caveat}>
+            <span className={styles.infoMark} aria-hidden="true">
+              i
+            </span>
+            {dict.assistant.disclaimer}
+          </p>
         </div>
 
         <form
@@ -144,54 +203,41 @@ export function AssistantBoard({ locale, dict }: { locale: Locale; dict: Diction
           </label>
           <input
             id="assistant-board-input"
+            className={styles.field}
             value={input}
             maxLength={400}
             autoComplete="off"
             placeholder={dict.assistant.placeholder}
             onChange={(event) => setInput(event.target.value)}
           />
-          <button type="submit" className={styles.send} disabled={busy || !input.trim()}>
-            {dict.assistant.send}
+          <button
+            type="submit"
+            className={styles.send}
+            disabled={busy || !input.trim()}
+            aria-label={dict.assistant.send}
+            title={dict.assistant.send}
+          >
+            <SendMark />
           </button>
         </form>
-
-        <p className={styles.foot}>{dict.assistant.disclaimer}</p>
       </section>
 
-      {/* ---------- the plates it named ---------- */}
-      <section className={styles.proposal} aria-label={dict.assistant.proposal}>
-        <h2 className={styles.proposalTitle}>{dict.assistant.proposal}</h2>
-
-        {shown.length ? (
-          <ul className={styles.dishes}>
-            {shown.map((suggestion) => (
-              <DishCard
-                key={`${suggestion.dishId}-${suggestion.variantId}`}
-                locale={locale}
-                dict={dict}
-                suggestion={suggestion}
-                onAdd={add}
-              />
-            ))}
-          </ul>
-        ) : (
+      {/* ---------- the plate it named ---------- */}
+      <section className={`glass ${styles.plate}`} aria-label={dict.assistant.proposal}>
+        {plate ? <PlateCard locale={locale} dict={dict} suggestion={plate} onAdd={add} /> : (
           /* An empty frame with nothing in it reads as broken; this says why it
              is empty and what to do about it. */
           <div className={styles.waiting}>
-            <ChefAvatar size={56} className={styles.waitingAvatar} />
+            <BrainMark size={40} className={styles.waitingMark} />
             <p className={styles.waitingText}>{dict.assistant.teaser}</p>
           </div>
         )}
-
-        <p className={styles.note}>
-          {dict.assistant.proposalHint} {PRICE_NOTE[locale]}
-        </p>
       </section>
     </div>
   );
 }
 
-function DishCard({
+function PlateCard({
   locale,
   dict,
   suggestion,
@@ -205,18 +251,19 @@ function DishCard({
   const href = hrefFor(locale, 'dish', { slug: suggestion.slug });
 
   return (
-    <li className={styles.card} data-sold-out={suggestion.soldOut ? 'true' : undefined}>
-      <a href={href} className={styles.photo}>
+    <>
+      <div className={styles.photoWrap} data-sold-out={suggestion.soldOut ? 'true' : undefined}>
         {suggestion.photoId ? (
           <img
+            className={styles.photo}
             src={`/img/dish/${suggestion.photoId}-720.webp`}
             srcSet={`/img/dish/${suggestion.photoId}-480.webp 480w, /img/dish/${suggestion.photoId}-720.webp 720w, /img/dish/${suggestion.photoId}-1080.webp 1080w`}
-            sizes="(max-width: 900px) 30vw, 16vw"
+            sizes="(max-width: 900px) 92vw, 44vw"
             alt={suggestion.name}
             loading="lazy"
             decoding="async"
             width={720}
-            height={540}
+            height={495}
           />
         ) : (
           /* The same honest empty frame the card uses — borrowing another
@@ -226,29 +273,103 @@ function DishCard({
           </span>
         )}
 
+        {/* Said on the picture, where the price is read, not in a footnote. */}
+        <span className={styles.chip}>{dict.menu.demoLabel}</span>
         {suggestion.soldOut ? <span className={styles.soldOut}>{dict.menu.soldOut}</span> : null}
-      </a>
+      </div>
 
-      <div className={styles.body}>
-        <h3 className={styles.name}>
+      <div className={styles.plateBody}>
+        <h2 className={styles.dishName}>
           <a href={href}>
             {suggestion.code ? <span className={styles.code}>{suggestion.code}</span> : null}
             {suggestion.name}
           </a>
-        </h3>
+          <span className={styles.price}>{formatMoney(suggestion.priceCents, locale)}</span>
+        </h2>
+
         <p className={styles.variant}>{suggestion.variantLabel}</p>
 
-        <div className={styles.cardFoot}>
-          <p className={styles.price}>{formatMoney(suggestion.priceCents, locale)}</p>
-          {suggestion.soldOut ? null : suggestion.orderable ? (
-            <button type="button" className={styles.addBtn} onClick={() => onAdd(suggestion)}>
-              {dict.menu.add}
+        <div className={styles.plateFoot}>
+          {/*
+           * No allergen data has ever been supplied for this card, and the dish
+           * page is where that is said plainly, so the way to it belongs beside
+           * every price the guide quotes.
+           */}
+          <a href={href} className={styles.detailLink}>
+            {dict.menu.allergensAndDetails}
+            <span aria-hidden="true"> ↗</span>
+          </a>
+
+          {suggestion.soldOut ? (
+            <span className={styles.variant}>{dict.menu.soldOut}</span>
+          ) : suggestion.orderable ? (
+            <button type="button" className={`cta ${styles.add}`} onClick={() => onAdd(suggestion)}>
+              <span className={styles.addMark} aria-hidden="true">
+                +
+              </span>
+              {dict.dish.addToCart}
             </button>
           ) : (
             <span className={styles.variant}>{dict.menu.dineInOnly}</span>
           )}
         </div>
       </div>
-    </li>
+    </>
+  );
+}
+
+/**
+ * The mark the guide wears, matching the one in the dock.
+ *
+ * A brain rather than a portrait: nobody at the restaurant has agreed to be the
+ * face of a bot, and the same outline in the dock and on the card is what tells
+ * a guest the two are the same thing.
+ */
+function BrainMark({ size = 24, className }: { size?: number; className?: string }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      className={className}
+      aria-hidden="true"
+    >
+      <path
+        d="M9.5 4.2A2.7 2.7 0 0 0 6.8 7a2.6 2.6 0 0 0-1.6 4.5A2.7 2.7 0 0 0 6.8 16a2.7 2.7 0 0 0 2.7 2.8c.8 0 1.5-.4 2-.9V5.1c-.5-.5-1.2-.9-2-.9ZM14.5 4.2A2.7 2.7 0 0 1 17.2 7a2.6 2.6 0 0 1 1.6 4.5A2.7 2.7 0 0 1 17.2 16a2.7 2.7 0 0 1-2.7 2.8c-.8 0-1.5-.4-2-.9V5.1c.5-.5 1.2-.9 2-.9Z"
+        stroke="currentColor"
+        strokeWidth="1.4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function GuestMark() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <circle cx="12" cy="8.4" r="3.6" stroke="currentColor" strokeWidth="1.4" />
+      <path
+        d="M4.8 19.6c1-3.6 3.8-5.6 7.2-5.6s6.2 2 7.2 5.6"
+        stroke="currentColor"
+        strokeWidth="1.4"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function SendMark() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M20.4 3.6 3.2 10.3c-.8.3-.8 1.4 0 1.7l6.6 2.3 2.3 6.6c.3.8 1.4.8 1.7 0l6.7-17.2c.3-.7-.4-1.4-1.1-1.1Z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinejoin="round"
+      />
+      <path d="m9.9 14.2 4.2-4.2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
   );
 }

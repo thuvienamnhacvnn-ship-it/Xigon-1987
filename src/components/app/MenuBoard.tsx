@@ -63,7 +63,7 @@ export function MenuBoard({
   }
 
   return (
-    <div className={styles.board}>
+    <div className={`${styles.board} glass`}>
       <header className={styles.head}>
         <h1 className={styles.title}>{dict.menu.title}</h1>
         {/* The KIT labels the card itself, and it is right to: the prices below

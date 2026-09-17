@@ -1,0 +1,421 @@
+/*
+ * Reservieren.
+ *
+ * Split down the middle, measured off the drawing: the photograph runs from
+ * 3.1% to 49% of the window and the form from 49.1% to 96.8%, so this screen is
+ * the widest of the seven. See docs/MOCKUP-GEOMETRY.md.
+ */
+.board {
+  --screen-w: min(94vw, 1800px);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(0.8rem, 0.4rem + 1.2vw, 1.6rem);
+  height: 100%;
+  min-height: 0;
+}
+
+/* ---------- the room, left ---------- */
+
+.plate {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  min-width: 0;
+  overflow: hidden;
+  padding: 0;
+}
+
+.plateImg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.plateCopy {
+  position: relative;
+  padding: clamp(1.4rem, 0.8rem + 2vw, 3rem);
+  /* Type on a photograph needs its own ground; the card's glass is behind the
+     picture, not in front of it. */
+  background: linear-gradient(0deg, rgba(8, 6, 4, 0.9) 12%, rgba(8, 6, 4, 0.35) 62%, transparent);
+  width: 100%;
+}
+
+.plateTitle {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.7rem, 1rem + 2.1vw, 3rem);
+  font-weight: 400;
+  line-height: 1.04;
+  white-space: pre-line;
+  color: var(--ivory);
+}
+
+.plateLines {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin: 1rem 0 0;
+  font-size: var(--step--1);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ivory-soft);
+}
+
+.plateRule {
+  display: block;
+  width: 46px;
+  height: 1px;
+  margin-top: 1.1rem;
+  background: var(--gold);
+}
+
+/* ---------- the form, right ---------- */
+
+.form {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden auto;
+  overscroll-behavior: contain;
+  padding: clamp(1.1rem, 0.6rem + 1.6vw, 2.3rem);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 1rem + 1.9vw, 2.8rem);
+  font-weight: 400;
+  line-height: 1.05;
+  color: var(--ivory);
+}
+
+/* ---------- the three steps ---------- */
+
+.steps {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: clamp(0.8rem, 0.5rem + 0.9vw, 1.4rem) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.stepItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* The rule between the marks, drawn by the item rather than by an element of
+   its own so it cannot end up on the wrong side when the row wraps. */
+.stepItem + .stepItem::before {
+  content: '';
+  width: clamp(1.2rem, 3vw, 3.4rem);
+  height: 1px;
+  background: var(--gold-hair);
+}
+
+.stepMark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--gold-hair);
+  border-radius: 50%;
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  color: var(--ivory-mute);
+}
+
+.stepLabel {
+  font-size: var(--step--1);
+  color: var(--ivory-mute);
+  white-space: nowrap;
+}
+
+.stepItem[data-state='now'] .stepMark {
+  border-color: var(--gold);
+  color: var(--ink-black);
+  background: linear-gradient(180deg, var(--gold-lit), var(--gold-deep));
+}
+
+.stepItem[data-state='now'] .stepLabel {
+  color: var(--gold-lit);
+}
+
+.stepItem[data-state='done'] .stepMark {
+  border-color: var(--gold);
+  color: var(--gold-lit);
+}
+
+/* ---------- the fields ---------- */
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.7rem, 0.4rem + 0.8vw, 1.15rem);
+  margin-top: clamp(0.9rem, 0.5rem + 1vw, 1.5rem);
+}
+
+.pair {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 0.75rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.field > span:first-child {
+  font-size: var(--step--1);
+  color: var(--ivory-soft);
+}
+
+.control {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-width: 0;
+  padding: 0 0.95rem;
+  border: 1px solid var(--gold-hair);
+  border-radius: 12px;
+  color: var(--gold);
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.control:focus-within {
+  border-color: var(--gold);
+}
+
+.control select,
+.control input {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 0.8rem 0;
+  border: 0;
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  color: var(--ivory);
+  background: transparent;
+  /* The native arrow is a grey plastic triangle in the middle of a gold
+     hairline field; the chevron is drawn on the control instead. */
+  appearance: none;
+}
+
+.control select:focus-visible,
+.control input:focus-visible {
+  outline: none;
+}
+
+.control select option {
+  color: var(--ivory);
+  background: #15100b;
+}
+
+.control::after {
+  content: '';
+  width: 8px;
+  height: 8px;
+  margin-left: auto;
+  border-right: 1px solid currentColor;
+  border-bottom: 1px solid currentColor;
+  transform: translateY(-2px) rotate(45deg);
+  opacity: 0.7;
+}
+
+/* Only the pickers get a chevron; a text field with one would be a lie. */
+.control:has(input)::after {
+  display: none;
+}
+
+/* ---------- times and seating ---------- */
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.groupLabel {
+  font-size: var(--step--1);
+  color: var(--ivory-soft);
+}
+
+.slots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.slot {
+  min-height: 42px;
+  padding: 0.5rem 1.15rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.more {
+  min-height: 42px;
+  padding: 0.5rem 0.95rem;
+  border: 1px dashed var(--gold-hair);
+  border-radius: var(--r-pill);
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  color: var(--gold);
+  background: transparent;
+  cursor: pointer;
+}
+
+.more:hover {
+  border-style: solid;
+  border-color: var(--gold);
+  color: var(--gold-lit);
+}
+
+.seating {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 0.6rem;
+}
+
+.seat {
+  justify-content: flex-start;
+  min-height: 52px;
+  padding: 0.6rem 1.1rem;
+  border-radius: 12px;
+}
+
+/* ---------- the lines that qualify what was just chosen ---------- */
+
+.info,
+.note {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin: 0;
+  font-size: var(--step--2);
+  line-height: 1.5;
+  color: var(--ivory-mute);
+}
+
+.info svg {
+  flex: 0 0 auto;
+  margin-top: 2px;
+  color: var(--gold-deep);
+}
+
+.error {
+  margin: 0;
+  font-size: var(--step--1);
+  color: var(--error);
+}
+
+.held {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0;
+  font-size: var(--step-0);
+  color: var(--gold-lit);
+}
+
+.clock {
+  padding: 0.1rem 0.55rem;
+  border: 1px solid var(--gold-hair);
+  border-radius: var(--r-pill);
+  font-size: var(--step--2);
+  font-variant-numeric: tabular-nums;
+  color: var(--ivory-soft);
+}
+
+.submit {
+  width: 100%;
+}
+
+.actions {
+  display: flex;
+  gap: 0.6rem;
+  margin-top: 0.3rem;
+}
+
+.actions > :last-child {
+  flex: 1 1 auto;
+}
+
+/* ---------- the way out for a party too large to book online ---------- */
+
+.aside {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0.2rem 0 0;
+  font-size: var(--step--2);
+  color: var(--ivory-mute);
+}
+
+.asideRule {
+  width: 34px;
+  height: 1px;
+  background: var(--gold-hair);
+}
+
+.asideLink {
+  color: var(--gold);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.asideLink:hover {
+  color: var(--gold-lit);
+}
+
+/* ---------- narrower ---------- */
+
+@media (max-width: 1000px) {
+  .board {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 0.55fr) minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 720px) {
+  /* The photograph is the first thing to go: it says nothing the form does not,
+     and on a phone it costs the form half its height. */
+  .plate {
+    display: none;
+  }
+
+  .board {
+    grid-template-rows: minmax(0, 1fr);
+  }
+
+  .pair,
+  .more {
+  min-height: 42px;
+  padding: 0.5rem 0.95rem;
+  border: 1px dashed var(--gold-hair);
+  border-radius: var(--r-pill);
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  color: var(--gold);
+  background: transparent;
+  cursor: pointer;
+}
+
+.more:hover {
+  border-style: solid;
+  border-color: var(--gold);
+  color: var(--gold-lit);
+}
+
+.seating {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

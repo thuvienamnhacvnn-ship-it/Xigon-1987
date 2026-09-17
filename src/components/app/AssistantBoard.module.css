@@ -1,73 +1,78 @@
 /*
  * KI-Berater.
  *
- * Two columns in the height the shell gives it: the conversation and the plates
- * it named. The log is the one thing on this screen allowed to scroll, and it
- * scrolls inside its own box — the page itself never does, because the dock
- * below it has to stay where the guest last saw it.
+ * Two sheets of glass on the restaurant, not one panel split down the middle:
+ * the conversation and the plate it named are separate things, and the drawing
+ * keeps a gap of photograph between them. The log is the only box on this
+ * screen allowed to scroll — the page never does, because the dock below it has
+ * to stay where the guest last saw it.
  */
 .board {
   display: grid;
-  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
-  gap: clamp(0.7rem, 0.3rem + 1.2vw, 1.4rem);
+  grid-template-columns: minmax(0, 52fr) minmax(0, 48fr);
+  /* A fraction row, not auto: it is what gives the two cards a definite height
+     for the log to be a bounded part of. */
+  grid-template-rows: minmax(0, 1fr);
+  gap: clamp(0.7rem, 0.3rem + 1.1vw, 1.4rem);
   height: 100%;
-  padding: clamp(0.9rem, 0.4rem + 1.6vw, 1.8rem) var(--shell-gutter);
+  padding-inline: var(--shell-gutter);
+  padding-block: clamp(0.4rem, 0.2rem + 0.9vw, 1.3rem);
 }
 
 /* ---------- the conversation ---------- */
 
 .talk {
   display: grid;
-  /* Only the log gives; the chef, the question field and the caveat stay put,
-     so the guest never has to scroll to find the place they type. */
-  grid-template-rows: auto minmax(0, 1fr) auto auto;
+  /* Only the log gives; the guide's name and the question field stay put, so
+     the guest never has to scroll to find the place they type. */
+  grid-template-rows: auto minmax(0, 1fr) auto;
   min-height: 0;
   overflow: hidden;
-  border: 1px solid var(--gold-hair);
-  border-radius: 8px;
-  background: rgba(18, 13, 9, 0.58);
-  backdrop-filter: blur(14px) saturate(1.1);
-  box-shadow: var(--shadow-panel);
 }
 
 .head {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.75rem 1rem;
-  border-bottom: 1px solid var(--gold-hair);
+  gap: 0.85rem;
+  padding: clamp(0.9rem, 0.6rem + 0.6vw, 1.35rem) clamp(1rem, 0.6rem + 0.9vw, 1.6rem) 0.35rem;
 }
 
-.headAvatar {
-  flex-shrink: 0;
+.headMark {
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 52px;
+  height: 52px;
+  border: 1px solid var(--gold-hair);
+  border-radius: 50%;
   color: var(--gold-lit);
 }
 
 .headText {
   display: flex;
   flex-direction: column;
-  line-height: 1.25;
+  min-width: 0;
+  gap: 0.1rem;
 }
 
 .headName {
   font-family: var(--font-display);
-  font-size: var(--step-1);
+  font-size: var(--step-2);
+  line-height: 1.1;
   color: var(--ivory);
 }
 
 .headRole {
-  font-size: var(--step--2);
-  letter-spacing: var(--track-wide);
-  text-transform: uppercase;
-  color: var(--gold-deep);
+  font-size: var(--step--1);
+  color: var(--ivory-mute);
 }
 
 .log {
   display: flex;
   flex-direction: column;
-  gap: 0.7rem;
+  gap: 0.8rem;
   min-height: 0;
-  padding: 0.9rem 1rem;
+  padding: 0.9rem clamp(1rem, 0.6rem + 0.9vw, 1.6rem);
   overflow-y: auto;
   overscroll-behavior: contain;
 }
@@ -79,54 +84,72 @@
   color: var(--ivory-mute);
 }
 
-.prompts {
+/* ---------- one exchange ---------- */
+
+/*
+ * Guest on the right, guide on the left, each with its mark beside the bubble.
+ * `row-reverse` rather than `justify-content: flex-end` so the mark stays on
+ * the outside edge when a long answer wraps.
+ */
+.rowBot,
+.rowUser {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
+  align-items: flex-start;
+  gap: 0.6rem;
 }
 
-.prompt {
-  padding: 0.4rem 0.85rem;
+.rowUser {
+  flex-direction: row-reverse;
+}
+
+.rowMark {
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 34px;
+  height: 34px;
   border: 1px solid var(--gold-hair);
-  border-radius: var(--r-pill);
-  font-family: var(--font-body);
-  font-size: var(--step--2);
-  text-align: left;
-  color: var(--ivory-soft);
-  background: rgba(24, 17, 12, 0.5);
-  cursor: pointer;
-  transition: color var(--dur-1) var(--ease), border-color var(--dur-1) var(--ease);
+  border-radius: 50%;
+  color: var(--gold-lit);
 }
 
-.prompt:hover {
-  border-color: var(--gold);
+.rowBody {
+  min-width: 0;
+  max-width: 82%;
+}
+
+.rowUser .rowBody {
+  text-align: right;
+}
+
+.userMsg,
+.botMsg {
+  margin: 0;
+  padding: 0.6rem 0.95rem;
+  border: 1px solid var(--gold-hair);
+  font-size: var(--step--1);
+  line-height: 1.55;
+  text-align: left;
   color: var(--ivory);
+  white-space: pre-line;
 }
 
 .userMsg {
-  align-self: flex-end;
-  max-width: 85%;
-  margin: 0;
-  padding: 0.55rem 0.85rem;
-  border-radius: 10px 10px 2px 10px;
-  font-size: var(--step--1);
-  line-height: 1.55;
-  color: var(--ink-black);
-  background: var(--gold);
+  border-radius: 14px 14px 4px 14px;
+  background: rgba(0, 0, 0, 0.28);
 }
 
 .botMsg {
-  align-self: flex-start;
-  max-width: 94%;
-  margin: 0;
-  padding: 0.55rem 0.85rem;
-  border: 1px solid var(--gold-hair);
-  border-radius: 10px 10px 10px 2px;
-  font-size: var(--step--1);
-  line-height: 1.6;
-  color: var(--ivory);
-  background: rgba(8, 30, 20, 0.6);
-  white-space: pre-line;
+  border-radius: 14px 14px 14px 4px;
+  background: rgba(26, 19, 13, 0.62);
+}
+
+.stamp {
+  display: block;
+  margin-top: 0.3rem;
+  font-size: var(--step--2);
+  font-variant-numeric: tabular-nums;
+  color: var(--ivory-mute);
 }
 
 .error {
@@ -136,47 +159,100 @@
   color: var(--error);
 }
 
-.form {
+/* ---------- the ways in, and the caveat ---------- */
+
+.prompts {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.45rem;
-  padding: 0.7rem 1rem;
-  border-top: 1px solid var(--gold-hair);
 }
 
-.form input {
-  flex: 1 1 auto;
-  min-width: 0;
-  padding: 0.55rem 0.8rem;
+.prompt {
+  min-height: 36px;
+  padding: 0.35em 1.1em;
+  font-size: var(--step--2);
+}
+
+.prompt:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.caveat {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+  margin: 0;
+  font-size: var(--step--2);
+  line-height: 1.5;
+  color: var(--ivory-mute);
+}
+
+.infoMark {
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  border: 1px solid var(--gold-hair);
+  border-radius: 50%;
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  line-height: 1;
+  color: var(--gold-deep);
+}
+
+/* ---------- the question ---------- */
+
+/* One capsule holding both the field and the button, as drawn — not a box with
+   a button parked next to it. */
+.form {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 clamp(1rem, 0.6rem + 0.9vw, 1.6rem) clamp(1rem, 0.6rem + 0.9vw, 1.5rem);
+  padding: 0.3rem 0.3rem 0.3rem 1.2rem;
   border: 1px solid var(--gold-hair);
   border-radius: var(--r-pill);
+  background: rgba(0, 0, 0, 0.3);
+  transition: border-color var(--dur-1) var(--ease);
+}
+
+.form:focus-within {
+  border-color: var(--gold);
+}
+
+.field {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 0.5rem 0;
+  border: 0;
   font-family: var(--font-body);
   font-size: var(--step--1);
   color: var(--ivory);
-  background: rgba(0, 0, 0, 0.32);
+  background: transparent;
 }
 
-.form input:focus-visible {
-  border-color: var(--gold);
+.field:focus-visible {
   outline: none;
 }
 
 .send {
-  padding: 0 1.1rem;
-  border: 1px solid var(--gold);
-  border-radius: var(--r-pill);
-  font-family: var(--font-body);
-  font-size: var(--step--2);
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  color: var(--ink-black);
-  background: var(--gold);
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  color: #241a0a;
+  background: linear-gradient(180deg, #f6d79f 0%, var(--gold) 52%, #d79f4e 100%);
   cursor: pointer;
-  white-space: nowrap;
-  transition: background var(--dur-1) var(--ease);
+  transition: filter var(--dur-1) var(--ease);
 }
 
 .send:hover:not(:disabled) {
-  background: var(--gold-lit);
+  filter: brightness(1.08);
 }
 
 .send:disabled {
@@ -184,84 +260,40 @@
   cursor: not-allowed;
 }
 
-.foot {
-  margin: 0;
-  padding: 0 1rem 0.75rem;
-  font-size: var(--step--2);
-  line-height: 1.5;
-  color: var(--ivory-mute);
-}
+/* ---------- the plate it named ---------- */
 
-/* ---------- the plates it named ---------- */
-
-.proposal {
+.plate {
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr) auto;
-  gap: 0.6rem;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  align-content: start;
   min-height: 0;
+  /* The glass rounds its own corners; this keeps the photograph inside them. */
+  overflow: hidden;
 }
 
-.proposalTitle {
-  margin: 0;
-  font-size: var(--step--2);
-  font-weight: 600;
-  letter-spacing: var(--track-wide);
-  text-transform: uppercase;
-  color: var(--gold-deep);
+.photoWrap {
+  position: relative;
+  min-height: 0;
 }
 
 /*
- * Equal rows rather than a scroller: the guide proposes a handful of plates, and
- * dividing the column between them keeps every one of them on screen next to the
- * answer that named it. A second scrollbar beside the log would be one too many.
+ * A ratio, not a fraction of the card. Given `1fr` the photograph swallowed
+ * whatever height the window had spare, which is exactly the complaint.
  */
-.dishes {
-  display: grid;
-  grid-auto-rows: minmax(0, 1fr);
-  gap: 0.6rem;
-  min-height: 0;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.card {
-  display: grid;
-  grid-template-columns: minmax(0, 9rem) minmax(0, 1fr);
-  min-height: 0;
-  overflow: hidden;
-  border: 1px solid var(--gold-hair);
-  border-radius: 8px;
-  background: rgba(18, 13, 9, 0.58);
-  backdrop-filter: blur(14px) saturate(1.1);
-  box-shadow: var(--shadow-panel);
-  transition: border-color var(--dur-1) var(--ease);
-}
-
-.card:hover {
-  border-color: var(--gold);
-}
-
-.photo {
-  position: relative;
+.photo,
+.noPhoto {
   display: block;
-  min-height: 0;
-  overflow: hidden;
-  background: var(--green-dark);
-}
-
-.photo img {
   width: 100%;
-  height: 100%;
+  aspect-ratio: 16 / 11;
   object-fit: cover;
+  border-radius: calc(var(--glass-r) - 1px) calc(var(--glass-r) - 1px) 0 0;
 }
 
 .noPhoto {
   display: grid;
   place-items: center;
-  height: 100%;
-  min-height: 5rem;
-  padding: 0.4rem;
+  padding: 0.5rem;
   font-size: var(--step--2);
   letter-spacing: var(--track-wide);
   text-transform: uppercase;
@@ -272,11 +304,26 @@
     #171009;
 }
 
+.chip {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  max-width: calc(100% - 1.5rem);
+  padding: 0.24rem 0.8rem;
+  border: 1px solid var(--gold-hair);
+  border-radius: var(--r-pill);
+  font-size: var(--step--2);
+  line-height: 1.5;
+  color: var(--ivory);
+  background: rgba(14, 10, 7, 0.72);
+  backdrop-filter: blur(12px);
+}
+
 .soldOut {
   position: absolute;
-  top: 0.5rem;
-  left: 0.5rem;
-  padding: 0.16rem 0.55rem;
+  top: 0.75rem;
+  left: 0.75rem;
+  padding: 0.18rem 0.6rem;
   border-radius: var(--r-pill);
   font-size: var(--step--2);
   font-weight: 700;
@@ -286,33 +333,41 @@
   background: var(--seal);
 }
 
-/* Dimmed, but the page still opens: people want to read about the thing they
-   cannot have tonight. */
-.card[data-sold-out='true'] .photo img {
+/* Dimmed, but the dish page still opens: people want to read about the thing
+   they cannot have tonight. */
+.photoWrap[data-sold-out='true'] .photo {
   filter: grayscale(0.7) brightness(0.72);
 }
 
-.body {
+.plateBody {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.35rem;
   min-width: 0;
-  padding: 0.7rem 0.85rem;
+  padding: clamp(0.9rem, 0.6rem + 0.7vw, 1.35rem) clamp(1rem, 0.6rem + 0.9vw, 1.6rem)
+    clamp(1rem, 0.6rem + 0.9vw, 1.5rem);
 }
 
-.name {
+/* Name and price on one line: the two things a guest reads together. */
+.dishName {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.9rem;
   margin: 0;
   font-family: var(--font-display);
-  font-size: var(--step-1);
+  font-size: var(--step-2);
+  font-weight: 400;
   line-height: 1.15;
 }
 
-.name a {
+.dishName a {
+  min-width: 0;
   color: var(--ivory);
   text-decoration: none;
 }
 
-.name a:hover {
+.dishName a:hover {
   color: var(--gold-lit);
 }
 
@@ -325,102 +380,119 @@
   color: var(--gold);
 }
 
+.price {
+  flex: 0 0 auto;
+  font-family: var(--font-body);
+  font-size: var(--step-1);
+  font-weight: 600;
+  font-variant-numeric: lining-nums tabular-nums;
+  white-space: nowrap;
+  color: var(--gold);
+}
+
 .variant {
   margin: 0;
-  font-size: var(--step--2);
-  line-height: 1.45;
+  font-size: var(--step--1);
+  line-height: 1.5;
   color: var(--ivory-mute);
 }
 
-.cardFoot {
+.plateFoot {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 0.6rem;
-  margin-top: auto;
-  padding-top: 0.4rem;
+  gap: 0.7rem;
+  margin-top: 0.75rem;
 }
 
-.price {
-  margin: 0;
+.detailLink {
   font-family: var(--font-body);
-  font-size: var(--step-1);
-  font-weight: 700;
-  font-variant-numeric: lining-nums tabular-nums;
+  font-size: var(--step--1);
+  color: var(--gold);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.detailLink:hover {
   color: var(--gold-lit);
 }
 
-.addBtn {
-  padding: 0.34rem 0.8rem;
-  border: 1px solid var(--gold-hair);
-  border-radius: var(--r-pill);
-  font-family: var(--font-body);
-  font-size: var(--step--2);
-  font-weight: 600;
-  color: var(--ivory);
-  background: rgba(24, 17, 12, 0.5);
-  cursor: pointer;
-  white-space: nowrap;
-  transition: color var(--dur-1) var(--ease), background var(--dur-1) var(--ease),
-    border-color var(--dur-1) var(--ease);
+.add {
+  min-height: 46px;
+  padding-inline: 1.4em;
+  font-size: var(--step--1);
+  gap: 0.55em;
 }
 
-.addBtn:hover {
-  border-color: var(--gold);
-  color: var(--ink-black);
-  background: var(--gold);
+.addMark {
+  display: inline-grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border: 1px solid rgba(36, 26, 10, 0.35);
+  border-radius: 50%;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1;
 }
 
 /* ---------- nothing proposed yet ---------- */
 
 .waiting {
+  grid-row: 1 / -1;
   display: grid;
   place-content: center;
   justify-items: center;
-  gap: 0.6rem;
-  padding: 1.2rem;
+  gap: 0.7rem;
+  margin: clamp(0.8rem, 0.5rem + 0.8vw, 1.2rem);
+  padding: 1.4rem;
   border: 1px dashed var(--gold-hair);
-  border-radius: 8px;
+  border-radius: calc(var(--glass-r) - 6px);
   text-align: center;
 }
 
-.waitingAvatar {
+.waitingMark {
   color: var(--gold-hair);
 }
 
 .waitingText {
-  max-width: 24ch;
+  max-width: 28ch;
   margin: 0;
   font-size: var(--step--1);
   line-height: 1.6;
   color: var(--ivory-mute);
 }
 
-.note {
-  margin: 0;
-  font-size: var(--step--2);
-  line-height: 1.45;
-  color: var(--ivory-mute);
-}
-
 /* ---------- narrow ---------- */
 
 @media (max-width: 900px) {
+  /*
+   * Stacked, the conversation first: it is what the guest came to use, and the
+   * plate only exists once the guide has answered. Both rows are capped
+   * fractions of the band, so the screen still cannot push the dock away.
+   */
   .board {
-    /*
-     * Stacked, the conversation first: it is what the guest came to use, and the
-     * plates only exist once it has answered. Both rows are capped fractions of
-     * the shell's height, so the screen still cannot push the dock away.
-     */
     grid-template-columns: minmax(0, 1fr);
     grid-template-rows: minmax(0, 1.3fr) minmax(0, 1fr);
   }
 
-  .card {
-    grid-template-columns: minmax(0, 6.5rem) minmax(0, 1fr);
+  /*
+   * The photograph keeps its ratio and is cropped by the cap rather than being
+   * reshaped: at this width the untrimmed 16/11 would take the whole row and
+   * push the price and the button out of the card.
+   */
+  .photo,
+  .noPhoto {
+    max-height: clamp(92px, 13vh, 130px);
   }
 
-  .waitingAvatar {
-    display: none;
+  .headMark {
+    width: 44px;
+    height: 44px;
+  }
+
+  .rowBody {
+    max-width: 88%;
   }
 }

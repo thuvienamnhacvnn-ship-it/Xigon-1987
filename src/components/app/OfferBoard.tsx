@@ -10,12 +10,13 @@ import type { Promotion } from '@/server/content';
 const PER_PAGE = 3;
 
 /**
- * The offers, three to a page.
+ * Angebote.
  *
- * Each card carries its own countdown, because an offer with an end date and no
- * visible clock is just a sentence. The clock is started in an effect rather
- * than rendered on the server: the server's "now" and the guest's "now" are
- * never the same, and a hydration mismatch on a ticking number is guaranteed.
+ * The title sits on the restaurant itself and the offers float under it as
+ * three separate sheets of glass. There is no panel around them on purpose: a
+ * frame around a frame is what made this screen read as a billboard, and the
+ * dead space the drawing leaves above and below the row is what keeps the
+ * photographs looking like photographs.
  */
 export function OfferBoard({
   locale,
@@ -28,88 +29,95 @@ export function OfferBoard({
 }) {
   const [page, setPage] = useState(0);
   const pages = Math.max(1, Math.ceil(offers.length / PER_PAGE));
+  // A shorter list can leave the guest on a page that no longer exists; clamp
+  // rather than showing an empty row they have to click their way out of.
   const current = Math.min(page, pages - 1);
   const shown = offers.slice(current * PER_PAGE, current * PER_PAGE + PER_PAGE);
 
   return (
     <div className={styles.board}>
-      <ul className={styles.grid}>
-        {shown.map((offer) => (
-          <li key={offer.id} className={styles.card}>
-            {offer.imagePath ? (
-              <img
-                className={styles.image}
-                src={offer.imagePath}
-                alt={offer.title}
-                width={offer.imageWidth ?? undefined}
-                height={offer.imageHeight ?? undefined}
-                loading="lazy"
-                decoding="async"
-              />
-            ) : (
-              <span className={styles.noImage} aria-hidden="true" />
-            )}
+      <header className={styles.head}>
+        <h1 className={styles.title}>{dict.promo.title}</h1>
+        <p className={styles.subtitle}>{dict.promo.label}</p>
+      </header>
 
-            <div className={styles.body}>
-              <h3 className={styles.title}>{offer.title}</h3>
-              {offer.body ? <p className={styles.text}>{offer.body}</p> : null}
+      {shown.length ? (
+        <ul className={styles.grid}>
+          {shown.map((offer) => (
+            <li key={offer.id} className={`glass ${styles.card}`}>
+              {offer.imagePath ? (
+                <img
+                  className={styles.image}
+                  src={offer.imagePath}
+                  alt={offer.title}
+                  loading="lazy"
+                  decoding="async"
+                />
+              ) : (
+                /* An honest empty frame. Borrowing another offer's picture is
+                   what a guest would take for the offer itself. */
+                <span className={styles.noImage} aria-hidden="true" />
+              )}
 
-              {offer.endsAt ? <Countdown dict={dict} endsAt={offer.endsAt} /> : null}
+              <div className={styles.body}>
+                <h2 className={styles.name}>{offer.title}</h2>
+                {offer.body ? <p className={styles.text}>{offer.body}</p> : null}
 
-              <div className={styles.actions}>
-                <Link href={hrefFor(locale, 'menu')} className="btn btn--gold">
+                {offer.endsAt ? <Countdown dict={dict} endsAt={offer.endsAt} /> : null}
+
+                <Link href={hrefFor(locale, 'menu')} className={`ghost ${styles.action}`}>
                   {dict.menu.label}
-                </Link>
-                <Link href={hrefFor(locale, 'reserve')} className="btn">
-                  {dict.nav.reserveShort}
+                  <span aria-hidden="true">→</span>
                 </Link>
               </div>
-            </div>
-          </li>
-        ))}
-      </ul>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className={styles.none}>{dict.promo.none}</p>
+      )}
 
-      {pages > 1 ? (
-        <nav className={styles.pager} aria-label={fill(dict.menu.pageOf, { n: current + 1, total: pages })}>
-          <button
-            type="button"
-            className={styles.step}
-            onClick={() => setPage(current - 1)}
-            disabled={current === 0}
-            aria-label={dict.menu.prevPage}
-          >
-            ‹
-          </button>
-          <ol className={styles.numbers}>
-            {Array.from({ length: pages }, (_, index) => (
-              <li key={index}>
-                <button
-                  type="button"
-                  className={styles.number}
-                  aria-current={index === current ? 'page' : undefined}
-                  aria-label={fill(dict.menu.goToPage, { n: index + 1 })}
-                  onClick={() => setPage(index)}
-                >
-                  {index + 1}
-                </button>
-              </li>
-            ))}
-          </ol>
-          <button
-            type="button"
-            className={styles.step}
-            onClick={() => setPage(current + 1)}
-            disabled={current >= pages - 1}
-            aria-label={dict.menu.nextPage}
-          >
-            ›
-          </button>
-        </nav>
-      ) : null}
+      {/*
+       * Two arrows and a count, the same device the card uses. Nobody jumps to
+       * page four of a list of offers; they turn pages until one appeals.
+       */}
+      <nav className={styles.pager} aria-label={fill(dict.menu.pageOf, { n: current + 1, total: pages })}>
+        <button
+          type="button"
+          className={styles.step}
+          onClick={() => setPage(current - 1)}
+          disabled={current === 0}
+          aria-label={dict.menu.prevPage}
+        >
+          ←
+        </button>
+
+        <span className={styles.pageCount} aria-hidden="true">
+          {current + 1} / {pages}
+        </span>
+
+        <button
+          type="button"
+          className={styles.step}
+          onClick={() => setPage(current + 1)}
+          disabled={current >= pages - 1}
+          aria-label={dict.menu.nextPage}
+        >
+          →
+        </button>
+      </nav>
     </div>
   );
 }
 
+/**
+ * One line, because an offer with an end date and no visible clock is just a
+ * sentence — and four stacked figures are a dashboard.
+ *
+ * The clock starts in an effect rather than rendering on the server: the
+ * server's "now" and the guest's "now" are never the same, and a ticking number
+ * painted during render is a guaranteed hydration mismatch.
+ */
 function Countdown({ dict, endsAt }: { dict: Dictionary; endsAt: Date }) {
   const [left, setLeft] = useState<number | null>(null);
 
@@ -132,16 +140,11 @@ function Countdown({ dict, endsAt }: { dict: Dictionary; endsAt: Date }) {
   ];
 
   return (
-    <div className={styles.clock}>
+    <p className={styles.clock}>
       <span className={styles.clockLabel}>{dict.promo.endsIn}</span>
-      <span className={styles.clockParts}>
-        {parts.map((part) => (
-          <span key={part.label} className={styles.clockPart}>
-            <b>{String(part.value).padStart(2, '0')}</b>
-            {part.label}
-          </span>
-        ))}
+      <span className={styles.clockValue}>
+        {parts.map((part) => `${String(part.value).padStart(2, '0')} ${part.label}`).join(' · ')}
       </span>
-    </div>
+    </p>
   );
 }

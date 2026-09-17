@@ -273,6 +273,8 @@ export type ConfirmInput = {
   email: string;
   phone: string;
   occasion?: string | null;
+  /** A wish, recorded for the staff — never an allocation. See the schema. */
+  seatingPreference?: string | null;
   note?: string | null;
   locale: Locale;
   autoConfirm: boolean;
@@ -334,6 +336,7 @@ export async function confirmReservation(input: ConfirmInput): Promise<ConfirmRe
         email: input.email.trim().slice(0, 160),
         phone: input.phone.trim().slice(0, 40),
         occasion: input.occasion?.trim().slice(0, 120) || null,
+        seatingPreference: input.seatingPreference?.trim().slice(0, 24) || null,
         note: input.note?.trim().slice(0, 500) || null,
         locale: input.locale,
       })

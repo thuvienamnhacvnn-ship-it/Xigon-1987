@@ -1,48 +1,88 @@
 /*
- * Angebote. The same three-across rhythm as the card, so moving between the two
- * screens does not feel like moving between two websites.
+ * Angebote.
+ *
+ * Three rows that size to their own content, centred in the band the shell
+ * gives the screen. `align-content: center` rather than a 1fr row for the cards
+ * is the whole scale fix: a fraction row hands the photographs whatever height
+ * is left over, which on a desktop window is half the screen.
  */
 .board {
   display: grid;
+  /* minmax(0, …) so a long offer title cannot widen the screen past the phone. */
   grid-template-columns: minmax(0, 1fr);
-  grid-template-rows: minmax(0, 1fr) auto;
-  gap: clamp(0.7rem, 0.3rem + 1.2vw, 1.4rem);
+  grid-template-rows: auto auto auto;
+  align-content: center;
+  justify-items: center;
+  gap: clamp(0.9rem, 0.5rem + 1.2vw, 1.7rem);
   height: 100%;
-  padding: clamp(0.9rem, 0.4rem + 1.6vw, 1.8rem) var(--shell-gutter);
+  overflow: hidden;
+  padding-inline: var(--shell-gutter);
 }
 
+/* ---------- the title, on the photograph ---------- */
+
+/*
+ * Nothing sits under this heading but the restaurant, so it carries its own
+ * shadow. Without one it dissolves wherever a lamp happens to be lit.
+ */
+.head {
+  text-align: center;
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.8), 0 1px 3px rgba(0, 0, 0, 0.65);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 1.1rem + 2.4vw, 3.3rem);
+  font-weight: 400;
+  line-height: 1.08;
+  letter-spacing: 0;
+  color: var(--ivory);
+}
+
+.subtitle {
+  margin: 0.45rem 0 0;
+  font-size: var(--step--1);
+  letter-spacing: 0.04em;
+  color: var(--ivory-soft);
+}
+
+/* ---------- the offers ---------- */
+
+/*
+ * Capped well short of the shell's own measure. Three cards spread across the
+ * full band are 480 px wide each, and at that size the photograph stops being a
+ * card and becomes wallpaper.
+ */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(18rem, 100%), 1fr));
-  gap: clamp(0.7rem, 0.3rem + 1.2vw, 1.4rem);
-  min-height: 0;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(0.7rem, 0.3rem + 1.1vw, 1.3rem);
+  width: min(100%, 1120px);
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
 .card {
-  display: grid;
-  grid-template-rows: minmax(0, 1fr) auto;
-  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  /* The glass already rounds its corners; this keeps the photograph inside
+     them rather than squaring off the top of every card. */
   overflow: hidden;
-  border: 1px solid var(--gold-hair);
-  border-radius: 8px;
-  background: rgba(18, 13, 9, 0.58);
-  backdrop-filter: blur(14px) saturate(1.1);
-  box-shadow: var(--shadow-panel);
 }
 
-.image {
+.image,
+.noImage {
+  display: block;
   width: 100%;
-  height: 100%;
+  aspect-ratio: 16 / 10;
   object-fit: cover;
+  /* Inset by the hairline, or a thread of gold shows through the corner. */
+  border-radius: calc(var(--glass-r) - 1px) calc(var(--glass-r) - 1px) 0 0;
 }
 
 .noImage {
-  display: block;
-  height: 100%;
-  min-height: 7rem;
   background:
     repeating-linear-gradient(135deg, rgba(239, 177, 92, 0.05) 0 14px, transparent 14px 28px),
     #171009;
@@ -51,70 +91,69 @@
 .body {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  padding: 0.95rem 1rem 1.05rem;
+  align-items: center;
+  gap: 0.4rem;
+  padding: clamp(0.9rem, 0.6rem + 0.6vw, 1.25rem) clamp(0.8rem, 0.5rem + 0.8vw, 1.2rem)
+    clamp(1rem, 0.7rem + 0.7vw, 1.4rem);
+  text-align: center;
 }
 
-.title {
+.name {
   margin: 0;
   font-family: var(--font-display);
   font-size: var(--step-2);
-  line-height: 1.1;
+  font-weight: 400;
+  line-height: 1.15;
   color: var(--ivory);
 }
 
+/* One line in the drawing. Two is the most a card can take before it stops
+   being a card and starts being a page. */
 .text {
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 2;
   overflow: hidden;
   margin: 0;
   font-size: var(--step--1);
-  line-height: 1.55;
-  color: var(--ivory-soft);
+  line-height: 1.5;
+  color: var(--ivory-mute);
 }
-
-/* ---------- the clock ---------- */
 
 .clock {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  gap: 0.5rem;
+  justify-content: center;
+  gap: 0.1rem 0.5rem;
+  margin: 0.15rem 0 0;
+  font-size: var(--step--2);
 }
 
 .clockLabel {
-  font-size: var(--step--2);
   letter-spacing: var(--track-wide);
   text-transform: uppercase;
   color: var(--gold-deep);
 }
 
-.clockParts {
-  display: flex;
-  gap: 0.55rem;
-}
-
-.clockPart {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 0.15rem;
-  font-size: var(--step--2);
-  color: var(--ivory-mute);
-}
-
-.clockPart b {
-  /* Tabular figures, or the whole row twitches once a second. */
+.clockValue {
+  /* Tabular figures, or the whole line twitches once a second. */
   font-variant-numeric: tabular-nums;
-  font-size: var(--step-0);
   color: var(--gold-lit);
 }
 
-.actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-top: 0.2rem;
+.action {
+  margin-top: 0.55rem;
+  min-height: 42px;
+  padding-inline: 1.5em;
+}
+
+.none {
+  margin: 0;
+  max-width: 34ch;
+  text-align: center;
+  color: var(--ivory-soft);
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.75);
 }
 
 /* ---------- page numbers ---------- */
@@ -122,16 +161,15 @@
 .pager {
   display: flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: 0.9rem;
 }
 
-.step,
-.number {
+.step {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 2rem;
-  height: 2rem;
+  min-width: 2.25rem;
+  height: 2.25rem;
   padding: 0 0.4rem;
   border: 1px solid var(--gold-hair);
   border-radius: var(--r-pill);
@@ -141,10 +179,10 @@
   color: var(--ivory-soft);
   background: rgba(24, 17, 12, 0.5);
   cursor: pointer;
+  transition: color var(--dur-1) var(--ease), border-color var(--dur-1) var(--ease);
 }
 
-.step:hover:not(:disabled),
-.number:hover {
+.step:hover:not(:disabled) {
   border-color: var(--gold);
   color: var(--ivory);
 }
@@ -154,29 +192,55 @@
   cursor: default;
 }
 
-.number[aria-current='page'] {
-  border-color: var(--gold);
-  color: var(--ink-black);
-  background: var(--gold);
+.pageCount {
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  font-variant-numeric: tabular-nums;
+  color: var(--ivory-soft);
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.7);
 }
 
-.numbers {
-  display: flex;
-  gap: 0.25rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
+/* ---------- narrow ---------- */
 
-@media (max-width: 720px) {
+@media (max-width: 900px) {
+  /*
+   * One column, and the row of cards is what gives. It scrolls inside itself so
+   * the page does not: two scrollbars on one screen puts the dock below the
+   * fold, which is the one thing the shell exists to prevent.
+   */
+  .board {
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    align-content: stretch;
+    gap: clamp(0.7rem, 0.4rem + 1vw, 1.2rem);
+    padding-block: clamp(0.4rem, 0.2rem + 0.8vw, 0.9rem);
+  }
+
   .grid {
     grid-template-columns: minmax(0, 1fr);
+    width: 100%;
+    min-height: 0;
     overflow-y: auto;
     overscroll-behavior: contain;
   }
 
+  /* Side by side at this width: stacked, one offer would fill the screen. */
   .card {
-    grid-template-rows: none;
-    grid-template-columns: minmax(0, 8rem) minmax(0, 1fr);
+    flex-direction: row;
+  }
+
+  .image,
+  .noImage {
+    flex: 0 0 9rem;
+    aspect-ratio: 4 / 3;
+    border-radius: calc(var(--glass-r) - 1px) 0 0 calc(var(--glass-r) - 1px);
+  }
+
+  .body {
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .clock {
+    justify-content: flex-start;
   }
 }
