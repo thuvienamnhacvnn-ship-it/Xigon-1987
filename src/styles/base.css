@@ -37,6 +37,16 @@ body[data-app='true'] {
   overflow: hidden;
 }
 
+/* A screen with nothing to show says so in the middle of its own frame. */
+.screen-empty {
+  display: grid;
+  place-content: center;
+  height: 100%;
+  padding: var(--gutter);
+  text-align: center;
+  color: var(--ivory-soft);
+}
+
 h1, h2, h3, h4 {
   font-family: var(--font-display);
   font-weight: 500;

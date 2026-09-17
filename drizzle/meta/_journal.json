@@ -15,6 +15,13 @@
       "when": 1789636724767,
       "tag": "0001_careful_charles_xavier",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1789640905050,
+      "tag": "0002_remarkable_wong",
+      "breakpoints": true
     }
   ]
 }

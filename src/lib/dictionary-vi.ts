@@ -129,6 +129,11 @@ export const vi: Dictionary = {
     spice: 'Độ cay',
     back: 'Về thực đơn',
     related: 'Dùng kèm',
+    prevPage: 'Trang trước',
+    nextPage: 'Trang sau',
+    pageOf: 'Trang {n} trên {total}',
+    goToPage: 'Tới trang {n}',
+    photoPending: 'Ảnh sẽ bổ sung',
   },
 
   dish: {

@@ -69,6 +69,13 @@ export const dishes = pgTable(
     ingredientsEn: text('ingredients_en'),
     ingredientsVi: text('ingredients_vi'),
 
+    /**
+     * An id in public/img/dish — the restaurant's own photograph of the plate,
+     * built at 480/720/1080 with an lqip. This is what the card, the detail
+     * panel and the basket all show; the menu is the one screen where the
+     * photography does the selling, so a dish without one looks unfinished.
+     */
+    photoId: varchar('photo_id', { length: 60 }),
     /** An id in public/img/plate — the transparent cut-outs. */
     plateId: varchar('plate_id', { length: 60 }),
     /** An id in public/img/scene, for dishes shown inside a photograph. */

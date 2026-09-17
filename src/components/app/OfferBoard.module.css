@@ -1,0 +1,181 @@
+/*
+ * Angebote. The same three-across rhythm as the card, so moving between the two
+ * screens does not feel like moving between two websites.
+ */
+.board {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: clamp(0.7rem, 0.3rem + 1.2vw, 1.4rem);
+  height: 100%;
+  padding: clamp(0.9rem, 0.4rem + 1.6vw, 1.8rem) var(--shell-gutter);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(18rem, 100%), 1fr));
+  gap: clamp(0.7rem, 0.3rem + 1.2vw, 1.4rem);
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.card {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  min-height: 0;
+  overflow: hidden;
+  border: 1px solid var(--gold-hair);
+  border-radius: 8px;
+  background: rgba(6, 28, 18, 0.62);
+  backdrop-filter: blur(14px) saturate(1.1);
+  box-shadow: var(--shadow-panel);
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.noImage {
+  display: block;
+  height: 100%;
+  min-height: 7rem;
+  background:
+    repeating-linear-gradient(135deg, rgba(239, 177, 92, 0.05) 0 14px, transparent 14px 28px),
+    var(--green-deep);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.95rem 1rem 1.05rem;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--step-2);
+  line-height: 1.1;
+  color: var(--ivory);
+}
+
+.text {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+  margin: 0;
+  font-size: var(--step--1);
+  line-height: 1.55;
+  color: var(--ivory-soft);
+}
+
+/* ---------- the clock ---------- */
+
+.clock {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.clockLabel {
+  font-size: var(--step--2);
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
+  color: var(--gold-deep);
+}
+
+.clockParts {
+  display: flex;
+  gap: 0.55rem;
+}
+
+.clockPart {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.15rem;
+  font-size: var(--step--2);
+  color: var(--ivory-mute);
+}
+
+.clockPart b {
+  /* Tabular figures, or the whole row twitches once a second. */
+  font-variant-numeric: tabular-nums;
+  font-size: var(--step-0);
+  color: var(--gold-lit);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.2rem;
+}
+
+/* ---------- page numbers ---------- */
+
+.pager {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.step,
+.number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2rem;
+  height: 2rem;
+  padding: 0 0.4rem;
+  border: 1px solid var(--gold-hair);
+  border-radius: var(--r-pill);
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  font-weight: 600;
+  color: var(--ivory-soft);
+  background: rgba(8, 30, 20, 0.5);
+  cursor: pointer;
+}
+
+.step:hover:not(:disabled),
+.number:hover {
+  border-color: var(--gold);
+  color: var(--ivory);
+}
+
+.step:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.number[aria-current='page'] {
+  border-color: var(--gold);
+  color: var(--ink-black);
+  background: var(--gold);
+}
+
+.numbers {
+  display: flex;
+  gap: 0.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (max-width: 720px) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .card {
+    grid-template-rows: none;
+    grid-template-columns: minmax(0, 8rem) minmax(0, 1fr);
+  }
+}

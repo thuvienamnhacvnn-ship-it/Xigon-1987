@@ -1,0 +1,426 @@
+/*
+ * KI-Berater.
+ *
+ * Two columns in the height the shell gives it: the conversation and the plates
+ * it named. The log is the one thing on this screen allowed to scroll, and it
+ * scrolls inside its own box — the page itself never does, because the dock
+ * below it has to stay where the guest last saw it.
+ */
+.board {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: clamp(0.7rem, 0.3rem + 1.2vw, 1.4rem);
+  height: 100%;
+  padding: clamp(0.9rem, 0.4rem + 1.6vw, 1.8rem) var(--shell-gutter);
+}
+
+/* ---------- the conversation ---------- */
+
+.talk {
+  display: grid;
+  /* Only the log gives; the chef, the question field and the caveat stay put,
+     so the guest never has to scroll to find the place they type. */
+  grid-template-rows: auto minmax(0, 1fr) auto auto;
+  min-height: 0;
+  overflow: hidden;
+  border: 1px solid var(--gold-hair);
+  border-radius: 8px;
+  background: rgba(6, 28, 18, 0.62);
+  backdrop-filter: blur(14px) saturate(1.1);
+  box-shadow: var(--shadow-panel);
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--gold-hair);
+}
+
+.headAvatar {
+  flex-shrink: 0;
+  color: var(--gold-lit);
+}
+
+.headText {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+}
+
+.headName {
+  font-family: var(--font-display);
+  font-size: var(--step-1);
+  color: var(--ivory);
+}
+
+.headRole {
+  font-size: var(--step--2);
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
+  color: var(--gold-deep);
+}
+
+.log {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  min-height: 0;
+  padding: 0.9rem 1rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.intro {
+  margin: 0;
+  font-size: var(--step--1);
+  line-height: 1.6;
+  color: var(--ivory-mute);
+}
+
+.prompts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.prompt {
+  padding: 0.4rem 0.85rem;
+  border: 1px solid var(--gold-hair);
+  border-radius: var(--r-pill);
+  font-family: var(--font-body);
+  font-size: var(--step--2);
+  text-align: left;
+  color: var(--ivory-soft);
+  background: rgba(8, 30, 20, 0.5);
+  cursor: pointer;
+  transition: color var(--dur-1) var(--ease), border-color var(--dur-1) var(--ease);
+}
+
+.prompt:hover {
+  border-color: var(--gold);
+  color: var(--ivory);
+}
+
+.userMsg {
+  align-self: flex-end;
+  max-width: 85%;
+  margin: 0;
+  padding: 0.55rem 0.85rem;
+  border-radius: 10px 10px 2px 10px;
+  font-size: var(--step--1);
+  line-height: 1.55;
+  color: var(--ink-black);
+  background: var(--gold);
+}
+
+.botMsg {
+  align-self: flex-start;
+  max-width: 94%;
+  margin: 0;
+  padding: 0.55rem 0.85rem;
+  border: 1px solid var(--gold-hair);
+  border-radius: 10px 10px 10px 2px;
+  font-size: var(--step--1);
+  line-height: 1.6;
+  color: var(--ivory);
+  background: rgba(8, 30, 20, 0.6);
+  white-space: pre-line;
+}
+
+.error {
+  margin: 0;
+  font-size: var(--step--1);
+  line-height: 1.5;
+  color: var(--error);
+}
+
+.form {
+  display: flex;
+  gap: 0.45rem;
+  padding: 0.7rem 1rem;
+  border-top: 1px solid var(--gold-hair);
+}
+
+.form input {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 0.55rem 0.8rem;
+  border: 1px solid var(--gold-hair);
+  border-radius: var(--r-pill);
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  color: var(--ivory);
+  background: rgba(0, 0, 0, 0.32);
+}
+
+.form input:focus-visible {
+  border-color: var(--gold);
+  outline: none;
+}
+
+.send {
+  padding: 0 1.1rem;
+  border: 1px solid var(--gold);
+  border-radius: var(--r-pill);
+  font-family: var(--font-body);
+  font-size: var(--step--2);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--ink-black);
+  background: var(--gold);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background var(--dur-1) var(--ease);
+}
+
+.send:hover:not(:disabled) {
+  background: var(--gold-lit);
+}
+
+.send:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.foot {
+  margin: 0;
+  padding: 0 1rem 0.75rem;
+  font-size: var(--step--2);
+  line-height: 1.5;
+  color: var(--ivory-mute);
+}
+
+/* ---------- the plates it named ---------- */
+
+.proposal {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 0.6rem;
+  min-height: 0;
+}
+
+.proposalTitle {
+  margin: 0;
+  font-size: var(--step--2);
+  font-weight: 600;
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
+  color: var(--gold-deep);
+}
+
+/*
+ * Equal rows rather than a scroller: the guide proposes a handful of plates, and
+ * dividing the column between them keeps every one of them on screen next to the
+ * answer that named it. A second scrollbar beside the log would be one too many.
+ */
+.dishes {
+  display: grid;
+  grid-auto-rows: minmax(0, 1fr);
+  gap: 0.6rem;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.card {
+  display: grid;
+  grid-template-columns: minmax(0, 9rem) minmax(0, 1fr);
+  min-height: 0;
+  overflow: hidden;
+  border: 1px solid var(--gold-hair);
+  border-radius: 8px;
+  background: rgba(6, 28, 18, 0.62);
+  backdrop-filter: blur(14px) saturate(1.1);
+  box-shadow: var(--shadow-panel);
+  transition: border-color var(--dur-1) var(--ease);
+}
+
+.card:hover {
+  border-color: var(--gold);
+}
+
+.photo {
+  position: relative;
+  display: block;
+  min-height: 0;
+  overflow: hidden;
+  background: var(--green-dark);
+}
+
+.photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.noPhoto {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  min-height: 5rem;
+  padding: 0.4rem;
+  font-size: var(--step--2);
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--ivory-mute);
+  background:
+    repeating-linear-gradient(135deg, rgba(239, 177, 92, 0.05) 0 14px, transparent 14px 28px),
+    var(--green-deep);
+}
+
+.soldOut {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  padding: 0.16rem 0.55rem;
+  border-radius: var(--r-pill);
+  font-size: var(--step--2);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ivory);
+  background: var(--seal);
+}
+
+/* Dimmed, but the page still opens: people want to read about the thing they
+   cannot have tonight. */
+.card[data-sold-out='true'] .photo img {
+  filter: grayscale(0.7) brightness(0.72);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+  padding: 0.7rem 0.85rem;
+}
+
+.name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--step-1);
+  line-height: 1.15;
+}
+
+.name a {
+  color: var(--ivory);
+  text-decoration: none;
+}
+
+.name a:hover {
+  color: var(--gold-lit);
+}
+
+.code {
+  margin-right: 0.4rem;
+  font-family: var(--font-body);
+  font-size: var(--step--2);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--gold);
+}
+
+.variant {
+  margin: 0;
+  font-size: var(--step--2);
+  line-height: 1.45;
+  color: var(--ivory-mute);
+}
+
+.cardFoot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  margin-top: auto;
+  padding-top: 0.4rem;
+}
+
+.price {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--step-1);
+  font-weight: 700;
+  font-variant-numeric: lining-nums tabular-nums;
+  color: var(--gold-lit);
+}
+
+.addBtn {
+  padding: 0.34rem 0.8rem;
+  border: 1px solid var(--gold-hair);
+  border-radius: var(--r-pill);
+  font-family: var(--font-body);
+  font-size: var(--step--2);
+  font-weight: 600;
+  color: var(--ivory);
+  background: rgba(8, 30, 20, 0.5);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color var(--dur-1) var(--ease), background var(--dur-1) var(--ease),
+    border-color var(--dur-1) var(--ease);
+}
+
+.addBtn:hover {
+  border-color: var(--gold);
+  color: var(--ink-black);
+  background: var(--gold);
+}
+
+/* ---------- nothing proposed yet ---------- */
+
+.waiting {
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 0.6rem;
+  padding: 1.2rem;
+  border: 1px dashed var(--gold-hair);
+  border-radius: 8px;
+  text-align: center;
+}
+
+.waitingAvatar {
+  color: var(--gold-hair);
+}
+
+.waitingText {
+  max-width: 24ch;
+  margin: 0;
+  font-size: var(--step--1);
+  line-height: 1.6;
+  color: var(--ivory-mute);
+}
+
+.note {
+  margin: 0;
+  font-size: var(--step--2);
+  line-height: 1.45;
+  color: var(--ivory-mute);
+}
+
+/* ---------- narrow ---------- */
+
+@media (max-width: 900px) {
+  .board {
+    /*
+     * Stacked, the conversation first: it is what the guest came to use, and the
+     * plates only exist once it has answered. Both rows are capped fractions of
+     * the shell's height, so the screen still cannot push the dock away.
+     */
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1.3fr) minmax(0, 1fr);
+  }
+
+  .card {
+    grid-template-columns: minmax(0, 6.5rem) minmax(0, 1fr);
+  }
+
+  .waitingAvatar {
+    display: none;
+  }
+}

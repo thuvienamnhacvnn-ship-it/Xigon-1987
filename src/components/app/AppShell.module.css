@@ -256,6 +256,17 @@
   min-height: 0;
   overflow: hidden auto;
   overscroll-behavior: contain;
+
+  /*
+   * A screen is not a page.
+   *
+   * The section rhythm in tokens.css was written for a document that scrolls
+   * for several thousand pixels; inside a frame 750 px tall the same figures
+   * put a guest three swipes away from the first sentence. Overriding the
+   * token here re-times every screen at once, including the ones still using
+   * the older section markup.
+   */
+  --section-y: clamp(1rem, 0.6rem + 1.2vw, 1.9rem);
 }
 
 /* ---------- the dock ---------- */

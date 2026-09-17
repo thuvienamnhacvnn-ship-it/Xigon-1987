@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { getDictionary } from '@/lib/dictionary';
 import { isLocale, matchRoute, routes, type RouteKey } from '@/lib/i18n';
+import { AssistantView } from '@/views/AssistantView';
 import { CartView } from '@/views/CartView';
 import { ExperienceView } from '@/views/ExperienceView';
 import { CheckoutView } from '@/views/CheckoutView';
@@ -8,6 +9,7 @@ import { ContactView } from '@/views/ContactView';
 import { DishView } from '@/views/DishView';
 import { LegalView } from '@/views/LegalView';
 import { MenuView } from '@/views/MenuView';
+import { OffersView } from '@/views/OffersView';
 import { OrderStatusView } from '@/views/OrderStatusView';
 import { OrderView } from '@/views/OrderView';
 import { PromoAdminView } from '@/views/PromoAdminView';
@@ -38,6 +40,8 @@ export async function generateMetadata({ params }: Props) {
 
   const titles: Partial<Record<RouteKey, string>> = {
     experience: dict.dock.experience,
+    offers: dict.promo.title,
+    assistant: dict.nav.assistant,
     menu: dict.menu.title,
     dish: dict.menu.title,
     order: dict.order.title,
@@ -96,6 +100,10 @@ export default async function SectionPage({ params, searchParams }: Props) {
       return <ExperienceView locale={locale} dict={dict} />;
     case 'menu':
       return <MenuView locale={locale} dict={dict} />;
+    case 'offers':
+      return <OffersView locale={locale} dict={dict} />;
+    case 'assistant':
+      return <AssistantView locale={locale} dict={dict} />;
     case 'dish':
       return <DishView locale={locale} dict={dict} slug={decodeURIComponent(second)} />;
     case 'order':

@@ -150,6 +150,12 @@ const de = {
     spice: 'Schärfe',
     back: 'Zurück zur Karte',
     related: 'Passt dazu',
+    /* The card paginates rather than scrolling: the screen has a fixed height. */
+    prevPage: 'Vorherige Seite',
+    nextPage: 'Nächste Seite',
+    pageOf: 'Seite {n} von {total}',
+    goToPage: 'Zu Seite {n}',
+    photoPending: 'Foto folgt',
   },
 
   dish: {
@@ -529,6 +535,11 @@ const en: Dictionary = {
     spice: 'Heat',
     back: 'Back to the menu',
     related: 'Goes well with',
+    prevPage: 'Previous page',
+    nextPage: 'Next page',
+    pageOf: 'Page {n} of {total}',
+    goToPage: 'Go to page {n}',
+    photoPending: 'Photo to follow',
   },
   dish: {
     choose: 'Choice',

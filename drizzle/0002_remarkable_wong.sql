@@ -1,0 +1,1 @@
+ALTER TABLE "dishes" ADD COLUMN "photo_id" varchar(60);

@@ -31,6 +31,7 @@ export type MenuDish = {
   name: string;
   description: string | null;
   ingredients: string | null;
+  photoId: string | null;
   plateId: string | null;
   sceneId: string | null;
   vegetarian: boolean;
@@ -80,6 +81,7 @@ function toDish(locale: Locale, dish: DishRow, category: CategoryRow, variants: 
     name: tr(locale, { de: dish.nameDe, en: dish.nameEn, vi: dish.nameVi }),
     description: tr(locale, { de: dish.descriptionDe, en: dish.descriptionEn, vi: dish.descriptionVi }) || null,
     ingredients: tr(locale, { de: dish.ingredientsDe, en: dish.ingredientsEn, vi: dish.ingredientsVi }) || null,
+    photoId: dish.photoId,
     plateId: dish.plateId,
     sceneId: dish.sceneId,
     vegetarian: dish.vegetarian,

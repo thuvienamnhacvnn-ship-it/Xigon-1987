@@ -66,6 +66,7 @@ for (const [index, category] of CATEGORIES.entries()) {
       ingredientsDe: dish.ingredientsDe ?? null,
       ingredientsEn: dish.ingredientsEn ?? null,
       ingredientsVi: dish.ingredientsVi ?? null,
+      photoId: dish.photoId ?? null,
       plateId: dish.plateId ?? null,
       sceneId: dish.sceneId ?? null,
       vegetarian: dish.vegetarian ?? false,
