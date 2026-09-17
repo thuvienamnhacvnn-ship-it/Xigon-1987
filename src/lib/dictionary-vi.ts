@@ -164,6 +164,7 @@ export const vi: Dictionary = {
     minutes: 'phút',
     seconds: 'giây',
     none: 'Hiện chưa có chương trình nào.',
+    caveat: 'Ưu đãi dạng ý tưởng · nội dung chưa được xác nhận',
     manage: 'Tải chương trình lên',
   },
 

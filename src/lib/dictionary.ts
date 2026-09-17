@@ -186,6 +186,7 @@ const de = {
     minutes: 'Min',
     seconds: 'Sek',
     none: 'Zurzeit läuft keine Aktion.',
+    caveat: 'Konzeptangebote · Inhalte noch zu bestätigen',
     manage: 'Aktion hochladen',
   },
 
@@ -585,6 +586,7 @@ const en: Dictionary = {
     minutes: 'min',
     seconds: 'sec',
     none: 'No offer is running at the moment.',
+    caveat: 'Concept offers · contents still to be confirmed',
     manage: 'Upload an offer',
   },
   space: {

@@ -262,6 +262,11 @@
 
 /* ---------- the plate it named ---------- */
 
+ /*
+    `align-content: start` packs the plate at the top, which is right when there
+    is a plate. With nothing suggested yet it left the empty frame as a stamp in
+    the corner of a tall card, so the empty state takes the whole card instead.
+  */
 .plate {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -439,8 +444,12 @@
 
 /* ---------- nothing proposed yet ---------- */
 
+.plate:has(.waiting) {
+  align-content: stretch;
+  grid-template-rows: minmax(0, 1fr);
+}
+
 .waiting {
-  grid-row: 1 / -1;
   display: grid;
   place-content: center;
   justify-items: center;

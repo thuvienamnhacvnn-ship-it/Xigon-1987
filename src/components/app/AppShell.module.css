@@ -62,6 +62,25 @@
   transition: filter var(--dur-3) var(--ease), transform var(--dur-3) var(--ease);
 }
 
+/*
+ * A scrim, for the screens that put type straight on the photograph.
+ *
+ * Angebote and the guide have no panel behind their heading, and the house
+ * video has a lit sign in the middle of it — a serif title landing on that is
+ * unreadable at any weight. This is a gradient rather than a flat wash so the
+ * room still shows at the edges, which is the whole point of the backdrop.
+ */
+.shell:not([data-bare='true'])::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    radial-gradient(120% 75% at 50% 42%, rgba(6, 4, 3, 0.62), transparent 70%),
+    linear-gradient(180deg, rgba(6, 4, 3, 0.5), rgba(6, 4, 3, 0.2) 38%, rgba(6, 4, 3, 0.62));
+}
+
 /* ---------- the content ---------- */
 
 .content {

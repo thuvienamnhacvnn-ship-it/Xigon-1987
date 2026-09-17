@@ -38,7 +38,7 @@ export function OfferBoard({
     <div className={styles.board}>
       <header className={styles.head}>
         <h1 className={styles.title}>{dict.promo.title}</h1>
-        <p className={styles.subtitle}>{dict.promo.label}</p>
+        <p className={styles.subtitle}>{dict.promo.caveat}</p>
       </header>
 
       {shown.length ? (

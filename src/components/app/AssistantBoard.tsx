@@ -325,26 +325,34 @@ function PlateCard({
  * face of a bot, and the same outline in the dock and on the card is what tells
  * a guest the two are the same thing.
  */
+/*
+ * Two lobes and their folds. The bare outline read as a circle with a line
+ * through it at 28px, which is not a brain and not anything else either — the
+ * folds are what make the mark legible at the size it is actually used.
+ */
 function BrainMark({ size = 24, className }: { size?: number; className?: string }) {
+  const line = {
+    stroke: 'currentColor',
+    strokeWidth: 1.3,
+    strokeLinecap: 'round',
+    strokeLinejoin: 'round',
+  } as const;
   return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      className={className}
-      aria-hidden="true"
-    >
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
       <path
-        d="M9.5 4.2A2.7 2.7 0 0 0 6.8 7a2.6 2.6 0 0 0-1.6 4.5A2.7 2.7 0 0 0 6.8 16a2.7 2.7 0 0 0 2.7 2.8c.8 0 1.5-.4 2-.9V5.1c-.5-.5-1.2-.9-2-.9ZM14.5 4.2A2.7 2.7 0 0 1 17.2 7a2.6 2.6 0 0 1 1.6 4.5A2.7 2.7 0 0 1 17.2 16a2.7 2.7 0 0 1-2.7 2.8c-.8 0-1.5-.4-2-.9V5.1c.5-.5 1.2-.9 2-.9Z"
-        stroke="currentColor"
-        strokeWidth="1.4"
-        strokeLinecap="round"
-        strokeLinejoin="round"
+        d="M11.3 4.6a2.5 2.5 0 0 0-4.2 1.5 2.4 2.4 0 0 0-1.6 4.1 2.5 2.5 0 0 0 .5 4.2 2.5 2.5 0 0 0 2.6 3 2.4 2.4 0 0 0 2.7 1.6V4.6Z"
+        {...line}
       />
+      <path
+        d="M12.7 4.6a2.5 2.5 0 0 1 4.2 1.5 2.4 2.4 0 0 1 1.6 4.1 2.5 2.5 0 0 1-.5 4.2 2.5 2.5 0 0 1-2.6 3 2.4 2.4 0 0 1-2.7 1.6V4.6Z"
+        {...line}
+      />
+      <path d="M11.3 8.6H9.2M11.3 12.4H8.4M11.3 16H9.6" {...line} strokeWidth={1} />
+      <path d="M12.7 8.6h2.1M12.7 12.4h2.9M12.7 16h1.7" {...line} strokeWidth={1} />
     </svg>
   );
 }
+
 
 function GuestMark() {
   return (
