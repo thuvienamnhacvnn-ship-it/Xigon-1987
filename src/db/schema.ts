@@ -151,6 +151,20 @@ export const promotions = pgTable(
     badgeEn: varchar('badge_en', { length: 24 }),
     badgeVi: varchar('badge_vi', { length: 24 }),
 
+    /**
+     * Everything the card can show, in the order the admin arranged it.
+     *
+     * A list rather than one file, because an offer is often easier to show
+     * than to describe: two or three photographs the card cycles through, or a
+     * short clip of the sushi bench working. `kind` is decided from the file
+     * when it is uploaded, never from its name.
+     *
+     * `imagePath` below is kept as the first frame — older rows have only that,
+     * and a migration that guessed at their dimensions would be writing numbers
+     * nobody measured.
+     */
+    media: jsonb('media').$type<PromoMedia[]>().notNull().default(sql`'[]'::jsonb`),
+
     /** Uploaded file under /uploads/promo — never an external URL. */
     imagePath: text('image_path'),
     imageWidth: integer('image_width'),
@@ -163,6 +177,15 @@ export const promotions = pgTable(
   },
   (table) => [uniqueIndex('promotions_slug_key').on(table.slug)],
 );
+
+export type PromoMedia = {
+  path: string;
+  kind: 'image' | 'video';
+  width: number | null;
+  height: number | null;
+  /** A still for a clip, so the card is never blank while it loads. */
+  poster?: string | null;
+};
 
 /* ---------------------------------------------------------------- reviews -- */
 

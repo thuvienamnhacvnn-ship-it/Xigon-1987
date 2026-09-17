@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import styles from './OfferBoard.module.css';
 import { EdgeLight } from './EdgeLight';
+import { OfferMedia } from './OfferMedia';
 import { fill, type Dictionary } from '@/lib/dictionary';
 import { hrefFor, type Locale } from '@/lib/i18n';
 import type { Promotion } from '@/server/content';
@@ -47,19 +48,7 @@ export function OfferBoard({
           {shown.map((offer) => (
             <li key={offer.id} className={`glass ${styles.card}`}>
               <EdgeLight />
-              {offer.imagePath ? (
-                <img
-                  className={styles.image}
-                  src={offer.imagePath}
-                  alt={offer.title}
-                  loading="lazy"
-                  decoding="async"
-                />
-              ) : (
-                /* An honest empty frame. Borrowing another offer's picture is
-                   what a guest would take for the offer itself. */
-                <span className={styles.noImage} aria-hidden="true" />
-              )}
+              <OfferMedia media={offer.media} alt={offer.title} />
 
               {/*
                * The corner label. It carries a day or a kind — never a
@@ -82,7 +71,7 @@ export function OfferBoard({
                   {runsFor(offer, locale, dict)}
                 </p>
 
-                {offer.endsAt ? <Countdown dict={dict} endsAt={offer.endsAt} /> : null}
+                <Countdown dict={dict} endsAt={offer.endsAt} startsAt={offer.startsAt} />
 
                 <Link href={hrefFor(locale, 'menu')} className={`ghost ${styles.action}`}>
                   {dict.menu.label}
@@ -183,18 +172,36 @@ function CalendarIcon() {
  * server's "now" and the guest's "now" are never the same, and a ticking number
  * painted during render is a guaranteed hydration mismatch.
  */
-function Countdown({ dict, endsAt }: { dict: Dictionary; endsAt: Date }) {
+function Countdown({
+  dict,
+  endsAt,
+  startsAt,
+}: {
+  dict: Dictionary;
+  endsAt: Date | null;
+  startsAt: Date | null;
+}) {
   const [left, setLeft] = useState<number | null>(null);
 
+  /*
+   * Counts down to whichever moment is still ahead: to the start while the
+   * offer has not opened, then to the end. An offer with neither runs until
+   * somebody takes it down, and inventing a deadline for it — the usual trick
+   * for making a card feel urgent — would be inventing a fact.
+   */
+  const target = endsAt ?? (startsAt && new Date(startsAt).getTime() > Date.now() ? startsAt : null);
+  const counting = endsAt ? 'ends' : 'starts';
+
   useEffect(() => {
-    const target = new Date(endsAt).getTime();
-    const tick = () => setLeft(Math.max(0, target - Date.now()));
+    if (!target) return;
+    const at = new Date(target).getTime();
+    const tick = () => setLeft(Math.max(0, at - Date.now()));
     tick();
     const timer = window.setInterval(tick, 1000);
     return () => window.clearInterval(timer);
-  }, [endsAt]);
+  }, [target]);
 
-  if (left === null) return null;
+  if (!target || left === null) return null;
 
   const seconds = Math.floor(left / 1000);
   const parts = [
@@ -206,7 +213,7 @@ function Countdown({ dict, endsAt }: { dict: Dictionary; endsAt: Date }) {
 
   return (
     <p className={styles.clock}>
-      <span className={styles.clockLabel}>{dict.promo.endsIn}</span>
+      <span className={styles.clockLabel}>{counting === 'ends' ? dict.promo.endsIn : dict.promo.startsIn}</span>
       <span className={styles.clockValue}>
         {parts.map((part) => `${String(part.value).padStart(2, '0')} ${part.label}`).join(' · ')}
       </span>

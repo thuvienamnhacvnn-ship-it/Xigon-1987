@@ -707,7 +707,31 @@ export const TABLES = [
  *
  * The badge is a label, never a claim: which days it runs, or what it is.
  */
-export const PROMOTIONS = [
+/*
+ * `kind` has to be the narrow union, not `string`: the column is typed, and
+ * without this the whole array widens and the insert stops compiling.
+ */
+type SeedMedia = { path: string; kind: 'image' | 'video'; width: number; height: number; poster?: string };
+
+export const PROMOTIONS: {
+  slug: string;
+  badgeDe: string;
+  badgeEn: string;
+  badgeVi: string;
+  titleDe: string;
+  titleEn: string;
+  titleVi: string;
+  bodyDe: string;
+  bodyEn: string;
+  bodyVi: string;
+  media: SeedMedia[];
+  imagePath: string;
+  imageWidth: number;
+  imageHeight: number;
+  endsAt?: Date;
+  published: boolean;
+  sort: number;
+}[] = [
   {
     slug: 'lunch-im-1987',
     badgeDe: 'Mo – Fr',
@@ -722,6 +746,16 @@ export const PROMOTIONS = [
       'A short card, cooked at midday: one soup, two warm dishes, a handful of sushi. You are out again within the hour — fed, and without having rushed. Demo content.',
     bodyVi:
       'Một thực đơn ngắn, nấu buổi trưa: một món canh, hai món nóng, một ít sushi. Một tiếng là quý khách ra về — no bụng mà không phải vội. Nội dung demo.',
+    /*
+     * Three pictures rather than one: the card turns them over by itself. A
+     * lunch is easier to show than to describe, and one photograph of a dining
+     * room says less about it than three do.
+     */
+    media: [
+      { path: '/img/scene/dining-room-1280.webp', kind: 'image', width: 1280, height: 719 },
+      { path: '/img/dish/pad-thai-1080.webp', kind: 'image', width: 1080, height: 810 },
+      { path: '/img/dish/miso-suppe-1080.webp', kind: 'image', width: 1080, height: 810 },
+    ],
     imagePath: '/img/scene/dining-room-1280.webp',
     imageWidth: 1280,
     imageHeight: 719,
@@ -742,6 +776,12 @@ export const PROMOTIONS = [
       'Eight seats, right at the sushi bench. You watch every piece being made and take it across the counter before the rice cools. Booking advised. Demo content.',
     bodyVi:
       'Tám chỗ ngồi ngay tại quầy sushi. Quý khách nhìn từng miếng được làm và nhận qua quầy trước khi cơm nguội. Nên đặt chỗ trước. Nội dung demo.',
+    /* The clip of the room, with two plates from the bench between showings. */
+    media: [
+      { path: '/img/video/bar.mp4', kind: 'video', width: 1920, height: 1080, poster: '/img/video/bar-poster.webp' },
+      { path: '/img/dish/nigiri-lachs-1080.webp', kind: 'image', width: 1080, height: 810 },
+      { path: '/img/dish/inside-out-rolle-1080.webp', kind: 'image', width: 1080, height: 810 },
+    ],
     imagePath: '/img/scene/sushi-bench-1280.webp',
     imageWidth: 1280,
     imageHeight: 719,
@@ -767,9 +807,19 @@ export const PROMOTIONS = [
       'Not another object to put somewhere: a table, a long evening, and somebody glad of it. The amount and the occasion we agree with you. Demo content.',
     bodyVi:
       'Không phải một món đồ để đâu đó: một cái bàn, một buổi tối dài, và một người vui vì điều đó. Số tiền và dịp sẽ trao đổi cùng quý khách. Nội dung demo.',
+    media: [
+      { path: '/img/scene/lanterns-bar-1280.webp', kind: 'image', width: 1280, height: 719 },
+      { path: '/img/dish/cocktail-trio-1080.webp', kind: 'image', width: 1080, height: 810 },
+    ],
     imagePath: '/img/scene/lanterns-bar-1280.webp',
     imageWidth: 1280,
     imageHeight: 719,
+    /*
+     * One offer carries a real end date so the clock on the card has something
+     * to count to. It is set from the seed's own run so it is always in the
+     * future — a demo whose countdown has already expired demonstrates nothing.
+     */
+    endsAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 12),
     published: true,
     sort: 2,
   },

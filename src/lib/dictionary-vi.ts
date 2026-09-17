@@ -159,6 +159,7 @@ export const vi: Dictionary = {
     label: 'Khuyến mại',
     title: 'Ưu đãi hiện có',
     endsIn: 'Ưu đãi kết thúc sau',
+    startsIn: 'Ưu đãi bắt đầu sau',
     days: 'ngày',
     hours: 'giờ',
     minutes: 'phút',

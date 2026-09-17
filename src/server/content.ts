@@ -2,7 +2,7 @@ import 'server-only';
 
 import { and, asc, desc, eq, gt, isNull, lte, or, sql } from 'drizzle-orm';
 import { db } from '@/db/client';
-import { promotions, reviews } from '@/db/schema';
+import { promotions, reviews , type PromoMedia } from '@/db/schema';
 import { tr, type Locale } from '@/lib/i18n';
 
 /**
@@ -17,12 +17,31 @@ export type Promotion = {
   body: string | null;
   /** The short word on the corner of the card. Never a price or a percentage. */
   badge: string | null;
+  /**
+   * What the card shows, in order. Never empty when there is anything to show:
+   * rows written before the card could hold more than one file are folded in
+   * here as a single image, so nothing downstream has to know about both shapes.
+   */
+  media: PromoMedia[];
   imagePath: string | null;
   imageWidth: number | null;
   imageHeight: number | null;
   startsAt: Date | null;
   endsAt: Date | null;
 };
+
+/**
+ * The card's media, whichever shape the row is in.
+ *
+ * Rows written before an offer could hold more than one file carry a single
+ * `imagePath` and nothing in `media`. Folding them together here means every
+ * screen reads one list and nobody downstream has to remember the old shape.
+ */
+function mediaOf(row: { media: PromoMedia[] | null; imagePath: string | null; imageWidth: number | null; imageHeight: number | null }): PromoMedia[] {
+  if (row.media?.length) return row.media;
+  if (!row.imagePath) return [];
+  return [{ path: row.imagePath, kind: 'image', width: row.imageWidth, height: row.imageHeight }];
+}
 
 /** Only what is published and inside its own dates. An expired offer is a lie. */
 export async function getLivePromotions(locale: Locale): Promise<Promotion[]> {
@@ -45,6 +64,7 @@ export async function getLivePromotions(locale: Locale): Promise<Promotion[]> {
     title: tr(locale, { de: row.titleDe, en: row.titleEn, vi: row.titleVi }),
     body: tr(locale, { de: row.bodyDe, en: row.bodyEn, vi: row.bodyVi }) || null,
     badge: tr(locale, { de: row.badgeDe, en: row.badgeEn, vi: row.badgeVi }) || null,
+    media: mediaOf(row),
     imagePath: row.imagePath,
     imageWidth: row.imageWidth,
     imageHeight: row.imageHeight,
