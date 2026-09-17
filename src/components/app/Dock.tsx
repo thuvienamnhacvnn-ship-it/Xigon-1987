@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import styles from './AppShell.module.css';
+import { EdgeLight } from './EdgeLight';
 import { dockKeyFrom, hrefFor, type Locale, type RouteKey } from '@/lib/i18n';
 import type { Dictionary } from '@/lib/dictionary';
 
@@ -37,6 +38,7 @@ export function Dock({
   return (
     <nav className={styles.dock} aria-label={dict.nav.menu}>
       <ul className={`${styles.dockList} glass-edge`}>
+        <EdgeLight radius="999px" />
         {ITEMS.map((item) => {
           const active = item.key === owner;
           const Icon = item.icon;

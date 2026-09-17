@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
 import styles from './MenuBoard.module.css';
+import { EdgeLight } from './EdgeLight';
 import { fill, type Dictionary } from '@/lib/dictionary';
 import { formatMoney } from '@/lib/money';
 import { hrefFor, type Locale } from '@/lib/i18n';
@@ -64,6 +65,7 @@ export function MenuBoard({
 
   return (
     <div className={`${styles.board} glass`}>
+      <EdgeLight />
       <header className={styles.head}>
         <h1 className={styles.title}>{dict.menu.title}</h1>
         {/* The KIT labels the card itself, and it is right to: the prices below

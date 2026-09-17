@@ -1,0 +1,20 @@
+/*
+ * Decoration behaves like decoration: it never takes a click, never takes a
+ * line of layout, and never competes with the words it sits behind.
+ */
+.ornament {
+  position: absolute;
+  display: block;
+  color: var(--gold);
+  /* Low enough to read as gilding on glass rather than as a drawing of a
+     flower. The panels are already busy with a restaurant behind them. */
+  opacity: 0.16;
+  pointer-events: none;
+  user-select: none;
+}
+
+.ornament svg {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}

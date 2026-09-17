@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import styles from './ContactView.module.css';
+import { EdgeLight } from '@/components/app/EdgeLight';
 import { MapPlate } from '@/components/app/MapPlate';
 import { HOURS_SOURCES, RESTAURANT, phoneHref } from '@/lib/restaurant';
 import { hrefFor, type Locale } from '@/lib/i18n';
@@ -21,6 +22,7 @@ export function ContactView({ locale, dict }: { locale: Locale; dict: Dictionary
 
   return (
     <div className={`glass screen-sheet ${styles.screen}`}>
+      <EdgeLight />
       <div className={styles.columns}>
         {/* ---------- what we know ---------- */}
         <section className={styles.facts}>

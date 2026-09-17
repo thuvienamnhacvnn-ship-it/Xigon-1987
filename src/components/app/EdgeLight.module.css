@@ -1,0 +1,49 @@
+/*
+ * The travelling edge light.
+ *
+ * It lies over the panel's own border, matching its radius, and takes no space
+ * and no clicks. `overflow: visible` matters: the stroke straddles the path, so
+ * half of it falls outside the box the SVG was given.
+ */
+.light {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.pass {
+  /* The panel's own radius, so the path is the same shape as the edge it
+     lights. As an attribute this cannot be a variable; as a property it can. */
+  rx: var(--edge-r, var(--glass-r));
+  ry: var(--edge-r, var(--glass-r));
+  fill: none;
+  stroke: rgb(255, 246, 224);
+  stroke-linecap: round;
+  /*
+   * The dash walks the path, which is what keeps the light on the line through
+   * the corners. Twenty-six seconds for one circuit: noticed once, never
+   * nagging.
+   */
+  animation: edge-travel 26s linear infinite;
+}
+
+@keyframes edge-travel {
+  from {
+    stroke-dashoffset: calc(100 + var(--centre, 0));
+  }
+  to {
+    stroke-dashoffset: var(--centre, 0);
+  }
+}
+
+/* A light travelling round the screen is what motion sickness is made of.
+   Asked to stop, it stops. */
+@media (prefers-reduced-motion: reduce) {
+  .light {
+    display: none;
+  }
+}

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import styles from './ReserveBoard.module.css';
+import { EdgeLight } from './EdgeLight';
 import { availabilityAction, confirmReservationAction, holdSlotAction } from '@/server/actions';
 import { addDays, formatDate } from '@/lib/dates';
 import { fill, type Dictionary } from '@/lib/dictionary';
@@ -192,6 +193,7 @@ export function ReserveBoard({
     <div className={styles.board}>
       {/* ---------- the room, left ---------- */}
       <aside className={`glass ${styles.plate}`}>
+        <EdgeLight />
         <img src="/img/scene/dining-room-1280.webp" alt="" className={styles.plateImg} />
         <div className={styles.plateCopy}>
           <h1 className={styles.plateTitle}>{dict.reserve.tableWaits}</h1>
@@ -206,6 +208,7 @@ export function ReserveBoard({
 
       {/* ---------- the form, right ---------- */}
       <section className={`glass ${styles.form}`}>
+        <EdgeLight />
         <h2 className={styles.title}>{dict.reserve.title}</h2>
 
         <ol className={styles.steps}>

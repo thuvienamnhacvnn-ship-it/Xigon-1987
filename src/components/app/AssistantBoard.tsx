@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import styles from './AssistantBoard.module.css';
+import { EdgeLight } from './EdgeLight';
 import type { Suggestion } from '@/lib/suggestion';
 import { formatMoney } from '@/lib/money';
 import { hrefFor, type Locale } from '@/lib/i18n';
@@ -143,6 +144,7 @@ export function AssistantBoard({
     <div className={styles.board}>
       {/* ---------- the conversation ---------- */}
       <section className={`glass ${styles.talk}`} aria-label={dict.assistant.role}>
+        <EdgeLight />
         <header className={styles.head}>
           <span className={styles.headMark}>
             <BrainMark size={28} />
@@ -241,6 +243,7 @@ export function AssistantBoard({
 
       {/* ---------- the plate it named ---------- */}
       <section className={`glass ${styles.plate}`} aria-label={dict.assistant.proposal}>
+        <EdgeLight />
         {plate ? (
           <PlateCard locale={locale} dict={dict} suggestion={plate} onAdd={add} />
         ) : sample ? (

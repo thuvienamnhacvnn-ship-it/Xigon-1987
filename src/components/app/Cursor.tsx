@@ -4,107 +4,122 @@ import { useEffect, useRef } from 'react';
 import styles from './Cursor.module.css';
 
 /**
- * A light that follows the pointer.
+ * A tail of light that chases the pointer.
  *
- * A gold ring that trails a little behind the cursor and opens out over
- * anything that can be pressed — the same brass-and-candlelight language as the
- * rest of the site, and a way of telling a guest what is live on a screen where
- * almost everything is glass.
+ * Fourteen points, each easing towards the one ahead of it rather than towards
+ * the cursor. That is what makes it a tail and not a swarm: chase the cursor
+ * directly and every point arrives on the same spot, one behind another only
+ * while the hand is moving fast. Chained, they string out through the corner
+ * the hand actually took and gather up behind it when it stops.
+ *
+ * The head carries a ring that opens over anything that can be pressed — on a
+ * site made almost entirely of glass, that is worth saying.
  *
  * It does not replace the system cursor. Hiding it is a fashion that costs
- * people the one thing they can always rely on: a pointer that behaves the way
- * their machine says it should. This is drawn behind it.
+ * people the one thing they can always rely on; this is drawn behind it.
  *
- * Nothing here goes through React state. A pointer move fires dozens of times a
- * second, and re-rendering a tree that often to move a circle is how a site
- * starts dropping frames; the ring is positioned directly and eased on the
- * animation frame instead.
+ * Nothing goes through React state. A pointer reports position dozens of times
+ * a second, and re-rendering a tree that often to move a dot is how a site
+ * starts dropping frames — the points are written straight to `transform`
+ * inside one animation frame.
  */
+const POINTS = 14;
+
+/*
+ * How hard each point is pulled towards the one ahead. Higher is tighter: the
+ * head keeps up with the hand, the tail hangs back and arrives late, which is
+ * the whole of the effect.
+ */
+const LEAD_PULL = 0.34;
+const TAIL_PULL = 0.16;
+
 export function Cursor() {
-  const ringRef = useRef<HTMLDivElement>(null);
-  const dotRef = useRef<HTMLDivElement>(null);
+  const hostRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     /*
-     * A touchscreen has no pointer to follow, and a guest who has asked for
-     * less motion has asked for exactly this to stop. Both are checked before
-     * anything is drawn rather than after.
+     * A touchscreen has no pointer to chase, and a guest who asked for less
+     * motion has asked for exactly this to stop. Both before anything is drawn.
      */
-    const fine = window.matchMedia('(pointer: fine)');
-    const still = window.matchMedia('(prefers-reduced-motion: reduce)');
-    if (!fine.matches || still.matches) return;
+    if (!window.matchMedia('(pointer: fine)').matches) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-    const ring = ringRef.current;
-    const dot = dotRef.current;
-    if (!ring || !dot) return;
+    const host = hostRef.current;
+    if (!host) return;
+
+    const nodes: HTMLSpanElement[] = [];
+    for (let index = 0; index < POINTS; index += 1) {
+      const node = document.createElement('span');
+      node.className = index === 0 ? `${styles.point} ${styles.head}` : styles.point;
+      // Furthest back is smallest and faintest, so the tail thins to nothing.
+      const along = index / (POINTS - 1);
+      node.style.setProperty('--size', `${11 - along * 8}px`);
+      node.style.setProperty('--fade', String(0.9 - along * 0.78));
+      host.append(node);
+      nodes.push(node);
+    }
 
     let pointerX = window.innerWidth / 2;
     let pointerY = window.innerHeight / 2;
-    let ringX = pointerX;
-    let ringY = pointerY;
+    const chain = nodes.map(() => ({ x: pointerX, y: pointerY }));
+    let awake = false;
     let frame = 0;
-    let visible = false;
 
     const onMove = (event: PointerEvent) => {
       pointerX = event.clientX;
       pointerY = event.clientY;
 
-      if (!visible) {
-        visible = true;
-        ringX = pointerX;
-        ringY = pointerY;
-        ring.dataset.on = 'true';
-        dot.dataset.on = 'true';
+      if (!awake) {
+        awake = true;
+        for (const link of chain) {
+          link.x = pointerX;
+          link.y = pointerY;
+        }
+        host.dataset.on = 'true';
       }
 
-      dot.style.transform = `translate3d(${pointerX}px, ${pointerY}px, 0)`;
-
       /*
-       * Whether the ring should open is asked of the element under the pointer,
-       * not maintained as a list of selectors each component has to remember to
-       * join. `closest` walks up, so a label inside a button counts as the
-       * button — which is what the guest is aiming at.
+       * Whether the head opens is asked of the element under the pointer rather
+       * than kept as a list of selectors every component must remember to join.
+       * `closest` walks up, so a label inside a button counts as the button —
+       * which is what the guest is aiming at.
        */
       const target = event.target as Element | null;
       const live = target?.closest('a, button, input, select, textarea, [role="button"], summary');
-      ring.dataset.live = live ? 'true' : undefined;
+      host.dataset.live = live ? 'true' : undefined;
     };
 
-    const onLeave = () => {
-      visible = false;
-      ring.dataset.on = undefined;
-      dot.dataset.on = undefined;
+    const sleep = () => {
+      awake = false;
+      host.dataset.on = undefined;
     };
 
-    /*
-     * The ring is eased towards the pointer rather than pinned to it: a sixth of
-     * the remaining distance each frame. That lag is the whole effect — a ring
-     * that sits exactly on the cursor is just a bigger cursor.
-     */
     const tick = () => {
-      ringX += (pointerX - ringX) * 0.16;
-      ringY += (pointerY - ringY) * 0.16;
-      ring.style.transform = `translate3d(${ringX}px, ${ringY}px, 0)`;
+      for (let index = 0; index < chain.length; index += 1) {
+        const link = chain[index];
+        const aheadX = index === 0 ? pointerX : chain[index - 1].x;
+        const aheadY = index === 0 ? pointerY : chain[index - 1].y;
+        const pull = index === 0 ? LEAD_PULL : TAIL_PULL;
+        link.x += (aheadX - link.x) * pull;
+        link.y += (aheadY - link.y) * pull;
+        nodes[index].style.transform = `translate3d(${link.x}px, ${link.y}px, 0) translate(-50%, -50%)`;
+      }
       frame = window.requestAnimationFrame(tick);
     };
 
     frame = window.requestAnimationFrame(tick);
     window.addEventListener('pointermove', onMove, { passive: true });
-    document.addEventListener('pointerleave', onLeave);
-    window.addEventListener('blur', onLeave);
+    document.addEventListener('pointerleave', sleep);
+    window.addEventListener('blur', sleep);
 
     return () => {
       window.cancelAnimationFrame(frame);
       window.removeEventListener('pointermove', onMove);
-      document.removeEventListener('pointerleave', onLeave);
-      window.removeEventListener('blur', onLeave);
+      document.removeEventListener('pointerleave', sleep);
+      window.removeEventListener('blur', sleep);
+      for (const node of nodes) node.remove();
     };
   }, []);
 
-  return (
-    <>
-      <div ref={ringRef} className={styles.ring} aria-hidden="true" />
-      <div ref={dotRef} className={styles.dot} aria-hidden="true" />
-    </>
-  );
+  return <div ref={hostRef} className={styles.trail} aria-hidden="true" />;
 }

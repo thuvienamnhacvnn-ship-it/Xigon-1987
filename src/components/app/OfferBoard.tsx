@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import styles from './OfferBoard.module.css';
+import { EdgeLight } from './EdgeLight';
 import { fill, type Dictionary } from '@/lib/dictionary';
 import { hrefFor, type Locale } from '@/lib/i18n';
 import type { Promotion } from '@/server/content';
@@ -45,6 +46,7 @@ export function OfferBoard({
         <ul className={styles.grid}>
           {shown.map((offer) => (
             <li key={offer.id} className={`glass ${styles.card}`}>
+              <EdgeLight />
               {offer.imagePath ? (
                 <img
                   className={styles.image}

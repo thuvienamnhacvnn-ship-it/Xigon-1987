@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import { EdgeLight } from '@/components/app/EdgeLight';
 import { getDictionary } from '@/lib/dictionary';
 import { isLocale, matchRoute, routes, type RouteKey } from '@/lib/i18n';
 import { AssistantView } from '@/views/AssistantView';
@@ -101,7 +102,10 @@ export default async function SectionPage({ params, searchParams }: Props) {
    * deliberately not on this list: the drawings build those from separate
    * cards, and a frame around a frame is what made them read as billboards.
    */
-  const sheet = (node: React.ReactNode) => <div className="glass screen-sheet legacy-sheet">{node}</div>;
+  const sheet = (node: React.ReactNode) => <div className="glass screen-sheet legacy-sheet">
+      <EdgeLight />
+      {node}
+    </div>;
 
   switch (key) {
     case 'experience':

@@ -1,40 +1,187 @@
+/*
+ * Bestellen.
+ *
+ * Two ways to get the food, drawn as two cards of equal weight even though only
+ * one of them is switched on — the shape of the screen should not change the
+ * day delivery is turned on.
+ */
+.screen {
+  --screen-w: var(--screen-mid);
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: clamp(0.9rem, 0.5rem + 1.2vw, 1.8rem);
+  height: 100%;
+  padding: clamp(1rem, 0.6rem + 1.2vw, 1.8rem) 0;
+}
+
+/* ---------- the head ---------- */
+
+.head {
+  position: relative;
+  text-align: center;
+}
+
+.title {
+  margin: 0.3rem 0 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.7rem, 1rem + 2vw, 2.9rem);
+  font-weight: 400;
+  line-height: 1.04;
+  color: var(--ivory);
+}
+
+.lede {
+  margin: 0.5rem 0 0;
+  font-weight: var(--weight-quiet);
+  font-size: var(--step-0);
+  color: var(--ivory-soft);
+}
+
+/* The rule under the heading is drawn, not a border: a border cannot carry a
+   diamond in its middle. */
+.headRule {
+  position: relative;
+  display: block;
+  width: min(240px, 60%);
+  margin: 0.9rem auto 0;
+  opacity: 0.4;
+}
+
+/* ---------- the two ways ---------- */
+
 .options {
   display: grid;
-  gap: clamp(1rem, 0.6rem + 1.6vw, 1.8rem);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-content: center;
+  gap: clamp(0.9rem, 0.5rem + 1.2vw, 1.8rem);
+  min-height: 0;
 }
-@media (min-width: 760px) { .options { grid-template-columns: 1fr 1fr; } }
 
 .option {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 0.7rem;
-  padding: clamp(1.3rem, 1rem + 1.6vw, 2.2rem);
-  border: 1px solid var(--gold-hair);
-  background: var(--green-panel);
+  gap: 0.55rem;
+  min-width: 0;
+  padding: clamp(1.2rem, 0.8rem + 1.4vw, 2.2rem);
 }
-/* A switched-off option is visibly quieter rather than hidden: a guest should
-   see that delivery exists and is simply not open yet. */
-.option[data-on='false'] { opacity: 0.62; }
 
-.optionTitle { font-family: var(--font-display); font-size: var(--step-3); }
-.optionText { color: var(--ivory-soft); line-height: 1.7; }
-.optionMeta {
-  font-size: var(--step--2);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--gold);
-  font-variant-numeric: lining-nums tabular-nums;
+/*
+ * The one that is off is not hidden and not greyed into illegibility. A guest
+ * who came for delivery is owed a plain answer, and an answer they cannot read
+ * is not one.
+ */
+.option:not([data-on='true']) .mark {
+  color: var(--ivory-mute);
+  border-color: var(--gold-hair);
 }
-.option .btn { margin-top: auto; }
+
+.mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 68px;
+  height: 68px;
+  margin-bottom: 0.3rem;
+  border: 1px solid var(--gold);
+  border-radius: 50%;
+  color: var(--gold-lit);
+}
+
+.optionTitle {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--step-2);
+  font-weight: 400;
+  color: var(--ivory);
+}
+
+.optionText {
+  margin: 0;
+  font-weight: var(--weight-quiet);
+  font-size: var(--step--1);
+  line-height: 1.55;
+  color: var(--ivory-soft);
+}
+
+.facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.1rem;
+  margin: 0.2rem 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--step--2);
+  color: var(--ivory-mute);
+}
+
+.facts li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.facts svg {
+  color: var(--gold-deep);
+}
+
+.action {
+  margin-top: auto;
+  padding-top: 0.2rem;
+}
 
 .off {
-  margin-top: auto;
+  margin: 0;
+  padding: 0.5rem 0.85rem;
+  border-left: 2px solid var(--gold-deep);
+  font-weight: var(--weight-quiet);
   font-size: var(--step--1);
-  color: var(--gold-lit);
-  border-left: 2px solid var(--gold);
-  padding-left: 0.8rem;
-  line-height: 1.6;
+  color: var(--ivory-soft);
+  background: rgba(239, 177, 92, 0.06);
 }
 
-.hoursNote { margin-top: 2rem; font-size: var(--step--1); color: var(--ivory-mute); max-width: 60ch; line-height: 1.7; }
+.note {
+  margin: 0;
+  font-weight: var(--weight-quiet);
+  font-size: var(--step--2);
+  text-align: center;
+  color: var(--ivory-mute);
+}
+
+/* ---------- the gilding ---------- */
+
+.cornerTop {
+  top: -0.4rem;
+  left: -1.2rem;
+  width: clamp(70px, 8vw, 118px);
+}
+
+.branch {
+  top: 12%;
+  right: -2.4rem;
+  width: clamp(110px, 13vw, 200px);
+  transform: scaleX(-1);
+}
+
+/* ---------- narrower ---------- */
+
+@media (max-width: 860px) {
+  .options {
+    grid-template-columns: minmax(0, 1fr);
+    align-content: start;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .branch {
+    display: none;
+  }
+
+  .mark {
+    width: 54px;
+    height: 54px;
+  }
+}

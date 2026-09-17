@@ -156,80 +156,13 @@ a { color: inherit; text-decoration: none; }
 }
 
 /*
- * A light running round the edge — a short bright length of the gold line
- * travelling along it, the way a lamp slides along the brass rail of the bar as
- * you walk past.
+ * The edge light lives in `EdgeLight.tsx`, not here.
  *
- * It follows the border path rather than sweeping an angle around the centre.
- * A conic gradient was the obvious way to do this and it is wrong: on a
- * rectangle an angular sweep dawdles at the corners and races across the short
- * edges, because equal angles are not equal distances. `offset-path` walks the
- * box itself, so the light moves at one speed the whole way round.
- *
- * It rides the padding box, one pixel inside the visible line, because several
- * cards clip their overflow to keep a photograph inside their corners and
- * anything on the border box would be cut off on those.
+ * It was a CSS-only bar walking the border box with `offset-path`, and it cut
+ * every corner: a rigid bar cannot bend round a radius, so at each corner the
+ * light left the line and struck across the curve. A stroked path bends by
+ * definition, which is why it is an SVG now.
  */
-@supports (offset-path: padding-box) {
-  .glass::after,
-  .glass-edge::after {
-    content: '';
-    position: absolute;
-    /*
-     * Long, and mostly falloff.
-     *
-     * A short bright dash reads as a dot being dragged round a rectangle. What
-     * makes it look like light is the length of the fade either side of the
-     * core — the eye needs to see the edge brighten before the highlight
-     * arrives and dim after it has gone.
-     */
-    width: clamp(220px, 34%, 620px);
-    height: 3px;
-    offset-path: padding-box;
-    offset-rotate: auto;
-    offset-anchor: 50% 50%;
-    background: linear-gradient(
-      90deg,
-      rgba(247, 217, 164, 0) 0%,
-      rgba(247, 217, 164, 0.12) 16%,
-      rgba(247, 217, 164, 0.38) 32%,
-      rgba(252, 232, 190, 0.72) 43%,
-      rgba(255, 252, 244, 1) 50%,
-      rgba(252, 232, 190, 0.72) 57%,
-      rgba(247, 217, 164, 0.38) 68%,
-      rgba(247, 217, 164, 0.12) 84%,
-      rgba(247, 217, 164, 0) 100%
-    );
-    filter: drop-shadow(0 0 7px rgba(247, 217, 164, 0.85));
-    animation: edge-run 26s linear infinite;
-    pointer-events: none;
-    z-index: 2;
-  }
-
-  /* Offset so the dock and the panel above it are never lit at the same
-     instant, which reads as a flash rather than a reflection. */
-  .glass-edge::after {
-    animation-delay: -7s;
-  }
-
-  @keyframes edge-run {
-    from {
-      offset-distance: 0%;
-    }
-    to {
-      offset-distance: 100%;
-    }
-  }
-}
-
-/* A light travelling round the screen is what motion sickness is made of.
-   Asked to stop, it stops, and the edge keeps the brightness on its own. */
-@media (prefers-reduced-motion: reduce) {
-  .glass::after,
-  .glass-edge::after {
-    display: none;
-  }
-}
 
 /*
  * The dock carries its own background and its own blur — it is not a panel —
