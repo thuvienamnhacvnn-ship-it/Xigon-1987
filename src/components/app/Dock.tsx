@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import styles from './AppShell.module.css';
-import { EdgeLight } from './EdgeLight';
 import { dockKeyFrom, hrefFor, type Locale, type RouteKey } from '@/lib/i18n';
 import type { Dictionary } from '@/lib/dictionary';
 
@@ -37,8 +36,17 @@ export function Dock({
 
   return (
     <nav className={styles.dock} aria-label={dict.nav.menu}>
-      <ul className={`${styles.dockList} glass-edge`}>
-        <EdgeLight radius="999px" />
+      {/*
+       * No travelling edge light on the dock.
+       *
+       * It is the one surface here that scrolls sideways when the labels do not
+       * fit, and an absolutely positioned overlay inside a scroll container is
+       * measured against the scrollable content rather than the visible pill —
+       * so the light left the edge and drew a line straight across the middle
+       * of the bar. The dock has its own gold hairline; it does not need the
+       * effect, and the effect cannot be made honest here.
+       */}
+      <ul className={styles.dockList}>
         {ITEMS.map((item) => {
           const active = item.key === owner;
           const Icon = item.icon;

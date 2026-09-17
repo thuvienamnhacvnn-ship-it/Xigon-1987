@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import styles from './AppShell.module.css';
 import { Dock } from './Dock';
-import { Cursor } from './Cursor';
 import { RoomBackdrop } from './RoomBackdrop';
 import { TopBar } from './TopBar';
 import { hrefFor, routeKeyFrom, type Locale } from '@/lib/i18n';
@@ -56,9 +55,6 @@ export function AppShell({
        * restaurant's evening: it stops on a frame and goes on again.
        */}
       <RoomBackdrop locale={locale} pathname={pathname} />
-
-      {/* Drawn behind the system cursor, never instead of it. */}
-      <Cursor />
 
       <main id="main" className={`${styles.content} screen-panel`} data-bare={bare ? 'true' : undefined}>
         {children}
