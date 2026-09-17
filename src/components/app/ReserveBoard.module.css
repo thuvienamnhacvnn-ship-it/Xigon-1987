@@ -395,28 +395,46 @@
 
   .board {
     grid-template-rows: minmax(0, 1fr);
+    /* The shell's phone gutter is 13.6px and a card wants 16 off the edge; this
+       tops it up rather than replacing it, so the two never disagree. */
+    padding-inline: max(0px, 16px - var(--shell-gutter));
   }
 
+  /* Both halves of a pair are a full line here. Side by side, the date field is
+     133px wide and "Donnerstag, 17. September 2026" is read as "Donnerst". */
   .pair,
-  .more {
-  min-height: 42px;
-  padding: 0.5rem 0.95rem;
-  border: 1px dashed var(--gold-hair);
-  border-radius: var(--r-pill);
-  font-family: var(--font-body);
-  font-size: var(--step--1);
-  color: var(--gold);
-  background: transparent;
-  cursor: pointer;
-}
-
-.more:hover {
-  border-style: solid;
-  border-color: var(--gold);
-  color: var(--gold-lit);
-}
-
-.seating {
+  .seating {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  /*
+   * "Donnerstag, 24. September 2026" is 260px of type and the field is 231px
+   * wide once the icon and the chevron have taken theirs, so the year was being
+   * cut off the end. A step down the scale is 211px and leaves the date whole —
+   * the alternative was dropping the icon, which is what tells the two pickers
+   * apart at a glance.
+   */
+  .control select {
+    font-size: var(--step--1);
+  }
+
+  /* Three marks, three labels and two rules do not fit on one line; without this
+     the last step is a numbered circle with its name cut off the side. */
+  .steps {
+    flex-wrap: wrap;
+    row-gap: 0.4rem;
+  }
+
+  /* The number for a party too large to book online, on its own line rather than
+     squeezed into the 46px left over beside the sentence — and tall enough to
+     be pressed, since it is the only way to book a table for nine. */
+  .aside {
+    flex-wrap: wrap;
+  }
+
+  .asideLink {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
   }
 }

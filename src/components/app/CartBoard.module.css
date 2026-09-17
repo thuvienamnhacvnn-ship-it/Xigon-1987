@@ -635,3 +635,56 @@
     min-height: 0;
   }
 }
+
+/*
+ * ---------- the phone ----------
+ *
+ * The stepper is 112px wide and will not become narrower without the buttons
+ * getting too small for a thumb, so on a narrow screen it stops sharing a row
+ * with the picture and takes a line of its own with the line total opposite.
+ * Before this it sat in a 50px column and printed itself straight through the
+ * price beside it.
+ */
+@media (max-width: 620px) {
+  .board {
+    padding: 0.85rem 0.75rem;
+  }
+
+  .line {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas:
+      'thumb body bin'
+      'step step total';
+    gap: 0.5rem 0.7rem;
+  }
+
+  .stepper {
+    grid-area: step;
+    justify-self: start;
+  }
+
+  .lineTotal {
+    grid-area: total;
+    align-self: center;
+  }
+
+  .thumb {
+    width: 84px;
+    height: 58px;
+  }
+
+  .remove {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  /* Two columns of figures side by side is a table; on a phone the card reads
+     better as one column of rows. */
+  .ways {
+    gap: 0.45rem;
+  }
+
+  .grand {
+    font-size: 1.5rem;
+  }
+}

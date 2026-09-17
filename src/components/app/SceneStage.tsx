@@ -47,7 +47,19 @@ export function SceneStage({ locale, dict }: { locale: Locale; dict: Dictionary 
         ))}
       </div>
 
-      {/* ---------- the rail, left edge ---------- */}
+      {/*
+       * The mark, in the middle of the film.
+       *
+       * On a phone the corner of the screen is the worst place for it: the bar
+       * up there is already carrying three languages, an account and a basket.
+       * Centred over the room it is the first thing the guest sees, which is
+       * what a sign outside a restaurant is for. The shell hides its own
+       * corner copy at this width so the logo is not shown twice.
+       */}
+      <img className={styles.bannerMark} src="/img/logo.png" alt="XIGON 1987" />
+
+      {/* ---------- the rail: left edge on a wide screen, a row above the
+           bar on a phone ---------- */}
       <div className={styles.rail}>
         <a
           className={styles.railButton}

@@ -32,6 +32,9 @@ export const vi: Dictionary = {
     offers: 'Ưu đãi',
     assistant: 'Trợ lý AI',
     contact: 'Liên hệ',
+    shortReserve: 'Đặt bàn',
+    shortMenu: 'Thực đơn',
+    shortAssistant: 'Trợ lý',
   },
 
   shell: {

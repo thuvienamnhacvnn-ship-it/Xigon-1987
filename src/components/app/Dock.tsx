@@ -12,14 +12,29 @@ import type { Dictionary } from '@/lib/dictionary';
  * the only navigation the site has. Exactly one item is current at a time, and
  * it is marked twice over: gold type and a dot beneath, so it does not rely on
  * colour alone.
+ *
+ * On a phone the bar spans the screen and the card is lifted out of it as a
+ * round button in the middle. That is the one thing a guest opens a restaurant
+ * site to do, and on a phone it is worth a thumb's reach rather than a sixth of
+ * a crowded row. The order differs there — the card moves to the centre — which
+ * is done in CSS off `data-key`, so the reading order stays the one the
+ * drawings set on a wide screen.
  */
-const ITEMS: { key: RouteKey; label: (d: Dictionary) => string; icon: () => React.ReactElement }[] = [
+type Item = {
+  key: RouteKey;
+  label: (d: Dictionary) => string;
+  /** The name used where a cell is 54px wide. Falls back to the full one. */
+  short?: (d: Dictionary) => string;
+  icon: () => React.ReactElement;
+};
+
+const ITEMS: Item[] = [
   { key: 'experience', label: (d) => d.dock.experience, icon: EyeIcon },
-  { key: 'menu', label: (d) => d.dock.menu, icon: CutleryIcon },
-  { key: 'reserve', label: (d) => d.dock.reserve, icon: CalendarIcon },
+  { key: 'menu', label: (d) => d.dock.menu, short: (d) => d.dock.shortMenu, icon: CutleryIcon },
+  { key: 'reserve', label: (d) => d.dock.reserve, short: (d) => d.dock.shortReserve, icon: CalendarIcon },
   { key: 'order', label: (d) => d.dock.order, icon: BagIcon },
   { key: 'offers', label: (d) => d.dock.offers, icon: TagIcon },
-  { key: 'assistant', label: (d) => d.dock.assistant, icon: BrainIcon },
+  { key: 'assistant', label: (d) => d.dock.assistant, short: (d) => d.dock.shortAssistant, icon: BrainIcon },
   { key: 'contact', label: (d) => d.dock.contact, icon: MailIcon },
 ];
 
@@ -51,14 +66,26 @@ export function Dock({
           const active = item.key === owner;
           const Icon = item.icon;
           return (
-            <li key={item.key}>
+            <li key={item.key} data-key={item.key}>
               <Link
                 href={hrefFor(locale, item.key)}
                 className={styles.dockItem}
                 aria-current={active ? 'page' : undefined}
               >
-                <Icon />
+                {/* The round button on a phone is this ring; on a wide screen
+                    it collapses to nothing and the icon sits bare, as drawn. */}
+                <span className={styles.dockIcon}>
+                  <Icon />
+                </span>
+                {/*
+                 * Both names are rendered and CSS shows one. A width cannot be
+                 * read during render without guessing on the server and
+                 * correcting after mount, which flickers the whole bar.
+                 */}
                 <span className={styles.dockLabel}>{item.label(dict)}</span>
+                {item.short ? (
+                  <span className={styles.dockLabelShort}>{item.short(dict)}</span>
+                ) : null}
                 <span className={styles.dockDot} aria-hidden="true" />
               </Link>
             </li>

@@ -126,6 +126,10 @@
 .userMsg,
 .botMsg {
   margin: 0;
+  /* A guest may type four hundred characters without a space in them — a link,
+     usually. Left to itself that one word is wider than the column and the log
+     grows a sideways scrollbar under the conversation. */
+  overflow-wrap: anywhere;
   padding: 0.6rem 0.95rem;
   border: var(--edge-w) solid var(--gold-hair);
   font-size: var(--step--1);
@@ -504,5 +508,54 @@
 
   .rowBody {
     max-width: 88%;
+  }
+}
+
+/* ---------- the phone ---------- */
+
+@media (max-width: 760px) {
+  /*
+   * The plate takes what it needs and the conversation keeps the rest, with a
+   * floor under it so a long dish name cannot squeeze the log away. Two capped
+   * fractions could not do both: the plate was given 267px for 284px of card
+   * and the photograph came down on the dish name.
+   */
+  .board {
+    grid-template-rows: minmax(200px, 1fr) minmax(0, auto);
+  }
+
+  /* And if the card is taller than the room left for it, it scrolls rather than
+     clipping its own price and button. */
+  .plate {
+    overflow: hidden auto;
+    overscroll-behavior: contain;
+  }
+
+  /*
+   * The photograph takes its height from the frame, never from its width — the
+   * ratio above is what let it grow into the row meant for the words. Capping
+   * it with `max-height` was not enough: the image kept its own height while
+   * the wrapper shrank, and it spilled over the name.
+   */
+  .photoWrap {
+    height: clamp(96px, 13vh, 132px);
+  }
+
+  .photo,
+  .noPhoto {
+    height: 100%;
+    max-height: none;
+    aspect-ratio: auto;
+  }
+
+  /* Thumb-sized: 36px is a mouse target. */
+  .prompt {
+    min-height: 40px;
+  }
+
+  .detailLink {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
   }
 }

@@ -382,3 +382,42 @@
     grid-auto-rows: minmax(200px, auto);
   }
 }
+
+/* ---------- the phone ---------- */
+
+@media (max-width: 760px) {
+  /*
+   * A card is as tall as what is written on it.
+   *
+   * The rows above are a floor of 200px, and `min-height: 0` on the card means
+   * it contributes nothing to that track — so every card was exactly the floor,
+   * with the rest of the body clipped by its own `overflow: hidden`. The third
+   * offer lost its button that way, and the badge, pinned to the top corner,
+   * came down on the title.
+   *
+   * `max-content` rather than `auto`: the row band has a definite height, and
+   * `auto` tracks in a box too small for them are shrunk to fit it, which is
+   * the same clipping by another route. A `max-content` row keeps its size and
+   * the band scrolls instead, which is what the band is for.
+   */
+  .grid,
+  .column {
+    grid-auto-rows: max-content;
+  }
+
+  /*
+   * The band of photograph above the words is an explicit height, not a ratio:
+   * the picture is laid over the whole card, so what the card keeps clear at
+   * the top is the only thing deciding where the words start. It is also what
+   * the badge sits in, which is why it is deep enough to hold one.
+   */
+  .card {
+    min-height: auto;
+    padding-top: clamp(140px, 24vh, 200px);
+  }
+
+  .step {
+    min-width: 44px;
+    height: 44px;
+  }
+}

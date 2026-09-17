@@ -46,6 +46,15 @@ const de = {
     offers: 'Angebote',
     assistant: 'KI-Berater',
     contact: 'Kontakt',
+    /*
+     * The same seven on a phone, where each name has about 54px.
+     * "Reservieren" does not fit in 54px and cannot wrap — it is one word — so
+     * the bar either broke it mid-syllable or clipped it to "Reservie…".
+     * A shorter true name beats a longer clipped one.
+     */
+    shortReserve: 'Tisch',
+    shortMenu: 'Karte',
+    shortAssistant: 'KI',
   },
 
   shell: {
@@ -524,6 +533,9 @@ const en: Dictionary = {
     offers: 'Offers',
     assistant: 'AI guide',
     contact: 'Contact',
+    shortReserve: 'Book',
+    shortMenu: 'Menu',
+    shortAssistant: 'AI',
   },
   shell: {
     account: 'Account',

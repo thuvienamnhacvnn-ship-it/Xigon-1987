@@ -5,6 +5,7 @@ type PlateEntry = { widths: number[]; ratio: number };
 
 const scenes = manifest.scene as unknown as Record<string, SceneEntry>;
 const plates = manifest.plate as unknown as Record<string, PlateEntry>;
+const dishes = manifest.dish as unknown as Record<string, SceneEntry>;
 
 type SceneProps = {
   id: string;
@@ -49,6 +50,44 @@ export function Scene({ id, alt, sizes, className, priority = false }: SceneProp
         }}
       />
     </picture>
+  );
+}
+
+/**
+ * The photograph of a dish as it is served.
+ *
+ * Distinct from `Plate`, which is the same dish cut out on transparency for
+ * floating over the room. Most dishes have a photograph; only a handful were
+ * ever cut out. The dish page asked for the cut-out first and fell through to
+ * an empty frame with the dish's code in it when there was none — so a dish with
+ * a perfectly good photograph, shown on the card and in the basket, opened onto
+ * a blank box.
+ */
+export function Dish({ id, alt, sizes, className, priority = false }: SceneProps) {
+  const asset = dishes[id];
+  if (!asset) return null;
+
+  const srcSet = asset.widths.map((w) => `/img/dish/${id}-${w}.webp ${w}w`).join(', ');
+  const widest = asset.widths[asset.widths.length - 1];
+
+  return (
+    <img
+      src={`/img/dish/${id}-${widest}.webp`}
+      srcSet={srcSet}
+      sizes={sizes}
+      alt={alt}
+      width={widest}
+      height={Math.round(widest / asset.ratio)}
+      className={className}
+      loading={priority ? 'eager' : 'lazy'}
+      fetchPriority={priority ? 'high' : 'auto'}
+      decoding={priority ? 'sync' : 'async'}
+      style={{
+        backgroundImage: asset.lqip ? `url(${asset.lqip})` : undefined,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
+    />
   );
 }
 

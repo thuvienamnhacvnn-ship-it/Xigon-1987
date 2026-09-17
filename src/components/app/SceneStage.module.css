@@ -60,6 +60,13 @@
   box-shadow: 0 2px 16px -4px rgba(239, 177, 92, 0.5);
 }
 
+/* ---------- the mark in the middle of the film ---------- */
+
+/* Nothing on a wide screen: the corner of the bar carries it there, as drawn. */
+.bannerMark {
+  display: none;
+}
+
 /* ---------- the rail, left edge ---------- */
 
 .rail {
@@ -230,14 +237,66 @@
 /* ---------- phone ---------- */
 
 @media (max-width: 860px) {
-  /* There is no room beside a 390px frame for a rail and a picture both. */
+  /*
+   * The mark, centred over the room.
+   *
+   * High in the frame rather than on the middle line: the restaurant's own
+   * neon sign is in the middle of most of these shots, and our mark landing on
+   * it read as the logo printed twice, slightly out of register. Up here it
+   * sits on the dark awning in every scene.
+   */
+  .bannerMark {
+    position: absolute;
+    left: 50%;
+    top: 27%;
+    transform: translate(-50%, -50%);
+    display: block;
+    width: min(54vw, 260px);
+    height: auto;
+    /* The film behind it is a lit shopfront; without its own shadow the mark
+       disappears into the neon on the brightest frames. */
+    filter: drop-shadow(0 6px 26px rgba(0, 0, 0, 0.85));
+    pointer-events: none;
+  }
+
+  /*
+   * The social row: one line, centred, above the bar.
+   *
+   * It clears the round button that lifts out of the bar — the three icons are
+   * centred on the same axis, so a shorter gap would put the middle one behind
+   * the card button.
+   */
   .rail {
     flex-direction: row;
     left: 50%;
     top: auto;
-    bottom: calc(env(safe-area-inset-bottom, 0px) + 6.6rem);
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 6.4rem);
     transform: translateX(-50%);
-    gap: 0.55rem;
+    gap: 0.7rem;
+  }
+
+  /* The guide has its own place in the bar; a second way in from here is one
+     button too many on a screen this size. */
+  .railAi {
+    display: none;
+  }
+
+  /* The scene switch drops below the top bar, which on a phone is already
+     carrying three languages, an account and a basket. */
+  .scenes {
+    top: calc(env(safe-area-inset-top, 0px) + 4.2rem);
+  }
+
+  .notice {
+    top: calc(env(safe-area-inset-top, 0px) + 7.6rem);
+  }
+
+  /* Play and sound move above the bar so a thumb reaching for them does not
+     land on Kontakt. */
+  .controls {
+    right: 0.85rem;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 6.1rem);
+    gap: 0.5rem;
   }
 
   .railRule,

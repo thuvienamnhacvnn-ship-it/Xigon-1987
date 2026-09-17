@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import { PageHead } from './PageHead';
 import styles from './DishView.module.css';
 import viewStyles from './Views.module.css';
-import { Plate, Scene } from '@/components/Picture';
+import { Dish, Plate, Scene } from '@/components/Picture';
 import { DishOrder } from '@/components/DishOrder';
 import { DishCard } from '@/components/DishCard';
 import { getDish, getRelated } from '@/server/menu';
@@ -47,7 +47,24 @@ export async function DishView({
           <div className={styles.layout}>
             {/* ------------------------------------------------ picture -- */}
             <div className={styles.media}>
-              {dish.plateId ? (
+              {/*
+               * The photograph first, then the cut-out.
+               *
+               * Nearly every dish has a photograph and only a handful were ever
+               * cut out on transparency, so asking for the cut-out first meant
+               * most dishes opened onto an empty frame with their code in it —
+               * while the same dish showed its picture on the card the guest
+               * had just tapped.
+               */}
+              {dish.photoId ? (
+                <Dish
+                  id={dish.photoId}
+                  alt={dish.name}
+                  sizes="(min-width: 900px) 46vw, 92vw"
+                  className={styles.photo}
+                  priority
+                />
+              ) : dish.plateId ? (
                 <>
                   <span className={styles.glow} aria-hidden="true" />
                   <Plate

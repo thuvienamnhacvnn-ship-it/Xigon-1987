@@ -226,7 +226,13 @@ function DishCard({ locale, dict, dish }: { locale: Locale; dict: Dictionary; di
 
         {dish.description ? <p className={styles.text}>{dish.description}</p> : null}
 
-        <div className={styles.foot}>
+        {/*
+         * `actions`, not `foot`: the pager at the bottom of the panel is also
+         * called `foot`, and two rules of the same name in one module are
+         * decided by stylesheet order rather than by intent — the pager's three
+         * tracks were landing on this row as well.
+         */}
+        <div className={styles.actions}>
           {/*
            * The allergen link is not a nicety. No allergen data has ever been
            * supplied for this card, and the dish page is where that is said

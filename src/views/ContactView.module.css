@@ -305,10 +305,26 @@
 }
 
 @media (max-width: 720px) {
-  .columns {
-    grid-template-columns: minmax(0, 1fr);
+  /*
+   * One column, and the sheet scrolls.
+   *
+   * The row above is `minmax(0, 1fr)`, which is right while the three columns
+   * fit the frame. Stacked they are twice its height, and a 1fr row does not
+   * grow: the three sections ran on out of the bottom of their own box and the
+   * footer — correctly placed under a 500px row — was drawn across the map and
+   * the route button. An `auto` row is as tall as what is in it, and the glass
+   * sheet is already the thing allowed to scroll.
+   */
+  .screen {
+    grid-template-rows: auto auto;
   }
 
+  .columns {
+    grid-template-columns: minmax(0, 1fr);
+    min-height: auto;
+  }
+
+  /* The map has no content of its own to be as tall as. */
   .map {
     min-height: 14rem;
   }
@@ -320,5 +336,23 @@
 
   .legal {
     margin-left: 0;
+  }
+
+  /* A footer link is still something a thumb has to hit, and a 20px glyph is
+     not one — the icons need the width as much as the height. */
+  .legal a,
+  .social a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+  }
+
+  .social {
+    gap: 0.4rem;
+  }
+
+  .social a {
+    justify-content: center;
+    min-width: 40px;
   }
 }

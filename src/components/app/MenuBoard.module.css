@@ -280,11 +280,26 @@
   color: var(--ivory-mute);
 }
 
-.foot {
-  display: flex;
+/*
+ * The line under the description: the way to the allergen statement, and the
+ * way into the basket.
+ *
+ * It was called `foot` too, and lost: the pager rule further down this file
+ * carries the same name, so the plate's own row was being laid out on the
+ * pager's three tracks. The measurements below are what that collision
+ * happened to produce on a wide screen, written out on purpose this time.
+ */
+.actions {
+  display: grid;
+  /*
+   * Three tracks, and the outer two are `1fr` rather than `minmax(0, 1fr)`.
+   * That is deliberate here and nowhere else on this screen: the first track is
+   * meant to be floored by the link's own width, which is what holds the button
+   * where the drawings put it. The phone rule below replaces the whole thing.
+   */
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
+  gap: 1rem;
   margin-top: auto;
   padding-top: 0.55rem;
 }
@@ -498,25 +513,240 @@
   }
 }
 
-@media (max-width: 720px) {
+/* ---------- the phone ---------- */
+
+/*
+ * 760px, the width the shell itself changes at.
+ *
+ * This block used to start at 720, and for those forty pixels the two
+ * disagreed: the shell had already given the board the whole window while the
+ * board was still laying its plates out in columns.
+ */
+@media (max-width: 760px) {
+  .board {
+    gap: 0.6rem;
+    padding: 0.9rem 1rem 0.8rem;
+  }
+
+  .title {
+    font-size: 1.55rem;
+  }
+
+  /* ---------- filters ---------- */
+
+  /*
+   * The capsule is a wide-screen object.
+   *
+   * Seven category names do not fit on one 390px line, so inside a pill they
+   * wrapped into four rows and the border drew an oval around the block — one
+   * lozenge of words rather than a row of filters. Here the categories are a
+   * strip that scrolls sideways and the search has the line under it.
+   */
+  .controls {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.5rem;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+  }
+
+  .tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    /* A visible scrollbar over a row of pills reads as a fault; the pill cut
+       off at the right edge is what says there is more. */
+    scrollbar-width: none;
+  }
+
+  .tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Out of the shared capsule each pill needs an edge of its own, or an
+     unchosen filter is a word floating on the panel. */
+  .tab {
+    flex: 0 0 auto;
+    padding: 0.42rem 0.9rem;
+    border: var(--edge-w) solid var(--gold-hair);
+  }
+
+  .tab[aria-pressed='true'] {
+    border-color: var(--gold);
+  }
+
+  .search {
+    flex: 1 1 auto;
+    padding: 0 0.85rem;
+    border: var(--edge-w) solid var(--gold-hair);
+    border-radius: var(--r-pill);
+  }
+
+  /* ---------- the plates ---------- */
+
   .grid {
     grid-template-columns: minmax(0, 1fr);
-    /* On a phone the three plates cannot all be seen at once, so this one row
+    /*
+     * `max-content`, not the `auto` this inherited.
+     *
+     * An `auto` track in a container with a definite height grows into the room
+     * it is given, so the three plates split the panel's height three ways —
+     * 89px each — while a plate needs about 160. Every row then printed its own
+     * buttons through the name and price of the next one. `max-content` says
+     * the row is as tall as what is in it; the surplus is the scroll below.
+     */
+    grid-auto-rows: max-content;
+    gap: 0.55rem;
+    /* On a phone the plates cannot all be seen at once, so this one row
        scrolls. It is the only scroll on the screen and it is inside the card,
        not the page. */
     overflow-y: auto;
     overscroll-behavior: contain;
   }
 
+  /*
+   * A plate becomes a row: the photograph, then everything else.
+   *
+   * The rule that used to be here set `grid-template-columns` on a card that is
+   * `display: flex`, so it did nothing and the phone layout was never applied
+   * at all — the plates stayed stacked, and stacked they did not fit.
+   */
   .card,
   .card:last-child:nth-child(odd) {
-    grid-template-rows: none;
-    grid-template-columns: minmax(0, 8rem) minmax(0, 1fr);
+    display: grid;
+    grid-column: auto;
+    grid-template-columns: 96px minmax(0, 1fr);
+    align-items: center;
+    gap: 0.6rem;
+    padding-bottom: 0.55rem;
+    border-bottom: 1px solid rgba(239, 177, 92, 0.16);
   }
 
-  .search {
-    margin-left: 0;
-    max-width: none;
+  /* A rule under the last plate of the page reads as a list cut off, not as a
+     list that ends. */
+  .card:last-child,
+  .card:last-child:nth-child(odd) {
+    border-bottom: 0;
+  }
+
+  /*
+   * An explicit height, never a ratio.
+   *
+   * A ratio takes the picture's height from the width of its column, and in a
+   * row the picture shares with the name, the price and the buttons that is the
+   * picture deciding how much room the words get.
+   */
+  .photo {
+    aspect-ratio: auto;
+    height: clamp(64px, 18.5vw, 78px);
+  }
+
+  /* The 9rem floor was for a plate the width of the screen; in a 96px frame it
+     is the one thing setting the height of the row. */
+  .noPhoto {
+    min-height: 0;
+  }
+
+  .soldOut {
+    top: 0.3rem;
+    left: 0.3rem;
+    padding: 0.1rem 0.35rem;
+    font-size: 0.58rem;
+  }
+
+  .body {
+    gap: 0.2rem;
+    padding: 0;
+  }
+
+  .name,
+  .price {
+    font-size: var(--step-0);
+  }
+
+  .name {
+    gap: 0.5rem;
+  }
+
+  /* Two lines, not three: the third pushes the row past the photograph beside
+     it and buys nothing — the dish page has the whole description. */
+  .text {
+    -webkit-line-clamp: 2;
+    font-size: var(--step--2);
+    line-height: 1.4;
+  }
+
+  /*
+   * Two things on the line, and the link gets a track that may be narrower than
+   * its own text. Given `1fr` the link's width becomes the track's minimum and
+   * the row widens until the button is off the side of the screen.
+   */
+  .actions {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.4rem;
+    padding-top: 0.3rem;
+  }
+
+  /*
+   * It wraps rather than pushing, and it breaks in the middle rather than at
+   * the end. The label is longer in German than in English and there is no
+   * width here at which both it and the button fit on one line in every
+   * language; balanced, two short lines read as a label, while the default
+   * break leaves the arrow alone on the second line looking like a fault.
+   */
+  .detailLink {
+    display: block;
+    font-size: var(--step--2);
+    white-space: normal;
+    text-wrap: balance;
+  }
+
+  /* Every millimetre here is a millimetre the label beside it does not have to
+     break over. */
+  .add {
+    gap: 0.3rem;
+    padding: 0.28rem 0.55rem 0.28rem 0.26rem;
+    font-size: var(--step--2);
+  }
+
+  .addMark {
+    width: 18px;
+    height: 18px;
+    font-size: 0.8rem;
+  }
+
+  /* ---------- page numbers ---------- */
+
+  /*
+   * Two objects on one line, not three tracks. The middle track left the basket
+   * a third of the row, and "2 in the cart" wrapped inside its own pill until
+   * the pill was an oval with three words stacked in it.
+   */
+  .foot {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  .pager,
+  .basket {
+    grid-column: auto;
+  }
+
+  .pager {
+    gap: 0.6rem;
+  }
+
+  .basket {
+    padding: 0.42rem 0.8rem;
+    font-size: var(--step--2);
+    white-space: nowrap;
+  }
+
+  .step {
+    min-width: 2rem;
+    height: 2rem;
   }
 
   .count {
