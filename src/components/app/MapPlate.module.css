@@ -9,7 +9,7 @@
   height: 100%;
   margin: 0;
   overflow: hidden;
-  border: 1px solid var(--gold-hair);
+  border: var(--edge-w) solid var(--gold-hair);
   border-radius: var(--glass-r);
   background: #0c0805;
 }
@@ -49,7 +49,7 @@
   position: absolute;
   width: 11px;
   height: 11px;
-  border: 1px solid var(--gold);
+  border: var(--edge-w) solid var(--gold);
   border-radius: 50%;
   animation: pin-pulse 3.6s ease-out infinite;
 }

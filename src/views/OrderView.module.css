@@ -28,7 +28,7 @@
   place-items: center;
   min-height: clamp(116px, 16vh, 180px);
   overflow: hidden;
-  border: 1px solid var(--gold-hair);
+  border: var(--edge-w) solid var(--gold-hair);
   border-radius: var(--glass-r);
 }
 
@@ -149,7 +149,7 @@
   place-items: center;
   width: 62px;
   height: 62px;
-  border: 1px solid var(--gold);
+  border: var(--edge-w) solid var(--gold);
   border-radius: 50%;
   color: var(--gold-lit);
   background: linear-gradient(180deg, rgba(20, 14, 9, 0.96), rgba(12, 9, 6, 0.98));
@@ -254,7 +254,7 @@
   flex: 0 0 auto;
   width: 26px;
   height: 26px;
-  border: 1px solid var(--gold-hair);
+  border: var(--edge-w) solid var(--gold-hair);
   border-radius: 50%;
   font-family: var(--font-body);
   font-size: var(--step--2);

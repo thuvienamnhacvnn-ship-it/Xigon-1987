@@ -12,7 +12,7 @@
   width: 100%;
   aspect-ratio: 4 / 3;
   object-fit: cover;
-  border: 1px solid var(--gold-hair);
+  border: var(--edge-w) solid var(--gold-hair);
 }
 .plates > .plate:first-child .image { aspect-ratio: 16 / 9; }
 

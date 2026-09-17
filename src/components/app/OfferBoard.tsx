@@ -9,16 +9,25 @@ import { fill, type Dictionary } from '@/lib/dictionary';
 import { hrefFor, type Locale } from '@/lib/i18n';
 import type { Promotion } from '@/server/content';
 
+/** One feature and two beside it. More than that pages. */
 const PER_PAGE = 3;
 
 /**
  * Angebote.
  *
- * The title sits on the restaurant itself and the offers float under it as
- * three separate sheets of glass. There is no panel around them on purpose: a
- * frame around a frame is what made this screen read as a billboard, and the
- * dead space the drawing leaves above and below the row is what keeps the
- * photographs looking like photographs.
+ * Three identical cards in a row is the layout a content management system
+ * produces, not one anybody designed: every offer the same size says every
+ * offer matters the same, which is never true, and a row of equal rectangles is
+ * the flattest thing that can be done with three photographs.
+ *
+ * So the first offer is the feature — full height, its picture carrying the
+ * whole card — and the other two stack beside it at half that. Which is which
+ * is simply the order set in the back office, so promoting an offer means
+ * moving it to the top, which is what anybody would expect it to mean.
+ *
+ * The words sit on the photograph rather than in a block beneath it. That is
+ * the language the rest of the site is built in, and it is the difference
+ * between a card that reads as an offer and one that reads as a database row.
  */
 export function OfferBoard({
   locale,
@@ -35,6 +44,7 @@ export function OfferBoard({
   // rather than showing an empty row they have to click their way out of.
   const current = Math.min(page, pages - 1);
   const shown = offers.slice(current * PER_PAGE, current * PER_PAGE + PER_PAGE);
+  const [feature, ...rest] = shown;
 
   return (
     <div className={styles.board}>
@@ -43,87 +53,105 @@ export function OfferBoard({
         <p className={styles.subtitle}>{dict.promo.caveat}</p>
       </header>
 
-      {shown.length ? (
-        <ul className={styles.grid}>
-          {shown.map((offer) => (
-            <li key={offer.id} className={`glass ${styles.card}`}>
-              <EdgeLight />
-              <OfferMedia media={offer.media} alt={offer.title} />
-
-              {/*
-               * The corner label. It carries a day or a kind — never a
-               * percentage and never a crossed-out price, because nothing on
-               * this card has been priced by the restaurant. A discount nobody
-               * agreed to is the one decoration that costs money at the till.
-               */}
-              {offer.badge ? <span className={styles.badge}>{offer.badge}</span> : null}
-
-              <div className={styles.body}>
-                <span className={styles.seal} aria-hidden="true">
-                  <Seal />
-                </span>
-
-                <h2 className={styles.name}>{offer.title}</h2>
-                {offer.body ? <p className={styles.text}>{offer.body}</p> : null}
-
-                <p className={styles.runs}>
-                  <CalendarIcon />
-                  {runsFor(offer, locale, dict)}
-                </p>
-
-                <Countdown dict={dict} endsAt={offer.endsAt} startsAt={offer.startsAt} />
-
-                <Link href={hrefFor(locale, 'menu')} className={`ghost ${styles.action}`}>
-                  {dict.menu.label}
-                  <span aria-hidden="true">→</span>
-                </Link>
-              </div>
-            </li>
-          ))}
-        </ul>
+      {feature ? (
+        <div className={styles.grid}>
+          <OfferCard locale={locale} dict={dict} offer={feature} feature />
+          {rest.length ? (
+            <div className={styles.column}>
+              {rest.map((offer) => (
+                <OfferCard key={offer.id} locale={locale} dict={dict} offer={offer} />
+              ))}
+            </div>
+          ) : null}
+        </div>
       ) : (
         <p className={styles.none}>{dict.promo.none}</p>
       )}
 
-      {/*
-       * Two arrows and a count, the same device the card uses. Nobody jumps to
-       * page four of a list of offers; they turn pages until one appeals.
-       */}
-      <nav className={styles.pager} aria-label={fill(dict.menu.pageOf, { n: current + 1, total: pages })}>
-        <button
-          type="button"
-          className={styles.step}
-          onClick={() => setPage(current - 1)}
-          disabled={current === 0}
-          aria-label={dict.menu.prevPage}
-        >
-          ←
-        </button>
-
-        <span className={styles.pageCount} aria-hidden="true">
-          {current + 1} / {pages}
-        </span>
-
-        <button
-          type="button"
-          className={styles.step}
-          onClick={() => setPage(current + 1)}
-          disabled={current >= pages - 1}
-          aria-label={dict.menu.nextPage}
-        >
-          →
-        </button>
-      </nav>
+      {pages > 1 ? (
+        <nav className={styles.pager} aria-label={fill(dict.menu.pageOf, { n: current + 1, total: pages })}>
+          <button
+            type="button"
+            className={styles.step}
+            onClick={() => setPage(current - 1)}
+            disabled={current === 0}
+            aria-label={dict.menu.prevPage}
+          >
+            ←
+          </button>
+          <span className={styles.pageCount} aria-hidden="true">
+            {current + 1} / {pages}
+          </span>
+          <button
+            type="button"
+            className={styles.step}
+            onClick={() => setPage(current + 1)}
+            disabled={current >= pages - 1}
+            aria-label={dict.menu.nextPage}
+          >
+            →
+          </button>
+        </nav>
+      ) : null}
     </div>
+  );
+}
+
+function OfferCard({
+  locale,
+  dict,
+  offer,
+  feature = false,
+}: {
+  locale: Locale;
+  dict: Dictionary;
+  offer: Promotion;
+  feature?: boolean;
+}) {
+  return (
+    <article className={`glass ${styles.card}`} data-feature={feature ? 'true' : undefined}>
+      <EdgeLight />
+
+      <OfferMedia media={offer.media} alt={offer.title} />
+
+      {/*
+       * Words read off a photograph need their own ground. A gradient rising
+       * out of the foot of the picture, not a panel laid over it — a panel
+       * would only be the boxy card again, one layer further in.
+       */}
+      <span className={styles.scrim} aria-hidden="true" />
+
+      {offer.badge ? <span className={styles.badge}>{offer.badge}</span> : null}
+
+      <div className={styles.body}>
+        <h2 className={styles.name}>{offer.title}</h2>
+        {offer.body ? <p className={styles.text}>{offer.body}</p> : null}
+
+        <p className={styles.runs}>
+          <CalendarIcon />
+          {runsFor(offer, locale, dict)}
+        </p>
+
+        <Countdown dict={dict} endsAt={offer.endsAt} startsAt={offer.startsAt} />
+
+        <Link
+          href={hrefFor(locale, 'menu')}
+          className={feature ? `cta ${styles.action}` : `ghost ${styles.action}`}
+        >
+          {dict.menu.label}
+          <span aria-hidden="true">→</span>
+        </Link>
+      </div>
+    </article>
   );
 }
 
 /**
  * When the offer runs, in words a guest can act on.
  *
- * An offer with no dates runs until somebody takes it down, and saying "from
- * now" is truer than leaving the line blank — a card with no period on it is
- * the kind a guest turns up for three weeks late.
+ * An offer with no dates runs until somebody takes it down, and saying so is
+ * truer than leaving the line blank — a card with no period on it is the kind a
+ * guest turns up for three weeks late.
  */
 function runsFor(
   offer: { startsAt: Date | null; endsAt: Date | null },
@@ -141,18 +169,6 @@ function runsFor(
   if (offer.endsAt) return `${dict.promo.until} ${day(offer.endsAt)}`;
   if (offer.startsAt) return `${dict.promo.from} ${day(offer.startsAt)}`;
   return dict.promo.ongoing;
-}
-
-/** A small pressed seal, the way a printed card marks its own offers. */
-function Seal() {
-  return (
-    <svg viewBox="0 0 40 40" width="26" height="26" aria-hidden="true">
-      <circle cx="20" cy="20" r="18.4" fill="none" stroke="currentColor" strokeWidth="0.7" />
-      <circle cx="20" cy="20" r="14" fill="none" stroke="currentColor" strokeWidth="1" />
-      <path d="M20 9c3.6 3.8 3.6 11.2 0 15-3.6-3.8-3.6-11.2 0-15Z" fill="none" stroke="currentColor" strokeWidth="0.8" />
-      <path d="M20 26.5v4M14 20h-4M30 20h-4" fill="none" stroke="currentColor" strokeWidth="0.6" />
-    </svg>
-  );
 }
 
 function CalendarIcon() {
@@ -184,10 +200,10 @@ function Countdown({
   const [left, setLeft] = useState<number | null>(null);
 
   /*
-   * Counts down to whichever moment is still ahead: to the start while the
-   * offer has not opened, then to the end. An offer with neither runs until
-   * somebody takes it down, and inventing a deadline for it — the usual trick
-   * for making a card feel urgent — would be inventing a fact.
+   * Counts to whichever moment is still ahead: to the start while the offer has
+   * not opened, then to the end. An offer with neither runs until somebody
+   * takes it down, and inventing a deadline for it — the usual trick for making
+   * a card feel urgent — would be inventing a fact.
    */
   const target = endsAt ?? (startsAt && new Date(startsAt).getTime() > Date.now() ? startsAt : null);
   const counting = endsAt ? 'ends' : 'starts';
@@ -213,9 +229,16 @@ function Countdown({
 
   return (
     <p className={styles.clock}>
-      <span className={styles.clockLabel}>{counting === 'ends' ? dict.promo.endsIn : dict.promo.startsIn}</span>
+      <span className={styles.clockLabel}>
+        {counting === 'ends' ? dict.promo.endsIn : dict.promo.startsIn}
+      </span>
       <span className={styles.clockValue}>
-        {parts.map((part) => `${String(part.value).padStart(2, '0')} ${part.label}`).join(' · ')}
+        {parts.map((part) => (
+          <span key={part.label} className={styles.clockPart}>
+            <b>{String(part.value).padStart(2, '0')}</b>
+            {part.label}
+          </span>
+        ))}
       </span>
     </p>
   );

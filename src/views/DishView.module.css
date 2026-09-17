@@ -12,7 +12,7 @@
   place-items: center;
   aspect-ratio: 1;
   overflow: hidden;
-  border: 1px solid var(--gold-hair);
+  border: var(--edge-w) solid var(--gold-hair);
   background: var(--green-panel);
 }
 @media (min-width: 900px) { .media { position: sticky; top: calc(var(--header-h) + 1.5rem); } }
@@ -57,7 +57,7 @@
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--gold);
-  border: 1px solid var(--gold-hair);
+  border: var(--edge-w) solid var(--gold-hair);
   padding: 0.35em 0.75em;
 }
 .badgeWarn { color: var(--gold-lit); border-color: var(--gold); }

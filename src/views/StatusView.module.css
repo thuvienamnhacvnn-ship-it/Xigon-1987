@@ -5,7 +5,7 @@
   flex-direction: column;
   gap: 1.4rem;
   padding: clamp(1.3rem, 1rem + 1.8vw, 2.4rem);
-  border: 1px solid var(--gold-hair);
+  border: var(--edge-w) solid var(--gold-hair);
   background: var(--green-panel);
 }
 
@@ -29,7 +29,7 @@
 
 .status {
   padding: 0.5em 1em;
-  border: 1px solid var(--gold);
+  border: var(--edge-w) solid var(--gold);
   color: var(--gold-lit);
   font-size: var(--step--2);
   letter-spacing: var(--track-wide);

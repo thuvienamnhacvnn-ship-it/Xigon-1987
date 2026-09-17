@@ -175,7 +175,7 @@
   top: calc(env(safe-area-inset-top, 0px) + clamp(0.8rem, 0.5rem + 0.9vw, 1.35rem));
   transform: translateX(-50%);
   padding: 0.6rem 2.1rem;
-  border: 1px solid var(--gold-hair);
+  border: var(--edge-w) solid var(--gold-hair);
   border-radius: var(--r-pill);
   font-family: var(--font-body);
   font-size: var(--step--1);
@@ -280,7 +280,7 @@
   z-index: 40;
   width: min(21rem, calc(100vw - 2rem));
   padding: 1rem 1.05rem 1.1rem;
-  border: 1px solid var(--gold-hair);
+  border: var(--edge-w) solid var(--gold-hair);
   border-radius: 14px;
   background: rgba(16, 11, 8, 0.93);
   backdrop-filter: blur(20px);
@@ -325,7 +325,7 @@
   flex: 1 1 auto;
   min-width: 0;
   padding: 0.5rem 0.65rem;
-  border: 1px solid var(--gold-hair);
+  border: var(--edge-w) solid var(--gold-hair);
   border-radius: var(--r-sm);
   font-family: var(--font-body);
   font-size: var(--step--1);
@@ -369,7 +369,7 @@
   list-style: none;
   /* The hairline is plainly visible in the drawing — it is what makes the bar
      read as one object rather than a smudge over the floor. */
-  border: 1px solid rgba(239, 177, 92, 0.45);
+  border: var(--edge-w) solid rgba(239, 177, 92, 0.6);
   border-radius: var(--r-pill);
   background: rgba(14, 10, 7, 0.62);
   backdrop-filter: blur(18px) saturate(1.1);
@@ -486,7 +486,7 @@
 
 .demo {
   padding: 0.08rem 0.45rem;
-  border: 1px solid var(--gold-hair);
+  border: var(--edge-w) solid var(--gold-hair);
   border-radius: var(--r-pill);
   color: var(--gold);
 }

@@ -26,7 +26,7 @@
   place-items: center;
   overflow: hidden;
   background: radial-gradient(circle at 50% 58%, rgba(239, 177, 92, 0.18), rgba(0, 32, 20, 0) 72%);
-  border: 1px solid var(--gold-hair);
+  border: var(--edge-w) solid var(--gold-hair);
 }
 .thumb img { width: 100%; height: 100%; object-fit: contain; }
 
@@ -55,7 +55,7 @@
   white-space: nowrap;
 }
 
-.stepper { display: flex; align-items: center; border: 1px solid var(--gold-hair); }
+.stepper { display: flex; align-items: center; border: var(--edge-w) solid var(--gold-hair); }
 .stepper button {
   width: 38px;
   height: 38px;

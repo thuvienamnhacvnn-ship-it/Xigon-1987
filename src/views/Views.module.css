@@ -24,7 +24,7 @@
 }
 
 .panel {
-  border: 1px solid var(--gold-hair);
+  border: var(--edge-w) solid var(--gold-hair);
   background: var(--green-panel);
   padding: clamp(1.2rem, 0.8rem + 1.6vw, 2.2rem);
 }
