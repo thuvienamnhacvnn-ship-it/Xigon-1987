@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import styles from './ContactView.module.css';
-import { MapCard } from '@/components/MapCard';
+import { MapPlate } from '@/components/app/MapPlate';
 import { HOURS_SOURCES, RESTAURANT, phoneHref } from '@/lib/restaurant';
 import { hrefFor, type Locale } from '@/lib/i18n';
 import type { Dictionary } from '@/lib/dictionary';
@@ -80,7 +80,7 @@ export function ContactView({ locale, dict }: { locale: Locale; dict: Dictionary
 
         {/* ---------- where it is ---------- */}
         <section className={styles.map}>
-          <MapCard dict={dict} />
+          <MapPlate dict={dict} />
         </section>
 
         {/* ---------- in a pocket ---------- */}

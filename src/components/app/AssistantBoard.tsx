@@ -29,7 +29,24 @@ type Message = {
  * so the name, the variant and the price are the card's own. Nothing reaches a
  * basket unless the guest presses the button.
  */
-export function AssistantBoard({ locale, dict }: { locale: Locale; dict: Dictionary }) {
+export function AssistantBoard({
+  locale,
+  dict,
+  sample,
+}: {
+  locale: Locale;
+  dict: Dictionary;
+  /*
+   * A real dish from the card, shown before the guide has said anything.
+   *
+   * The column used to hold a dashed outline and a sentence, which is a polite
+   * way of showing nothing at all — half the screen empty while the guest is
+   * still deciding whether to type. A plate from the published card fills it
+   * with the thing the screen is about, and the chip on the photograph says it
+   * is an example rather than an answer.
+   */
+  sample: Suggestion | null;
+}) {
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState<Message[]>([]);
   // A plain boolean, not a transition: awaiting a request inside startTransition
@@ -224,9 +241,12 @@ export function AssistantBoard({ locale, dict }: { locale: Locale; dict: Diction
 
       {/* ---------- the plate it named ---------- */}
       <section className={`glass ${styles.plate}`} aria-label={dict.assistant.proposal}>
-        {plate ? <PlateCard locale={locale} dict={dict} suggestion={plate} onAdd={add} /> : (
-          /* An empty frame with nothing in it reads as broken; this says why it
-             is empty and what to do about it. */
+        {plate ? (
+          <PlateCard locale={locale} dict={dict} suggestion={plate} onAdd={add} />
+        ) : sample ? (
+          <PlateCard locale={locale} dict={dict} suggestion={sample} onAdd={add} example />
+        ) : (
+          /* Only when the card itself is empty. */
           <div className={styles.waiting}>
             <BrainMark size={40} className={styles.waitingMark} />
             <p className={styles.waitingText}>{dict.assistant.teaser}</p>
@@ -242,11 +262,14 @@ function PlateCard({
   dict,
   suggestion,
   onAdd,
+  example = false,
 }: {
   locale: Locale;
   dict: Dictionary;
   suggestion: Suggestion;
   onAdd: (suggestion: Suggestion) => void;
+  /** Shown before the guide has answered: a real dish, but nobody's answer. */
+  example?: boolean;
 }) {
   const href = hrefFor(locale, 'dish', { slug: suggestion.slug });
 
@@ -274,7 +297,7 @@ function PlateCard({
         )}
 
         {/* Said on the picture, where the price is read, not in a footnote. */}
-        <span className={styles.chip}>{dict.menu.demoLabel}</span>
+        <span className={styles.chip}>{example ? dict.assistant.sample : dict.menu.demoLabel}</span>
         {suggestion.soldOut ? <span className={styles.soldOut}>{dict.menu.soldOut}</span> : null}
       </div>
 

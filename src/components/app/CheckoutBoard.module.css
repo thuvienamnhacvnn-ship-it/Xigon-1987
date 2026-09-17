@@ -307,7 +307,10 @@
 .mark[data-tone='mastercard'] { color: #e8a97a; }
 .mark[data-tone='apple'] { color: var(--ivory); }
 .mark[data-tone='google'] { color: #9dbbe8; }
-.mark[data-tone='counter'] { color: var(--ivory-mute); font-weight: 500; }
+
+.methodMarks svg {
+  color: var(--ivory-mute);
+}
 
 /* Two overlapping discs — the shape the card scheme is known by, drawn rather
    than copied. */

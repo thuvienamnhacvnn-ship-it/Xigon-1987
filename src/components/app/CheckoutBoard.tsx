@@ -199,7 +199,7 @@ export function CheckoutBoard({
         {/* ------------------------------------------------------ contact -- */}
         <div className={styles.left}>
           <section className={styles.group}>
-            <h2 className={styles.groupTitle}>{dict.checkout.contact}</h2>
+            <h2 className={styles.groupTitle}>{dict.checkout.stepContact}</h2>
 
             <div className={styles.rows}>
               <Row
@@ -313,7 +313,7 @@ export function CheckoutBoard({
                 label={dict.checkout.payOnCollection}
                 chosen={method === 'on_collection'}
                 onChoose={setMethod}
-                marks={<Mark tone="counter">{dict.order.pickup}</Mark>}
+                marks={<CounterIcon />}
               />
             </div>
 
@@ -574,6 +574,17 @@ function Mark({ tone, children }: { tone: string; children: React.ReactNode }) {
     <span className={styles.mark} data-tone={tone}>
       {children}
     </span>
+  );
+}
+
+/* Cash over a counter — the only one of the four with no brand behind it. */
+function CounterIcon() {
+  return (
+    <svg width="26" height="18" viewBox="0 0 28 20" fill="none" aria-hidden="true">
+      <rect x="1.4" y="4.4" width="21" height="13" rx="2.2" stroke="currentColor" strokeWidth="1.2" />
+      <circle cx="11.9" cy="10.9" r="3" stroke="currentColor" strokeWidth="1.2" />
+      <path d="M22.4 2.6h3.4a1 1 0 0 1 1 1v11" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+    </svg>
   );
 }
 
