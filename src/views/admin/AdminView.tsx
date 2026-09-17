@@ -6,6 +6,7 @@ import { AdminBook } from './AdminBook';
 import { AdminChannels } from './AdminChannels';
 import { AdminOrders } from './AdminOrders';
 import { AdminPayments } from './AdminPayments';
+import { AdminPromos } from './AdminPromos';
 import { signOutAction } from '@/server/admin-actions';
 import { adminConfigured, isSignedIn } from '@/server/admin-auth';
 import { hrefFor, type Locale } from '@/lib/i18n';
@@ -31,7 +32,7 @@ export async function AdminView({
 }) {
   if (segments.length > 1) notFound();
   const page = segments[0] ?? 'reservierungen';
-  const PAGES = ['reservierungen', 'bestellungen', 'zahlungen', 'kanaele'] as const;
+  const PAGES = ['reservierungen', 'bestellungen', 'zahlungen', 'aktionen', 'kanaele'] as const;
   if (!(PAGES as readonly string[]).includes(page)) notFound();
 
   const base = hrefFor(locale, 'admin');
@@ -94,11 +95,15 @@ export async function AdminView({
           >
             Zahlungen
           </Link>
+          <Link
+            href={`${base}/aktionen`}
+            className={styles.tab}
+            aria-current={page === 'aktionen' ? 'page' : undefined}
+          >
+            Aktionen
+          </Link>
           <Link href={`${base}/kanaele`} className={styles.tab} aria-current={page === 'kanaele' ? 'page' : undefined}>
             Kanäle
-          </Link>
-          <Link href={hrefFor(locale, 'promoAdmin')} className={styles.tab}>
-            Aktionen
           </Link>
         </nav>
 
@@ -112,6 +117,7 @@ export async function AdminView({
       {page === 'reservierungen' ? <AdminBook locale={locale} dict={dict} date={date} /> : null}
       {page === 'bestellungen' ? <AdminOrders locale={locale} date={date} /> : null}
       {page === 'zahlungen' ? <AdminPayments locale={locale} /> : null}
+      {page === 'aktionen' ? <AdminPromos /> : null}
       {page === 'kanaele' ? <AdminChannels /> : null}
     </div>
   );

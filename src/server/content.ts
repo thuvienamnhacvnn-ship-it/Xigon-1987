@@ -107,6 +107,7 @@ export async function createPromotion(input: {
   imageHeight?: number | null;
   startsAt?: Date | null;
   endsAt?: Date | null;
+  sort?: number;
   published: boolean;
 }) {
   const [row] = await db
@@ -126,11 +127,43 @@ export async function createPromotion(input: {
         imageHeight: input.imageHeight ?? null,
         startsAt: input.startsAt ?? null,
         endsAt: input.endsAt ?? null,
+        sort: input.sort ?? 0,
         published: input.published,
       },
     })
     .returning();
   return row;
+}
+
+/**
+ * Editing an offer that already exists.
+ *
+ * The slug is not touched. It is what the row has been known by since it was
+ * created, and renaming an offer is not a reason to change its identity.
+ *
+ * The three image columns are optional on purpose: leaving them out means "keep
+ * the picture", so correcting a typo in the body text cannot silently blank the
+ * only photograph of the dish.
+ */
+export async function updatePromotion(
+  id: number,
+  input: {
+    titleDe: string;
+    titleEn: string | null;
+    titleVi: string | null;
+    bodyDe: string | null;
+    bodyEn: string | null;
+    bodyVi: string | null;
+    imagePath?: string | null;
+    imageWidth?: number | null;
+    imageHeight?: number | null;
+    startsAt: Date | null;
+    endsAt: Date | null;
+    sort: number;
+    published: boolean;
+  },
+) {
+  await db.update(promotions).set(input).where(eq(promotions.id, id));
 }
 
 export async function setPromotionPublished(id: number, published: boolean) {
@@ -139,6 +172,37 @@ export async function setPromotionPublished(id: number, published: boolean) {
 
 export async function deletePromotion(id: number) {
   await db.delete(promotions).where(eq(promotions.id, id));
+}
+
+/**
+ * Moving one offer up or down the running order.
+ *
+ * Every row is renumbered rather than two `sort` values being swapped: rows
+ * created through the form all start at the same number, and where they tie the
+ * order is decided by `createdAt` — so a swap of two equal values would move
+ * nothing and look like a broken button. Renumbering the list makes the order
+ * on screen the order in the column.
+ */
+export async function reorderPromotion(id: number, direction: -1 | 1) {
+  await db.transaction(async (tx) => {
+    // Only `tx` inside here. Reaching for the outer handle deadlocks PGlite
+    // with no error at all.
+    const rows = await tx
+      .select({ id: promotions.id })
+      .from(promotions)
+      .orderBy(asc(promotions.sort), desc(promotions.createdAt));
+
+    const from = rows.findIndex((row) => row.id === id);
+    const to = from + direction;
+    if (from < 0 || to < 0 || to >= rows.length) return;
+
+    const order = rows.map((row) => row.id);
+    [order[from], order[to]] = [order[to], order[from]];
+
+    for (const [position, rowId] of order.entries()) {
+      await tx.update(promotions).set({ sort: position }).where(eq(promotions.id, rowId));
+    }
+  });
 }
 
 /** A slug that is unique even when two offers share a title. */
