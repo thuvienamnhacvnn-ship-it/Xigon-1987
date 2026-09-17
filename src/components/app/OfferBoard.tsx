@@ -61,9 +61,26 @@ export function OfferBoard({
                 <span className={styles.noImage} aria-hidden="true" />
               )}
 
+              {/*
+               * The corner label. It carries a day or a kind — never a
+               * percentage and never a crossed-out price, because nothing on
+               * this card has been priced by the restaurant. A discount nobody
+               * agreed to is the one decoration that costs money at the till.
+               */}
+              {offer.badge ? <span className={styles.badge}>{offer.badge}</span> : null}
+
               <div className={styles.body}>
+                <span className={styles.seal} aria-hidden="true">
+                  <Seal />
+                </span>
+
                 <h2 className={styles.name}>{offer.title}</h2>
                 {offer.body ? <p className={styles.text}>{offer.body}</p> : null}
+
+                <p className={styles.runs}>
+                  <CalendarIcon />
+                  {runsFor(offer, locale, dict)}
+                </p>
 
                 {offer.endsAt ? <Countdown dict={dict} endsAt={offer.endsAt} /> : null}
 
@@ -109,6 +126,52 @@ export function OfferBoard({
         </button>
       </nav>
     </div>
+  );
+}
+
+/**
+ * When the offer runs, in words a guest can act on.
+ *
+ * An offer with no dates runs until somebody takes it down, and saying "from
+ * now" is truer than leaving the line blank — a card with no period on it is
+ * the kind a guest turns up for three weeks late.
+ */
+function runsFor(
+  offer: { startsAt: Date | null; endsAt: Date | null },
+  locale: Locale,
+  dict: Dictionary,
+): string {
+  const day = (value: Date) =>
+    new Intl.DateTimeFormat(locale === 'en' ? 'en-GB' : 'de-DE', {
+      day: 'numeric',
+      month: 'long',
+      timeZone: 'Europe/Berlin',
+    }).format(new Date(value));
+
+  if (offer.startsAt && offer.endsAt) return `${day(offer.startsAt)} – ${day(offer.endsAt)}`;
+  if (offer.endsAt) return `${dict.promo.until} ${day(offer.endsAt)}`;
+  if (offer.startsAt) return `${dict.promo.from} ${day(offer.startsAt)}`;
+  return dict.promo.ongoing;
+}
+
+/** A small pressed seal, the way a printed card marks its own offers. */
+function Seal() {
+  return (
+    <svg viewBox="0 0 40 40" width="26" height="26" aria-hidden="true">
+      <circle cx="20" cy="20" r="18.4" fill="none" stroke="currentColor" strokeWidth="0.7" />
+      <circle cx="20" cy="20" r="14" fill="none" stroke="currentColor" strokeWidth="1" />
+      <path d="M20 9c3.6 3.8 3.6 11.2 0 15-3.6-3.8-3.6-11.2 0-15Z" fill="none" stroke="currentColor" strokeWidth="0.8" />
+      <path d="M20 26.5v4M14 20h-4M30 20h-4" fill="none" stroke="currentColor" strokeWidth="0.6" />
+    </svg>
+  );
+}
+
+function CalendarIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" aria-hidden="true">
+      <rect x="3.2" y="5" width="17.6" height="16" rx="2.5" stroke="currentColor" strokeWidth="1.3" />
+      <path d="M3.2 10h17.6M8 3v4M16 3v4" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+    </svg>
   );
 }
 

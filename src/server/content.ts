@@ -15,6 +15,8 @@ export type Promotion = {
   slug: string;
   title: string;
   body: string | null;
+  /** The short word on the corner of the card. Never a price or a percentage. */
+  badge: string | null;
   imagePath: string | null;
   imageWidth: number | null;
   imageHeight: number | null;
@@ -42,6 +44,7 @@ export async function getLivePromotions(locale: Locale): Promise<Promotion[]> {
     slug: row.slug,
     title: tr(locale, { de: row.titleDe, en: row.titleEn, vi: row.titleVi }),
     body: tr(locale, { de: row.bodyDe, en: row.bodyEn, vi: row.bodyVi }) || null,
+    badge: tr(locale, { de: row.badgeDe, en: row.badgeEn, vi: row.badgeVi }) || null,
     imagePath: row.imagePath,
     imageWidth: row.imageWidth,
     imageHeight: row.imageHeight,
@@ -97,6 +100,9 @@ export async function getReviews(locale: Locale, limit = 6): Promise<Review[]> {
 export async function createPromotion(input: {
   slug: string;
   titleDe: string;
+  badgeDe?: string | null;
+  badgeEn?: string | null;
+  badgeVi?: string | null;
   titleEn?: string | null;
   titleVi?: string | null;
   bodyDe?: string | null;
@@ -117,6 +123,9 @@ export async function createPromotion(input: {
       target: promotions.slug,
       set: {
         titleDe: input.titleDe,
+        badgeDe: input.badgeDe?.trim().slice(0, 24) || null,
+        badgeEn: input.badgeEn?.trim().slice(0, 24) || null,
+        badgeVi: input.badgeVi?.trim().slice(0, 24) || null,
         titleEn: input.titleEn ?? null,
         titleVi: input.titleVi ?? null,
         bodyDe: input.bodyDe ?? null,

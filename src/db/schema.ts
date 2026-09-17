@@ -141,6 +141,16 @@ export const promotions = pgTable(
     bodyDe: text('body_de'),
     bodyEn: text('body_en'),
     bodyVi: text('body_vi'),
+    /**
+     * The short word on the corner of the card — "Mo–Fr", "Donnerstags", a
+     * season. It is a label, not a claim: no percentage, no crossed-out price,
+     * because nothing on this card has been priced by the restaurant yet and a
+     * discount nobody agreed to is the one decoration that can cost money.
+     */
+    badgeDe: varchar('badge_de', { length: 24 }),
+    badgeEn: varchar('badge_en', { length: 24 }),
+    badgeVi: varchar('badge_vi', { length: 24 }),
+
     /** Uploaded file under /uploads/promo — never an external URL. */
     imagePath: text('image_path'),
     imageWidth: integer('image_width'),

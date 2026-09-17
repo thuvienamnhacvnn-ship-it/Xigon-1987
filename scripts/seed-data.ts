@@ -696,15 +696,32 @@ export const TABLES = [
  * Two sample offers so the promotions section has something to show. Both are
  * marked as demo content and can be deleted from the upload screen.
  */
+/*
+ * The three offers on the Angebote screen.
+ *
+ * They are written to be read, not to be counted: no percentage, no crossed-out
+ * price, no "only today". Nothing here has been priced by the restaurant, so a
+ * discount would be a number somebody invented — and a number on an offer is
+ * the one decoration that can end up costing money at the till. What each card
+ * promises instead is a thing the kitchen can actually do on a given evening.
+ *
+ * The badge is a label, never a claim: which days it runs, or what it is.
+ */
 export const PROMOTIONS = [
   {
     slug: 'lunch-im-1987',
+    badgeDe: 'Mo – Fr',
+    badgeEn: 'Mon – Fri',
+    badgeVi: 'Thứ 2 – 6',
     titleDe: 'Mittags im 1987',
     titleEn: 'Lunch at 1987',
     titleVi: 'Bữa trưa tại 1987',
-    bodyDe: 'Von Montag bis Freitag stellt die Küche mittags eine kleine Karte zusammen. Demo-Inhalt.',
-    bodyEn: 'Monday to Friday the kitchen puts together a short lunch card. Demo content.',
-    bodyVi: 'Thứ Hai đến thứ Sáu bếp làm một thực đơn trưa rút gọn. Nội dung demo.',
+    bodyDe:
+      'Eine kurze Karte, mittags gekocht: eine Suppe, zwei warme Gerichte, eine Handvoll Sushi. In einer Stunde sind Sie wieder draußen — nur eben satt und nicht in Eile gewesen. Demo-Inhalt.',
+    bodyEn:
+      'A short card, cooked at midday: one soup, two warm dishes, a handful of sushi. You are out again within the hour — fed, and without having rushed. Demo content.',
+    bodyVi:
+      'Một thực đơn ngắn, nấu buổi trưa: một món canh, hai món nóng, một ít sushi. Một tiếng là quý khách ra về — no bụng mà không phải vội. Nội dung demo.',
     imagePath: '/img/scene/dining-room-1280.webp',
     imageWidth: 1280,
     imageHeight: 719,
@@ -713,12 +730,18 @@ export const PROMOTIONS = [
   },
   {
     slug: 'sushi-abend',
-    titleDe: 'Sushi-Abend',
-    titleEn: 'Sushi evening',
-    titleVi: 'Tối sushi',
-    bodyDe: 'Jeden Donnerstag am Tresen: die Sushi-Bank arbeitet vor Ihren Augen. Demo-Inhalt.',
-    bodyEn: 'Every Thursday at the counter: the sushi bench works in front of you. Demo content.',
-    bodyVi: 'Mỗi tối thứ Năm tại quầy: đầu bếp sushi làm ngay trước mặt khách. Nội dung demo.',
+    badgeDe: 'Donnerstags',
+    badgeEn: 'Thursdays',
+    badgeVi: 'Tối thứ 5',
+    titleDe: 'Sushi-Abend am Tresen',
+    titleEn: 'Sushi evening at the counter',
+    titleVi: 'Tối sushi bên quầy',
+    bodyDe:
+      'Acht Plätze, direkt an der Sushi-Bank. Sie sehen jedes Stück entstehen und bekommen es über den Tresen gereicht, bevor der Reis abkühlt. Reservierung empfohlen. Demo-Inhalt.',
+    bodyEn:
+      'Eight seats, right at the sushi bench. You watch every piece being made and take it across the counter before the rice cools. Booking advised. Demo content.',
+    bodyVi:
+      'Tám chỗ ngồi ngay tại quầy sushi. Quý khách nhìn từng miếng được làm và nhận qua quầy trước khi cơm nguội. Nên đặt chỗ trước. Nội dung demo.',
     imagePath: '/img/scene/sushi-bench-1280.webp',
     imageWidth: 1280,
     imageHeight: 719,
@@ -726,20 +749,24 @@ export const PROMOTIONS = [
     sort: 1,
   },
   /*
-   * The third offer, so the row reads as a set rather than as two cards and a
-   * gap. The drawing shows a gift box with a ribbon; no such photograph exists,
-   * so it takes the bar instead — which is what the voucher actually buys. A
-   * picture of something the restaurant does not have would be the wrong kind
-   * of placeholder.
+   * The drawing shows a gift box with a ribbon; no such photograph exists, so
+   * this takes the bar — which is what the voucher actually buys. A picture of
+   * something the restaurant does not have would be the wrong placeholder.
    */
   {
     slug: 'genuss-verschenken',
-    titleDe: 'Genuss verschenken',
+    badgeDe: 'Gutschein',
+    badgeEn: 'Gift card',
+    badgeVi: 'Phiếu quà',
+    titleDe: 'Einen Abend verschenken',
     titleEn: 'Give an evening',
     titleVi: 'Tặng một buổi tối',
-    bodyDe: 'Ein Abend bei uns als Geschenk — Betrag und Anlass sprechen wir mit Ihnen ab. Demo-Inhalt.',
-    bodyEn: 'An evening with us as a gift — the amount and the occasion we agree with you. Demo content.',
-    bodyVi: 'Tặng một buổi tối tại nhà hàng — số tiền và dịp sẽ trao đổi cùng quý khách. Nội dung demo.',
+    bodyDe:
+      'Kein Gegenstand, der irgendwo herumliegt: ein Tisch, ein langer Abend und jemand, der sich freut. Betrag und Anlass sprechen wir mit Ihnen ab. Demo-Inhalt.',
+    bodyEn:
+      'Not another object to put somewhere: a table, a long evening, and somebody glad of it. The amount and the occasion we agree with you. Demo content.',
+    bodyVi:
+      'Không phải một món đồ để đâu đó: một cái bàn, một buổi tối dài, và một người vui vì điều đó. Số tiền và dịp sẽ trao đổi cùng quý khách. Nội dung demo.',
     imagePath: '/img/scene/lanterns-bar-1280.webp',
     imageWidth: 1280,
     imageHeight: 719,

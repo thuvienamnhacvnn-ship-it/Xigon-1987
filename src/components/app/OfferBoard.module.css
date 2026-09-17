@@ -11,8 +11,14 @@
   display: grid;
   /* minmax(0, …) so a long offer title cannot widen the screen past the phone. */
   grid-template-columns: minmax(0, 1fr);
-  grid-template-rows: auto auto auto;
-  align-content: center;
+  /*
+   * The row of cards is the only track allowed to give. With three `auto` rows
+   * and `align-content: center` the cards grew until the heading was pushed off
+   * the top of the band — a screen that centres its content will happily centre
+   * it past both edges.
+   */
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  align-content: stretch;
   justify-items: center;
   gap: clamp(0.9rem, 0.5rem + 1.2vw, 1.7rem);
   height: 100%;
@@ -59,7 +65,9 @@
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: clamp(0.7rem, 0.3rem + 1.1vw, 1.3rem);
+  align-content: center;
   width: 100%;
+  min-height: 0;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -245,4 +253,85 @@
   .clock {
     justify-content: flex-start;
   }
+}
+
+/* ------------------------------------------------- the sales dressing --- */
+
+/*
+ * The corner label.
+ *
+ * Angled across the top-left of the photograph, the way a printed card marks
+ * an offer. It carries a day or a kind and never a figure — see the component
+ * for why that matters.
+ */
+.badge {
+  position: absolute;
+  top: 0.9rem;
+  left: -2.6rem;
+  z-index: 2;
+  width: 10rem;
+  padding: 0.3rem 0;
+  font-family: var(--font-body);
+  font-size: var(--step--2);
+  font-weight: var(--weight-body);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-align: center;
+  white-space: nowrap;
+  color: #241a0a;
+  background: linear-gradient(180deg, var(--gold-lit), var(--gold-deep));
+  box-shadow: 0 6px 18px -8px rgba(0, 0, 0, 0.9);
+  transform: rotate(-38deg);
+  pointer-events: none;
+}
+
+/* The seal sits on the seam between the photograph and the words, half in
+   each, so the card reads as one object rather than a picture with a caption. */
+.seal {
+  position: absolute;
+  top: 0;
+  right: clamp(0.9rem, 1.4vw, 1.4rem);
+  transform: translateY(-50%);
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  color: var(--gold);
+  background: linear-gradient(180deg, rgba(20, 14, 9, 0.96), rgba(12, 9, 6, 0.98));
+  border: 1px solid var(--gold-hair);
+}
+
+.runs {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0;
+  font-weight: var(--weight-quiet);
+  font-size: var(--step--2);
+  letter-spacing: 0.04em;
+  color: var(--ivory-mute);
+}
+
+.runs svg {
+  color: var(--gold-deep);
+}
+
+/* The photograph has to be able to hold the angled label, and the body has to
+   be able to hold the seal hanging over its top edge. */
+.card {
+  position: relative;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* The photograph gives first when the window is short: the words and the button
+   are what the card is for. */
+.image {
+  min-height: 0;
+}
+
+.body {
+  position: relative;
+  padding-top: clamp(1.4rem, 1rem + 1.2vw, 2rem);
 }
