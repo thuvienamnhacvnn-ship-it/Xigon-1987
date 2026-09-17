@@ -350,8 +350,7 @@ export const CATEGORIES: SeedCategory[] = [
         descriptionEn: 'Green salad with papaya strips, radish, tomatoes and pomegranate seeds in a light dressing.',
         descriptionVi: 'Gỏi xanh với đu đủ bào sợi, củ cải đỏ, cà chua và hạt lựu, trộn nước sốt màu nhạt.',
         photoId: 'papayasalat',
-        vegetarian: true,
-        vegan: true,
+        /* No dietary flag until the dressing is confirmed — see Miso-Suppe. */
         sourceNote: NOTE,
         variants: portion(890),
       },
@@ -365,7 +364,8 @@ export const CATEGORIES: SeedCategory[] = [
         descriptionVi: 'Xà lách trộn cùng cà chua, củ cải đỏ và rau thơm, dọn trong tô gốm.',
         photoId: 'tisch-salat',
         vegetarian: true,
-        vegan: true,
+        /* Vegetarian is safe from the photograph; vegan is not, because the
+           dressing is the part you cannot see. */
         sourceNote: NOTE,
         variants: portion(780),
       },
@@ -421,7 +421,13 @@ export const CATEGORIES: SeedCategory[] = [
         descriptionEn: 'Clear miso broth with tofu cubes, seaweed and spring onions.',
         descriptionVi: 'Nước súp miso trong với đậu hũ cắt vuông, rong biển và hành lá.',
         photoId: 'miso-suppe',
-        vegetarian: true,
+        /*
+         * Not flagged vegetarian, though nothing animal is in the picture.
+         * Miso soup is normally built on bonito dashi, and green papaya salad
+         * on fish sauce. A dietary flag is the one label a guest acts on
+         * without asking, so it waits for the kitchen to confirm the recipe —
+         * the same rule the allergen list already follows.
+         */
         sourceNote: NOTE,
         variants: portion(690),
       },

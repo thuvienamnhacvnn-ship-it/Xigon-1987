@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import styles from './AssistantBoard.module.css';
 import { ChefAvatar } from '@/components/ChefAvatar';
-import type { Suggestion } from '@/components/Assistant';
+import type { Suggestion } from '@/lib/suggestion';
 import { formatMoney } from '@/lib/money';
 import { hrefFor, type Locale } from '@/lib/i18n';
 import { PRICE_NOTE } from '@/lib/price-note';

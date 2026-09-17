@@ -174,6 +174,10 @@ differ enough that scrolling in resizes the page, which scrolls it back out.
 ## Before this goes live
 
 - [ ] Confirm the menu, the prices and the allergen data with the restaurant
+- [ ] Confirm the vegetarian and vegan flags. The dishes drawn from the
+      photographs carry none: miso soup is usually built on bonito dashi and
+      green papaya salad on fish sauce, and a salad dressing is invisible. A
+      dietary flag is acted on without asking, so it follows the allergen rule
 - [ ] Confirm the opening hours (the two published sets contradict each other)
 - [ ] Supply the real floor plan and reservation duration
 - [ ] Complete the Impressum, and have the privacy statement reviewed

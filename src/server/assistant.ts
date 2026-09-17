@@ -4,6 +4,7 @@ import Anthropic from '@anthropic-ai/sdk';
 import { getCatalogue, type MenuDish } from './menu';
 import { tr, type Locale } from '@/lib/i18n';
 import { PRICE_NOTE } from '@/lib/price-note';
+import type { Suggestion } from '@/lib/suggestion';
 
 /**
  * The menu guide.
@@ -21,18 +22,7 @@ import { PRICE_NOTE } from '@/lib/price-note';
  * to somebody else's uptime.
  */
 
-export type Suggestion = {
-  dishId: string;
-  variantId: string;
-  slug: string;
-  code: string | null;
-  name: string;
-  variantLabel: string;
-  priceCents: number;
-  photoId: string | null;
-  soldOut: boolean;
-  orderable: boolean;
-};
+export type { Suggestion };
 
 export type Answer = { answer: string; suggestions: Suggestion[]; grounded: 'model' | 'search' };
 
@@ -47,7 +37,15 @@ function toSuggestion(dish: MenuDish): Suggestion | null {
     name: dish.name,
     variantLabel: variant.label,
     priceCents: variant.priceCents,
-    photoId: dish.plateId,
+    /*
+     * The dish photograph, not the plate cut-out.
+     *
+     * The cut-outs were made for the old banner, where a plate floated on a
+     * table; the card and the guide both show the photograph now. Sending the
+     * cut-out id here left the guide asking for /img/dish/<a plate id>, which
+     * exists for nothing.
+     */
+    photoId: dish.photoId,
     soldOut: dish.soldOut,
     orderable: variant.orderable && !dish.soldOut,
   };
