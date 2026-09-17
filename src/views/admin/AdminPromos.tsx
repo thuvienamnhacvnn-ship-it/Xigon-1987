@@ -4,6 +4,7 @@ import { PromoRowActions } from './PromoRowActions';
 import type { PromoDraft } from './PromoEditor';
 import { listPromotions } from '@/server/content';
 import { RESTAURANT } from '@/lib/restaurant';
+import type { PromoMedia } from '@/db/schema';
 
 /**
  * The offers, all of them.
@@ -70,20 +71,25 @@ export async function AdminPromos() {
               endsAt: forInput(row.endsAt),
               sort: row.sort,
               published: row.published,
-              imagePath: row.imagePath,
+              media: row.media,
             };
+
+            const front = row.media[0] ?? null;
 
             return (
               <li key={row.id} className={styles.promoRow} data-state={live ? undefined : 'off'}>
-                {row.imagePath ? (
-                  <img
+                {/* The first item, because that is the one a guest sees first. */}
+                {front?.kind === 'video' ? (
+                  <video
                     className={styles.promoThumb}
-                    src={row.imagePath}
-                    alt=""
-                    width={132}
-                    height={84}
-                    loading="lazy"
+                    src={front.path}
+                    poster={front.poster ?? undefined}
+                    muted
+                    playsInline
+                    preload="metadata"
                   />
+                ) : front ? (
+                  <img className={styles.promoThumb} src={front.path} alt="" width={132} height={84} loading="lazy" />
                 ) : (
                   <span className={styles.promoThumb} data-empty="true" aria-hidden="true" />
                 )}
@@ -99,7 +105,7 @@ export async function AdminPromos() {
                     {row.endsAt ? `bis ${STAMP.format(row.endsAt)}` : 'ohne Ende'}
                   </p>
                   <p className={styles.promoMeta}>
-                    {row.titleEn ? 'EN' : '—'} · {row.titleVi ? 'VI' : '—'} · {row.slug}
+                    {row.titleEn ? 'EN' : '—'} · {row.titleVi ? 'VI' : '—'} · {countMedia(row.media)} · {row.slug}
                   </p>
                 </div>
 
@@ -127,6 +133,17 @@ function isLive(row: Row, now: Date): boolean {
   if (row.startsAt && row.startsAt > now) return false;
   if (row.endsAt && row.endsAt <= now) return false;
   return true;
+}
+
+/** What the card has to show, said in the fewest words that stay accurate. */
+function countMedia(media: PromoMedia[]): string {
+  if (!media.length) return 'ohne Bild';
+  const clips = media.filter((item) => item.kind === 'video').length;
+  const stills = media.length - clips;
+  const parts: string[] = [];
+  if (stills) parts.push(stills === 1 ? '1 Bild' : `${stills} Bilder`);
+  if (clips) parts.push(clips === 1 ? '1 Video' : `${clips} Videos`);
+  return parts.join(' + ');
 }
 
 function stateLabel(row: Row, now: Date): string {

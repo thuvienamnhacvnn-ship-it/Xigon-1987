@@ -83,7 +83,7 @@
   justify-content: center;
   width: 30px;
   height: 30px;
-  border: 1px solid var(--gold-hair);
+  border: var(--edge-w) solid var(--gold-hair);
   border-radius: 50%;
   font-family: var(--font-body);
   font-size: var(--step--1);
@@ -174,7 +174,7 @@
   width: 100%;
   min-width: 0;
   padding: 0.8rem 1.05rem;
-  border: 1px solid var(--gold-hair);
+  border: var(--edge-w) solid var(--gold-hair);
   border-radius: 12px;
   font-family: var(--font-body);
   font-size: var(--step--1);
@@ -241,7 +241,7 @@
   justify-content: center;
   width: 22px;
   height: 22px;
-  border: 1px solid var(--gold-hair);
+  border: var(--edge-w) solid var(--gold-hair);
   border-radius: 50%;
 }
 
@@ -346,7 +346,7 @@
   overflow: hidden auto;
   overscroll-behavior: contain;
   padding: clamp(0.9rem, 0.5rem + 1.1vw, 1.5rem);
-  border: 1px solid var(--gold-hair);
+  border: var(--edge-w) solid var(--gold-hair);
   border-radius: var(--glass-r);
   background: rgba(0, 0, 0, 0.26);
   scrollbar-width: thin;
@@ -406,7 +406,7 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0 0.8rem;
-  border: 1px solid var(--gold-hair);
+  border: var(--edge-w) solid var(--gold-hair);
   border-radius: 12px;
   color: var(--gold);
   background: rgba(0, 0, 0, 0.3);

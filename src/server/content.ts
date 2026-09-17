@@ -73,13 +73,29 @@ export async function getLivePromotions(locale: Locale): Promise<Promotion[]> {
   }));
 }
 
-/** Everything, including drafts — for the upload screen. */
+/** Everything, including drafts — for the back office. */
 export async function listPromotions(locale: Locale) {
   const rows = await db.select().from(promotions).orderBy(asc(promotions.sort), desc(promotions.createdAt));
   return rows.map((row) => ({
     ...row,
+    // Folded, like everywhere else, so the editor shows an older row's single
+    // picture as the first item of its list instead of as nothing at all.
+    media: mediaOf(row),
     title: tr(locale, { de: row.titleDe, en: row.titleEn, vi: row.titleVi }),
   }));
+}
+
+/**
+ * What this offer already has on file.
+ *
+ * The editor sends back the paths it wants to keep, and a path arriving from a
+ * browser is a claim, not a fact. Without checking them against the row, the
+ * form could be talked into pointing an offer at any file on the server — so
+ * only paths this row already holds survive the round trip.
+ */
+export async function getPromotionMedia(id: number): Promise<PromoMedia[]> {
+  const [row] = await db.select().from(promotions).where(eq(promotions.id, id)).limit(1);
+  return row ? mediaOf(row) : [];
 }
 
 export type Review = {
@@ -128,6 +144,7 @@ export async function createPromotion(input: {
   bodyDe?: string | null;
   bodyEn?: string | null;
   bodyVi?: string | null;
+  media?: PromoMedia[];
   imagePath?: string | null;
   imageWidth?: number | null;
   imageHeight?: number | null;
@@ -151,6 +168,7 @@ export async function createPromotion(input: {
         bodyDe: input.bodyDe ?? null,
         bodyEn: input.bodyEn ?? null,
         bodyVi: input.bodyVi ?? null,
+        media: input.media ?? [],
         imagePath: input.imagePath ?? null,
         imageWidth: input.imageWidth ?? null,
         imageHeight: input.imageHeight ?? null,
@@ -170,9 +188,9 @@ export async function createPromotion(input: {
  * The slug is not touched. It is what the row has been known by since it was
  * created, and renaming an offer is not a reason to change its identity.
  *
- * The three image columns are optional on purpose: leaving them out means "keep
- * the picture", so correcting a typo in the body text cannot silently blank the
- * only photograph of the dish.
+ * `media` and the three legacy image columns are optional together: leaving
+ * them out means "keep what is there", so a caller that only has text to change
+ * cannot silently blank the pictures.
  */
 export async function updatePromotion(
   id: number,
@@ -183,6 +201,7 @@ export async function updatePromotion(
     bodyDe: string | null;
     bodyEn: string | null;
     bodyVi: string | null;
+    media?: PromoMedia[];
     imagePath?: string | null;
     imageWidth?: number | null;
     imageHeight?: number | null;

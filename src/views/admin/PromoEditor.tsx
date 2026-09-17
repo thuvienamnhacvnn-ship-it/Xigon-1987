@@ -1,8 +1,11 @@
 'use client';
 
-import { useActionState, useEffect, useRef, useState } from 'react';
+import { useActionState, useEffect, useMemo, useRef, useState } from 'react';
 import styles from './Admin.module.css';
+import { PromoMediaList, type MediaItem, storedItem } from './PromoMediaList';
 import { savePromotionAction, type PromoState } from '@/server/promo-actions';
+import { IMAGE_MAX_MB, MEDIA_MAX_ITEMS, VIDEO_MAX_MB } from '@/lib/media-limits';
+import type { PromoMedia } from '@/db/schema';
 
 /**
  * One offer, in full.
@@ -10,7 +13,7 @@ import { savePromotionAction, type PromoState } from '@/server/promo-actions';
  * The same form writes a new offer and edits an existing one — an edit screen
  * that differs from the create screen is an edit screen where a field quietly
  * goes missing. The only difference is the hidden id and, when editing, the
- * picture already on file showing in the drop zone.
+ * files already on the offer showing in the list.
  */
 export type PromoDraft = {
   id: number;
@@ -25,15 +28,18 @@ export type PromoDraft = {
   endsAt: string;
   sort: number;
   published: boolean;
-  imagePath: string | null;
+  media: PromoMedia[];
 };
 
 const ERRORS: Record<string, string> = {
   forbidden: 'Nicht angemeldet. Bitte neu anmelden.',
   invalid: 'Bitte einen deutschen Titel (mind. 2 Zeichen) und gültige Daten angeben.',
   dates: 'Das Ende liegt vor dem Beginn — so läuft die Aktion nie.',
-  type: 'Nur JPG, PNG oder WebP.',
-  size: 'Das Bild ist größer als 6 MB.',
+  'too-many': `Höchstens ${MEDIA_MAX_ITEMS} Dateien pro Aktion.`,
+  type: 'Nicht unterstützt. Bilder als JPG, PNG oder WebP, Videos als MP4 oder WebM.',
+  mismatch: 'Inhalt und Dateiendung passen nicht zusammen — die Datei ist nicht das, was ihr Name sagt.',
+  'image-size': `Ein Bild ist zu groß. Bilder dürfen höchstens ${IMAGE_MAX_MB} MB haben.`,
+  'video-size': `Ein Video ist zu groß. Videos dürfen höchstens ${VIDEO_MAX_MB} MB haben — strenger als Bilder, weil der Clip bei jedem Gast mitlädt.`,
   unreadable: 'Die Datei konnte nicht gelesen werden.',
 };
 
@@ -41,8 +47,9 @@ export function PromoEditor({ draft, onClose }: { draft: PromoDraft | null; onCl
   const [state, action, pending] = useActionState<PromoState, FormData>(savePromotionAction, {
     status: 'idle',
   });
-  const [preview, setPreview] = useState<string | null>(null);
+  const [items, setItems] = useState<MediaItem[]>(() => (draft?.media ?? []).map(storedItem));
   const formRef = useRef<HTMLFormElement>(null);
+  const filesRef = useRef<HTMLInputElement>(null);
   const handled = useRef<PromoState | null>(null);
 
   /*
@@ -55,37 +62,52 @@ export function PromoEditor({ draft, onClose }: { draft: PromoDraft | null; onCl
     handled.current = state;
     if (draft) return;
     formRef.current?.reset();
-    setPreview(null);
+    setItems([]);
   }, [state, draft]);
 
-  const field = (name: keyof PromoDraft) => `promo-${draft ? draft.id : 'neu'}-${name}`;
-  const shown = preview ?? draft?.imagePath ?? null;
+  /*
+   * The running order, and the files that go with it.
+   *
+   * Files already on the offer travel as their path, so editing a caption does
+   * not re-upload four photographs. New ones travel by position in a second,
+   * hidden file input whose contents are assembled below — a clip's poster
+   * frame rides along as an ordinary file the server checks like any other.
+   */
+  const plan = useMemo(() => {
+    const files: File[] = [];
+    const order = items.map((item) => {
+      if (item.source === 'stored') return { keep: item.media.path };
+      const slot = files.push(item.file) - 1;
+      if (!item.poster) return { slot };
+      return { slot, poster: files.push(item.poster) - 1 };
+    });
+    return { files, order };
+  }, [items]);
+
+  /*
+   * A file input's contents cannot be set from a string, so the list is loaded
+   * into it as real files. This is the one place the DOM is written to
+   * directly: React has no controlled form of `files`.
+   */
+  useEffect(() => {
+    const input = filesRef.current;
+    if (!input) return;
+    const transfer = new DataTransfer();
+    for (const file of plan.files) transfer.items.add(file);
+    input.files = transfer.files;
+  }, [plan]);
+
+  const field = (name: string) => `promo-${draft ? draft.id : 'neu'}-${name}`;
 
   return (
     <form ref={formRef} action={action} className={styles.promoForm}>
       {draft ? <input type="hidden" name="id" value={draft.id} /> : null}
 
-      <div className={styles.promoHead}>
-        <label className={styles.promoDrop} htmlFor={field('imagePath')}>
-          {shown ? (
-            <img src={shown} alt="" className={styles.promoPreview} />
-          ) : (
-            <span className={styles.promoDropText}>Bild wählen — JPG, PNG oder WebP, max. 6 MB</span>
-          )}
-        </label>
-        <input
-          id={field('imagePath')}
-          type="file"
-          name="image"
-          accept="image/jpeg,image/png,image/webp"
-          className="visually-hidden"
-          onChange={(event) => {
-            const file = event.target.files?.[0];
-            setPreview(file ? URL.createObjectURL(file) : null);
-          }}
-        />
+      <PromoMediaList items={items} onChange={setItems} idPrefix={field('media')} />
+      <input type="hidden" name="mediaOrder" value={JSON.stringify(plan.order)} />
+      <input ref={filesRef} type="file" name="mediaFiles" multiple className="visually-hidden" tabIndex={-1} />
 
-        <div className={styles.promoHeadFields}>
+      <div className={styles.promoHeadFields}>
           <div className="field">
             <label htmlFor={field('titleDe')}>Titel (DE) *</label>
             <input
@@ -119,7 +141,6 @@ export function PromoEditor({ draft, onClose }: { draft: PromoDraft | null; onCl
               />
             </div>
           </div>
-        </div>
       </div>
 
       <div className="field">

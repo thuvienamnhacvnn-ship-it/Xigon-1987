@@ -340,22 +340,71 @@
   background: var(--green-panel);
 }
 
-.promoHead { display: grid; gap: 1rem; grid-template-columns: 1fr; align-items: start; }
-@media (min-width: 800px) { .promoHead { grid-template-columns: 15rem minmax(0, 1fr); } }
 .promoHeadFields { display: flex; flex-direction: column; gap: 0.8rem; }
 
-.promoDrop {
-  display: grid;
-  place-items: center;
-  aspect-ratio: 3 / 2;
-  padding: 0.6rem;
+/*
+ * The media list.
+ *
+ * Laid out as a numbered list rather than a grid of tiles: the number is the
+ * point — it is the position on the card — and a row has room for the file
+ * name, its size and whether a clip has a still yet, none of which fits under a
+ * thumbnail.
+ */
+.promoMediaBox {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  padding: 0.9rem 1rem;
   border: 1px dashed var(--gold-hair);
   background: rgba(0, 0, 0, 0.25);
-  cursor: pointer;
 }
-.promoDrop:hover { border-color: var(--gold); }
-.promoDropText { font-size: var(--step--1); color: var(--ivory-mute); text-align: center; line-height: 1.6; }
-.promoPreview { width: 100%; height: 100%; object-fit: contain; }
+.promoMediaHead { display: flex; flex-direction: column; gap: 0.2rem; }
+.promoMediaLabel { font-size: var(--step--1); color: var(--gold-lit); }
+.promoMediaHint { font-size: 0.72rem; line-height: 1.65; color: var(--ivory-mute); }
+
+.promoMediaList { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.4rem; }
+.promoMediaItem {
+  display: grid;
+  grid-template-columns: 1.4rem 5rem minmax(0, 1fr);
+  gap: 0.7rem;
+  align-items: center;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid var(--gold-hair);
+  background: var(--green-panel);
+}
+@media (min-width: 800px) {
+  .promoMediaItem { grid-template-columns: 1.4rem 5rem minmax(0, 1fr) auto; }
+}
+
+.promoMediaRank {
+  font-variant-numeric: lining-nums tabular-nums;
+  font-size: var(--step--1);
+  color: var(--gold);
+  text-align: center;
+}
+.promoMediaThumb {
+  width: 5rem;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border: 1px solid var(--gold-hair);
+  background: rgba(0, 0, 0, 0.4);
+}
+.promoMediaInfo { display: flex; flex-direction: column; gap: 0.1rem; min-width: 0; }
+.promoMediaName {
+  font-size: var(--step--1);
+  color: var(--ivory);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.promoMediaKind { font-size: 0.68rem; color: var(--ivory-mute); font-variant-numeric: lining-nums tabular-nums; }
+.promoMediaBtns { display: flex; gap: 0.3rem; flex-wrap: wrap; grid-column: 1 / -1; }
+@media (min-width: 800px) { .promoMediaBtns { grid-column: auto; } }
+
+.promoMediaEmpty { font-size: var(--step--1); color: var(--ivory-mute); }
+.promoMediaAdd { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+/* The picker is reached through its label, so the label has to look pressable. */
+.promoMediaAdd label { cursor: pointer; }
 
 .promoPair { display: grid; gap: 0.8rem; grid-template-columns: 1fr; }
 @media (min-width: 700px) { .promoPair { grid-template-columns: 1fr 1fr; } }
