@@ -154,10 +154,29 @@
   min-height: 0;
 }
 
+/*
+ * One height for all three, taken from the window rather than from a ratio.
+ *
+ * As a plain shrinkable flex item the photograph gave up exactly as much of
+ * itself as the words beneath it needed, so three cards in a row showed three
+ * photographs of three different heights — 212, 232 and 252px at 1920 — which
+ * reads as three mistakes rather than one row.
+ *
+ * Making the 16:10 ratio binding instead fixed the heights but broke the other
+ * way: the drawing is of a 1080-tall window, and on a 889-tall one a ratio
+ * measured off the column width is taller than the card has room for. The
+ * photographs then pushed the page numbers up through the buttons.
+ *
+ * So the height answers to the window, the way every other picture band in this
+ * project had to in the end. At 1080 this is 281px, which is the 16:10 the
+ * drawing shows at this column width; on a shorter screen every card loses the
+ * same amount together.
+ */
 .photo {
   position: relative;
   display: block;
-  aspect-ratio: 16 / 10;
+  flex: 0 0 auto;
+  height: clamp(150px, 26vh, 290px);
   overflow: hidden;
   border-radius: var(--glass-r);
   background: #120c08;
