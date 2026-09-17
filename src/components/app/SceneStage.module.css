@@ -322,12 +322,34 @@
     max-width: calc(100vw - 2.4rem);
   }
 
-  /* Play and sound move above the bar so a thumb reaching for them does not
-     land on Kontakt. */
+  /*
+   * Play and sound go to the top left, on the bar's own line.
+   *
+   * Above the dock they sat on the same line as the three social buttons — a
+   * different size, a different gap and a different job — so the five of them
+   * read as one crooked row of circles instead of a centred trio. Up here they
+   * balance the languages, the account and the basket on the right, and the
+   * corner is free on this screen because the mark has moved to the middle of
+   * the film.
+   *
+   * `bottom: auto` is not optional: with the base rule's `bottom` still in
+   * force, an absolutely positioned box given both edges stretches between them
+   * — it measured 312px tall for two 38px buttons.
+   */
   .controls {
-    right: 0.85rem;
-    bottom: calc(env(safe-area-inset-bottom, 0px) + 6.1rem);
-    gap: 0.5rem;
+    left: 0.85rem;
+    right: auto;
+    /* 32px, not half of the 56px bar: the bar's own row sits a little low
+       inside it, and measuring the languages put their centre at 32. */
+    top: calc(env(safe-area-inset-top, 0px) + 32px);
+    bottom: auto;
+    transform: translateY(-50%);
+    gap: 0.45rem;
+  }
+
+  .round {
+    width: 36px;
+    height: 36px;
   }
 
   .railRule,
@@ -351,12 +373,4 @@
     font-size: var(--step--2);
   }
 
-  .round {
-    width: 38px;
-    height: 38px;
-  }
-
-  .controls {
-    bottom: calc(env(safe-area-inset-bottom, 0px) + 6.9rem);
-  }
 }
