@@ -43,12 +43,20 @@ body[data-app='true'] {
   overflow: hidden;
 }
 
-/* A screen with nothing to show says so in the middle of its own frame. */
+/*
+ * A screen with nothing to show.
+ *
+ * It says so in a card the size of the sentence, not in the middle of a panel
+ * built for a checkout — an empty basket was being announced inside a pane of
+ * glass six hundred pixels tall, which reads as something having gone wrong
+ * rather than as a basket nobody has filled yet.
+ */
 .screen-empty {
   display: grid;
-  place-content: center;
-  height: 100%;
-  padding: var(--gutter);
+  justify-items: center;
+  align-content: center;
+  gap: 1rem;
+  padding: clamp(1.6rem, 1rem + 2vw, 3rem);
   text-align: center;
   color: var(--ivory-soft);
 }
@@ -256,6 +264,18 @@ a { color: inherit; text-decoration: none; }
  */
 .legacy-sheet {
   --screen-w: var(--screen-mid);
+}
+
+/*
+ * A sheet holding nothing but a sentence shrinks to it and sits in the middle
+ * of the frame. `:has()` is what makes this possible without the dispatcher
+ * having to know which screens are empty today.
+ */
+.screen-sheet:has(> .screen-empty) {
+  --screen-w: min(92vw, 30rem);
+  height: auto;
+  max-height: 100%;
+  align-self: center;
 }
 
 /* A gold capsule: the one action a screen actually wants. */

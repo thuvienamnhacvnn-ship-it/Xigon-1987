@@ -55,8 +55,15 @@ export async function CartView({ locale, dict }: { locale: Locale; dict: Diction
               {cart.lines.map((line) => (
                 <li key={line.id} className={styles.line}>
                   <span className={styles.thumb}>
-                    {line.plateId ? (
-                      <img src={`/img/plate/${line.plateId}-420.webp`} alt="" width={76} height={76} loading="lazy" />
+                    {line.photoId ? (
+                      <img
+                        src={`/img/dish/${line.photoId}-480.webp`}
+                        alt=""
+                        width={76}
+                        height={76}
+                        loading="lazy"
+                        decoding="async"
+                      />
                     ) : null}
                   </span>
 

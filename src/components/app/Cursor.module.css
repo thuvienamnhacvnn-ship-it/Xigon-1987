@@ -1,0 +1,78 @@
+/*
+ * The pointer light.
+ *
+ * Both layers are fixed at the origin and moved with `translate3d`, so the
+ * browser can composite them without laying the page out again — animating
+ * `left`/`top` sixty times a second is what makes an effect like this feel
+ * cheap on anything but a new machine.
+ */
+.ring,
+.dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0;
+  /* The element's own centre goes under the pointer, not its corner. */
+  margin-left: -50%;
+  will-change: transform;
+}
+
+.ring[data-on='true'],
+.dot[data-on='true'] {
+  opacity: 1;
+}
+
+.ring {
+  width: 34px;
+  height: 34px;
+  margin: -17px 0 0 -17px;
+  border: 1px solid rgba(239, 177, 92, 0.75);
+  border-radius: 50%;
+  box-shadow:
+    0 0 14px rgba(239, 177, 92, 0.35),
+    inset 0 0 10px rgba(239, 177, 92, 0.18);
+  transition:
+    width var(--dur-2) var(--ease),
+    height var(--dur-2) var(--ease),
+    margin var(--dur-2) var(--ease),
+    border-color var(--dur-1) var(--ease),
+    background var(--dur-2) var(--ease),
+    opacity var(--dur-2) var(--ease);
+}
+
+/* Over anything that can be pressed the ring opens and fills a little, which
+   is the whole of the affordance: it says "this one". */
+.ring[data-live='true'] {
+  width: 56px;
+  height: 56px;
+  margin: -28px 0 0 -28px;
+  border-color: var(--gold-lit);
+  background: rgba(239, 177, 92, 0.12);
+  box-shadow:
+    0 0 26px rgba(239, 177, 92, 0.45),
+    inset 0 0 16px rgba(239, 177, 92, 0.2);
+}
+
+.dot {
+  width: 5px;
+  height: 5px;
+  margin: -2.5px 0 0 -2.5px;
+  border-radius: 50%;
+  background: var(--gold-lit);
+  box-shadow: 0 0 8px rgba(247, 217, 164, 0.9);
+  transition: opacity var(--dur-2) var(--ease);
+}
+
+/*
+ * A pointer that is not a mouse has nothing to follow, and a guest who asked
+ * for less motion asked for this. The component checks both before it starts,
+ * and these make sure nothing is painted even for the instant before it does.
+ */
+@media (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce) {
+  .ring,
+  .dot {
+    display: none;
+  }
+}

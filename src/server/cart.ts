@@ -30,6 +30,14 @@ export type CartLine = {
   note: string | null;
   unitPriceCents: number;
   totalCents: number;
+  /*
+   * The dish photograph, not the plate cut-out.
+   *
+   * The cut-outs were made for the old banner; the card, the guide and now the
+   * basket all show the photograph. A basket line whose picture is missing
+   * looks like a line that went wrong.
+   */
+  photoId: string | null;
   plateId: string | null;
   soldOut: boolean;
   orderable: boolean;
@@ -126,6 +134,7 @@ export async function readCart(locale: Locale, token?: string | null): Promise<C
       note: item.note,
       unitPriceCents,
       totalCents: unitPriceCents * item.quantity,
+      photoId: dish.photoId,
       plateId: dish.plateId,
       soldOut: dish.soldOut,
       orderable: variant.orderable && dish.published,
