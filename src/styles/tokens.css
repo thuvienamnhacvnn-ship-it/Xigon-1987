@@ -73,6 +73,18 @@
   --font-display: 'EB Garamond', 'Times New Roman', serif;
   --font-body: 'Montserrat', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
 
+  /*
+   * The style guide names the interface face as Montserrat Bold, so bold is the
+   * default here rather than something applied case by case.
+   *
+   * `--weight-quiet` exists because a paragraph of description set at 700 is a
+   * paragraph nobody finishes: bold is a voice for labels, prices, buttons and
+   * navigation, and running prose steps down one notch so it stays readable.
+   * Both are tokens so the balance can be moved in one place.
+   */
+  --weight-body: 700;
+  --weight-quiet: 500;
+
   --step--2: clamp(0.66rem, 0.64rem + 0.08vw, 0.72rem);
   --step--1: clamp(0.76rem, 0.74rem + 0.1vw, 0.83rem);
   --step-0: clamp(0.94rem, 0.91rem + 0.14vw, 1.01rem);

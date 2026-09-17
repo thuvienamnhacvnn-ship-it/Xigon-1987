@@ -296,6 +296,7 @@
 
 .info,
 .note {
+  font-weight: var(--weight-quiet);
   display: flex;
   align-items: flex-start;
   gap: 0.5rem;

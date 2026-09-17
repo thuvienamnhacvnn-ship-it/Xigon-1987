@@ -500,7 +500,7 @@
 .totalValue {
   font-family: var(--font-body);
   font-size: clamp(1.15rem, 0.8rem + 1vw, 1.7rem);
-  font-weight: 500;
+  font-weight: var(--weight-body);
   font-variant-numeric: tabular-nums;
   color: var(--gold);
 }

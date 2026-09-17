@@ -389,7 +389,7 @@
   flex: 0 0 auto;
   font-family: var(--font-body);
   font-size: var(--step-1);
-  font-weight: 600;
+  font-weight: var(--weight-body);
   font-variant-numeric: lining-nums tabular-nums;
   white-space: nowrap;
   color: var(--gold);
