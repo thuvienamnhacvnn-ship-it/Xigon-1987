@@ -1,0 +1,106 @@
+/* Shared by the order receipt and the reservation page. */
+.card {
+  max-width: 780px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+  padding: clamp(1.3rem, 1rem + 1.8vw, 2.4rem);
+  border: 1px solid var(--gold-hair);
+  background: var(--green-panel);
+}
+
+.headRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+  padding-bottom: 1.2rem;
+  border-bottom: 1px solid var(--gold-hair);
+}
+
+.reference {
+  font-family: var(--font-display);
+  font-size: var(--step-3);
+  letter-spacing: 0.06em;
+  font-variant-numeric: lining-nums tabular-nums;
+  color: var(--ivory);
+}
+
+.status {
+  padding: 0.5em 1em;
+  border: 1px solid var(--gold);
+  color: var(--gold-lit);
+  font-size: var(--step--2);
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.status[data-status='rejected'],
+.status[data-status='cancelled'],
+.status[data-status='cancelled_by_guest'],
+.status[data-status='cancelled_by_restaurant'] { border-color: var(--error); color: var(--error); }
+.status[data-status='confirmed'],
+.status[data-status='completed'] { border-color: var(--ok); color: var(--ok); }
+
+.facts { margin: 0; display: grid; gap: 1rem; }
+@media (min-width: 620px) { .facts { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.facts dt {
+  font-size: var(--step--2);
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 0.3rem;
+}
+.facts dd { margin: 0; color: var(--ivory); line-height: 1.5; font-variant-numeric: lining-nums tabular-nums; }
+
+.block { padding-top: 1.2rem; border-top: 1px solid var(--gold-hair); }
+.blockTitle {
+  font-size: var(--step--2);
+  font-family: var(--font-body);
+  font-weight: 400;
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 0.8rem;
+}
+
+.items { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.6rem; }
+.items li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 0.7rem;
+  align-items: baseline;
+}
+.qty { color: var(--gold); font-variant-numeric: lining-nums tabular-nums; }
+.variant { display: block; font-size: 0.74rem; color: var(--ivory-mute); }
+.note { display: block; font-size: 0.74rem; color: var(--ivory-soft); font-style: italic; }
+.price { font-variant-numeric: lining-nums tabular-nums; white-space: nowrap; }
+
+.totals { margin: 1rem 0 0; padding-top: 0.8rem; border-top: 1px solid var(--gold-hair); display: grid; gap: 0.4rem; }
+.totals > div { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; }
+.totals dt { font-size: var(--step--1); color: var(--ivory-soft); }
+.totals dd { margin: 0; font-variant-numeric: lining-nums tabular-nums; }
+.totalsMuted dt, .totalsMuted dd { color: var(--ivory-mute); }
+.grand dt { font-family: var(--font-display); font-size: var(--step-1); color: var(--ivory); }
+.grand dd { font-family: var(--font-display); font-size: var(--step-2); color: var(--gold-lit); }
+
+.warn {
+  font-size: var(--step--1);
+  line-height: 1.6;
+  color: var(--gold-lit);
+  padding: 0.8rem 1rem;
+  border-left: 2px solid var(--gold);
+  background: rgba(239, 177, 92, 0.08);
+}
+
+.footRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.2rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--gold-hair);
+}
+
+.hint { font-size: var(--step--1); color: var(--ivory-mute); line-height: 1.7; }

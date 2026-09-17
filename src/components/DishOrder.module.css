@@ -1,0 +1,79 @@
+.order {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  padding: clamp(1.1rem, 0.8rem + 1.2vw, 1.8rem);
+  border: 1px solid var(--gold-hair);
+  background: var(--green-panel);
+}
+
+.choice { border: 0; margin: 0; padding: 0; }
+.legend {
+  padding: 0;
+  font-size: var(--step--2);
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.options { display: grid; gap: 0.5rem; margin-top: 0.6rem; }
+
+.option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75em 1em;
+  border: 1px solid var(--gold-hair);
+  cursor: pointer;
+  transition: border-color var(--dur-1) var(--ease), background var(--dur-1) var(--ease);
+}
+.option:hover { border-color: var(--gold); }
+.option[data-active='true'] { border-color: var(--gold); background: rgba(239, 177, 92, 0.12); }
+.option:focus-within { outline: 2px solid var(--gold-lit); outline-offset: 2px; }
+
+.optionLabel { font-size: var(--step-0); }
+.optionPrice { font-variant-numeric: lining-nums tabular-nums; color: var(--gold-lit); white-space: nowrap; }
+
+.quantityRow { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+
+.stepper { display: flex; align-items: center; border: 1px solid var(--gold-hair); }
+.stepper button {
+  width: 44px;
+  height: 44px;
+  border: 0;
+  background: transparent;
+  color: var(--ivory);
+  font-size: 1.15rem;
+  cursor: pointer;
+  transition: background var(--dur-1) var(--ease);
+}
+.stepper button:hover { background: rgba(239, 177, 92, 0.16); }
+
+.count {
+  min-width: 46px;
+  text-align: center;
+  font-variant-numeric: lining-nums tabular-nums;
+  border-inline: 1px solid var(--gold-hair);
+  line-height: 44px;
+}
+
+.submit { display: flex; flex-direction: column; gap: 0.8rem; padding-top: 0.4rem; }
+.total { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; }
+.totalLabel { font-size: var(--step--2); letter-spacing: var(--track-wide); text-transform: uppercase; color: var(--ivory-mute); }
+.totalValue { font-family: var(--font-display); font-size: var(--step-2); color: var(--gold-lit); font-variant-numeric: lining-nums tabular-nums; }
+
+.unavailable {
+  font-size: var(--step--1);
+  letter-spacing: 0.08em;
+  color: var(--ivory-soft);
+  line-height: 1.6;
+}
+
+.source {
+  font-size: var(--step--1);
+  line-height: 1.6;
+  color: var(--ivory-mute);
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--gold-hair);
+}

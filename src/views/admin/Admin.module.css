@@ -1,0 +1,273 @@
+/*
+ * The back office.
+ *
+ * Deliberately plainer than the rest of the site: this is a working screen, used
+ * standing up, in a hurry, during service. Denser type, more contrast, no
+ * decoration that costs a glance.
+ */
+
+.shell { min-height: 100svh; background: var(--green-dark); }
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+  padding: 0.8rem var(--gutter);
+  background: var(--ink-black);
+  border-bottom: 1px solid var(--gold-hair);
+}
+
+.brand {
+  font-family: var(--font-display);
+  font-size: var(--step-1);
+  color: var(--gold-lit);
+}
+
+.tabs { display: flex; gap: 0.4rem; margin-left: auto; flex-wrap: wrap; }
+.tab {
+  padding: 0.5em 1em;
+  border: 1px solid var(--gold-hair);
+  font-size: var(--step--1);
+  color: var(--ivory-soft);
+}
+.tab:hover { border-color: var(--gold); color: var(--ivory); }
+.tab[aria-current='page'] { background: var(--gold); border-color: var(--gold); color: var(--green-deep); }
+
+.signOut {
+  padding: 0.5em 1em;
+  border: 1px solid var(--gold-hair);
+  background: transparent;
+  color: var(--ivory-mute);
+  font-size: var(--step--1);
+  cursor: pointer;
+}
+.signOut:hover { border-color: var(--error); color: var(--error); }
+
+.page {
+  width: min(100% - var(--gutter) * 2, 1500px);
+  margin-inline: auto;
+  padding-block: 1.6rem 4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+}
+
+/* ---------- gate ---------- */
+.gate { min-height: 100svh; display: grid; place-items: center; padding: var(--gutter); background: var(--green-dark); }
+.gateBox {
+  width: min(100%, 26rem);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 2rem;
+  border: 1px solid var(--gold-hair);
+  background: var(--ink-black);
+  color: var(--ivory-soft);
+  line-height: 1.7;
+}
+.gateTitle { font-family: var(--font-display); font-size: var(--step-2); color: var(--ivory); }
+.gateHint { font-size: var(--step--1); color: var(--ivory-mute); }
+.gateBox code { color: var(--gold-lit); font-size: 0.9em; }
+
+/* ---------- day header ---------- */
+.dayHead {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--gold-hair);
+}
+.dayLabel { font-family: var(--font-display); font-size: var(--step-2); color: var(--ivory); }
+.dayCounts { font-size: var(--step--1); color: var(--ivory-soft); margin-top: 0.25rem; }
+.warn { color: var(--gold-lit); }
+.danger { color: var(--error); }
+
+.dayNav { display: flex; align-items: center; gap: 0.7rem; flex-wrap: wrap; }
+.dayStep { font-size: var(--step--1); color: var(--ivory-mute); }
+.dayStep:hover { color: var(--gold-lit); }
+.dayPick { display: flex; gap: 0.4rem; }
+.dayPick .input { min-height: 42px; width: auto; }
+
+/* ---------- new booking ---------- */
+.newBar { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+.newForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.2rem;
+  border: 1px solid var(--gold-hair);
+  background: var(--green-panel);
+}
+.newGrid { display: grid; gap: 0.8rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr)); }
+.newActions { display: flex; gap: 0.6rem; }
+
+/* ---------- rows ---------- */
+.rows { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.5rem; }
+
+.row {
+  display: grid;
+  gap: 0.9rem;
+  grid-template-columns: 1fr;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--gold-hair);
+  background: var(--green-panel);
+}
+@media (min-width: 1000px) {
+  .row { grid-template-columns: 6rem minmax(0, 1.5fr) minmax(0, 0.8fr) minmax(0, 1.2fr); align-items: start; }
+}
+/* A cancelled booking stays in the list — the table it freed is information
+   too — but it stops competing for attention. */
+.row[data-state='off'] { opacity: 0.45; }
+.row[data-conflict='true'] { border-color: var(--error); }
+
+.rowTime { display: flex; flex-direction: column; }
+.time {
+  font-family: var(--font-body);
+  font-variant-numeric: lining-nums tabular-nums;
+  font-size: var(--step-2);
+  color: var(--ivory);
+}
+.until { font-size: 0.7rem; color: var(--ivory-mute); font-variant-numeric: lining-nums tabular-nums; }
+
+.rowWho { display: flex; flex-direction: column; gap: 0.2rem; min-width: 0; }
+.name { font-family: var(--font-display); font-size: var(--step-1); color: var(--ivory); display: flex; gap: 0.6rem; align-items: baseline; }
+.party { font-family: var(--font-body); font-size: var(--step--1); color: var(--gold); font-variant-numeric: lining-nums tabular-nums; }
+.contact { font-size: var(--step--1); color: var(--ivory-soft); font-variant-numeric: lining-nums tabular-nums; }
+.contact a { border-bottom: 1px solid var(--gold-hair); }
+.note { font-size: var(--step--1); color: var(--ivory-soft); font-style: italic; }
+.staffNote { font-size: var(--step--1); color: var(--gold-lit); }
+
+.rowMeta { display: flex; flex-direction: column; gap: 0.3rem; align-items: flex-start; }
+.channel {
+  font-size: 0.64rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.3em 0.6em;
+  border: 1px solid var(--gold-hair);
+  color: var(--ivory-soft);
+}
+/* The two outside platforms are marked, because a booking we did not take is a
+   booking we cannot change on our own. */
+.channel[data-channel='quandoo'],
+.channel[data-channel='thefork'] { border-color: var(--gold); color: var(--gold-lit); }
+.reference { font-size: 0.7rem; letter-spacing: 0.08em; color: var(--ivory-mute); }
+.conflictFlag { font-size: 0.7rem; color: var(--error); }
+
+/* ---------- row actions ---------- */
+.rowActions { display: flex; flex-direction: column; gap: 0.5rem; }
+.status {
+  font-size: 0.66rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ivory-mute);
+}
+.status[data-status='confirmed'] { color: var(--ok); }
+.status[data-status='requested'] { color: var(--gold-lit); }
+.status[data-status='seated'] { color: var(--gold); }
+
+.assign { display: flex; gap: 0.35rem; }
+.assign .select { min-height: 36px; padding-block: 0.25em; font-size: var(--step--1); }
+
+.flow { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+
+.small,
+.smallDanger {
+  border: 1px solid var(--gold-hair);
+  background: transparent;
+  color: var(--ivory-soft);
+  font-size: var(--step--1);
+  padding: 0.4em 0.75em;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.small:hover { border-color: var(--gold); color: var(--ivory); }
+.smallDanger { border-color: rgba(209, 101, 90, 0.5); color: var(--error); }
+.smallDanger:hover { background: var(--error); color: var(--cream); }
+
+.confirm {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  font-size: var(--step--1);
+  padding: 0.5rem 0.7rem;
+  border: 1px solid var(--error);
+  background: rgba(209, 101, 90, 0.1);
+}
+.noteForm { display: flex; gap: 0.35rem; }
+.noteForm .input { min-height: 36px; padding-block: 0.25em; font-size: var(--step--1); }
+
+/* ---------- channels ---------- */
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.4rem;
+  border: 1px solid var(--gold-hair);
+  background: var(--green-panel);
+}
+.h2 { font-family: var(--font-display); font-size: var(--step-2); color: var(--ivory); }
+.prose { font-size: var(--step--1); line-height: 1.75; color: var(--ivory-soft); max-width: 80ch; }
+.prose code, .platformFacts code { color: var(--gold-lit); }
+
+/*
+ * `.platform`, not `.channel`: a booking row already uses `.channel` for its
+ * little uppercase badge, and in one CSS module the two would be the same rule
+ * — which is how the descriptions here came out shouting.
+ */
+.platforms { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.8rem; }
+@media (min-width: 900px) { .platforms { grid-template-columns: repeat(3, 1fr); } }
+
+.platform {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 1rem;
+  border: 1px solid var(--gold-hair);
+  background: rgba(0, 0, 0, 0.2);
+}
+.platform[data-on='false'] { opacity: 0.75; }
+
+.platformHead { display: flex; align-items: baseline; justify-content: space-between; gap: 0.6rem; }
+.platformName { font-family: var(--font-display); font-size: var(--step-1); color: var(--ivory); }
+.platformState { font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ivory-mute); }
+.platform[data-on='true'] .platformState { color: var(--ok); }
+
+.platformNote { font-size: var(--step--1); line-height: 1.65; color: var(--ivory-soft); }
+.platformFacts { margin: 0; display: grid; gap: 0.4rem; font-size: 0.72rem; }
+.platformFacts > div { display: flex; flex-direction: column; gap: 0.15rem; }
+.platformFacts dt { color: var(--ivory-mute); letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.62rem; }
+.platformFacts dd { margin: 0; word-break: break-all; }
+
+.code {
+  margin: 0;
+  padding: 1rem;
+  overflow-x: auto;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--gold-hair);
+  color: var(--gold-lit);
+  font-size: 0.78rem;
+  line-height: 1.7;
+}
+
+.table { width: 100%; border-collapse: collapse; font-size: var(--step--1); }
+.table th,
+.table td { text-align: left; padding: 0.5rem 0.7rem; border-bottom: 1px solid var(--gold-hair); }
+.table th { color: var(--gold); font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.66rem; }
+.table td { color: var(--ivory-soft); font-variant-numeric: lining-nums tabular-nums; }
+
+/* ---------- shared ---------- */
+.empty {
+  padding: 2rem;
+  border: 1px dashed var(--gold-hair);
+  color: var(--ivory-mute);
+  text-align: center;
+}
+.error { font-size: var(--step--1); color: var(--error); }
+.ok { font-size: var(--step--1); color: var(--ok); }

@@ -1,0 +1,297 @@
+/* =========================================================================
+   THE BANNER
+
+   A stack, not a picture:
+
+     .room    the restaurant's own photograph, shown as a photograph
+     .wash    a neutral scrim — dark on the left, dark at the foot — so the
+              headline and the buttons have something to sit against. It is a
+              legibility device, not a colour: nothing here tints the room.
+     .table   the table, cut out of its background by the asset build
+     .dish    the dish — the only layer that changes
+
+   The copy, the buttons and the switcher sit above all of it as ordinary
+   markup, so they stay selectable, translatable and reachable by keyboard.
+   ========================================================================= */
+
+.hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: #0a0e0b;
+  /*
+   * Full screen, less whatever is above it. `svh` rather than `vh` so a phone
+   * browser's collapsing address bar does not leave a strip of the next
+   * section showing under the banner.
+   */
+  min-height: max(540px, calc(100svh - var(--demo-h, 0px) - var(--bar-h, 0px)));
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---------- the stack ---------- */
+.stage { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+
+.room {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 58% 48%;
+  /* only a little down, so the lanterns keep their warmth */
+  filter: brightness(0.86);
+}
+
+.wash {
+  position: absolute;
+  inset: 0;
+  background:
+    /* heaviest on the left, where the headline is */
+    linear-gradient(
+      100deg,
+      rgba(6, 10, 8, 0.9) 0%,
+      rgba(6, 10, 8, 0.78) 22%,
+      rgba(6, 10, 8, 0.5) 42%,
+      rgba(6, 10, 8, 0.22) 62%,
+      rgba(6, 10, 8, 0.32) 100%
+    ),
+    /* a foot of shadow, so the table has something to stand in */
+    linear-gradient(0deg, rgba(4, 7, 5, 0.86) 0%, rgba(4, 7, 5, 0) 46%),
+    /* and the faintest vignette, to close the corners */
+    radial-gradient(120% 90% at 50% 40%, rgba(0, 0, 0, 0) 52%, rgba(0, 0, 0, 0.45) 100%);
+}
+
+/* ---------- layers 1 and 2: the table, and the dish on it ---------- */
+/*
+ * One box for both. `aspect-ratio` matches the table cut-out exactly, so the
+ * box is the table: anything placed inside it in per-cent is placed against
+ * the marble, not against the banner.
+ *
+ * Pushed far enough down that the pedestal falls out of frame and only the
+ * slab is left — the template shows a table edge, not a whole table.
+ */
+.setting {
+  position: absolute;
+  right: -8%;
+  bottom: -30%;
+  width: 92%;
+  max-width: 1400px;
+  aspect-ratio: 1400 / 746;
+}
+@media (min-width: 1100px) { .setting { right: -6%; bottom: -46%; width: 76%; } }
+
+.table {
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 40px 60px rgba(0, 12, 7, 0.65));
+}
+
+/*
+ * Standing in the middle of the table.
+ *
+ * Anchored by its foot, not by its middle: food sits on a surface and rises
+ * above it, so what belongs at the centre of the marble is the bottom edge of
+ * the platter. Centring the whole picture instead buries half the dish in the
+ * table and pushes the rest off the bottom of the banner.
+ *
+ * Both numbers are read off the table cut-out: 50% is the middle of the
+ * ellipse, and 51% from the foot of the box is the middle of its top face —
+ * the box also contains the pedestal, which is below the marble.
+ */
+.dish {
+  position: absolute;
+  left: 50%;
+  bottom: 62%;
+  width: 71%;
+  transform: translateX(-50%);
+  animation: dishIn var(--dur-3) var(--ease) both;
+}
+/*
+ * The table sits low, so the dish stands further back on the marble — far
+ * enough that the whole platter, and the buttons under it, stay in frame.
+ * Still measured against the table, so the two move together.
+ */
+/*
+ * As low as it goes. Below this the buttons start covering the "XIGON 1987"
+ * written in sauce along the front of the slate, which is the one part of the
+ * photograph that should never be hidden.
+ */
+@media (min-width: 1100px) { .dish { bottom: 68.5%; } }
+
+.dishImg {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: auto;
+  /* several dishes are photographed on near-black stone; a touch of lift
+     keeps them from sinking into the table */
+  filter: brightness(1.1) saturate(1.05);
+}
+
+/*
+ * A pool of warm light under the dish.
+ *
+ * Several of the cut-outs are photographed on near-black stone, and the table
+ * they now stand on is black marble: without this the dessert and the cocktail
+ * simply disappear. It reads as the lamp above the table, which is where the
+ * light in the room comes from anyway.
+ */
+.dishGlow {
+  position: absolute;
+  left: 50%;
+  bottom: 2%;
+  width: 96%;
+  aspect-ratio: 5 / 2;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(247, 217, 164, 0.2) 0%,
+    rgba(239, 177, 92, 0.09) 40%,
+    rgba(239, 177, 92, 0) 68%
+  );
+}
+
+/* where the dish meets the marble */
+.dishShadow {
+  position: absolute;
+  left: 50%;
+  bottom: -3%;
+  width: 72%;
+  height: 12%;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(0, 10, 6, 0.75) 0%, rgba(0, 10, 6, 0.3) 52%, rgba(0, 10, 6, 0) 76%);
+}
+
+@keyframes dishIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(14px); }
+  to { opacity: 1; transform: translateX(-50%); }
+}
+@media (prefers-reduced-motion: reduce) { .dish { animation: none; } }
+
+/* ---------- copy ---------- */
+.copy {
+  position: relative;
+  z-index: 3;
+  width: min(100% - var(--gutter) * 2, 52rem);
+  margin-left: var(--gutter);
+  margin-right: auto;
+  padding-top: clamp(4rem, 2rem + 9vw, 8.5rem);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.9rem;
+}
+@media (min-width: 1100px) { .copy { margin-left: clamp(2rem, 0.5rem + 3.5vw, 4.5rem); } }
+
+.eyebrow {
+  font-size: var(--step--2);
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
+  color: var(--ivory-soft);
+}
+
+.headline {
+  font-family: var(--font-display);
+  font-size: var(--step-5);
+  font-weight: 500;
+  line-height: 0.98;
+  letter-spacing: -0.015em;
+  white-space: pre-line;
+  /* the template's headline is not flat gold but a light champagne ramp */
+  background: linear-gradient(174deg, #fbeccd 4%, var(--gold-lit) 38%, var(--gold) 82%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  /* a fallback for anything that cannot clip a background to text */
+  -webkit-text-fill-color: transparent;
+}
+
+.lede {
+  font-family: var(--font-display);
+  font-size: var(--step-1);
+  line-height: 1.5;
+  color: var(--ivory-soft);
+  max-width: 26ch;
+  white-space: pre-line;
+}
+
+.copyRule { margin-top: 0.6rem; }
+
+/* ---------- foot: the buttons and the switcher ---------- */
+.foot {
+  position: relative;
+  z-index: 3;
+  margin-top: auto;
+  padding: clamp(2rem, 1rem + 4vw, 4rem) var(--gutter) clamp(1.8rem, 1rem + 2.6vw, 3rem);
+}
+@media (min-width: 1100px) {
+  .foot {
+    padding-left: clamp(2rem, 0.5rem + 3.5vw, 4.5rem);
+    padding-right: clamp(5rem, 2rem + 7vw, 9rem);
+  }
+}
+
+.actions { display: flex; flex-wrap: wrap; gap: 0.8rem; }
+@media (min-width: 1100px) { .actions { gap: 1.1rem; } }
+.actions :global(.btn) { flex: 1 1 15rem; max-width: 22rem; }
+
+/* ---------- right edge ---------- */
+.aside {
+  position: absolute;
+  /*
+   * A narrow column at the right edge, centred on the banner's height. It is
+   * to the right of the table, so nothing standing on the table reaches it,
+   * and well above the guide's button in the corner.
+   */
+  right: clamp(1rem, 0.3rem + 0.9vw, 1.7rem);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 3;
+  display: none;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.7rem;
+  font-size: var(--step--2);
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
+  color: var(--ivory-mute);
+  text-align: right;
+  line-height: 2;
+  max-width: 4.6em;
+  white-space: pre-line;
+}
+@media (min-width: 1280px) { .aside { display: flex; } }
+.asideRule { width: 34px; height: 1px; background: var(--gold); opacity: 0.8; }
+
+/* ---------- dish switcher ---------- */
+.switcher {
+  position: relative;
+  z-index: 4;
+  display: none;
+  align-items: center;
+  gap: 0.55rem;
+  margin-top: 1.1rem;
+}
+@media (min-width: 1100px) { .switcher { display: flex; } }
+
+.switchLabel {
+  font-size: var(--step--2);
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-right: 0.7rem;
+}
+
+.dot {
+  width: 9px;
+  height: 9px;
+  padding: 0;
+  border: 1px solid var(--gold);
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  transition: background var(--dur-1) var(--ease), transform var(--dur-1) var(--ease);
+}
+.dot:hover { background: var(--gold-hair); }
+.dot[aria-current='true'] { background: var(--gold); transform: scale(1.3); }

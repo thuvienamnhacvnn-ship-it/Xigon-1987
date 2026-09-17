@@ -1,0 +1,110 @@
+/*
+ * The footer closes the page the way the rail opens it: cream type on deep
+ * navy, one gold rule, two drawn branches in the corners. It carries the map
+ * because the last thing a guest needs from a restaurant page is the way there.
+ */
+.footer {
+  position: relative;
+  overflow: hidden;
+  background: var(--green-deep);
+  border-top: 1px solid var(--gold-hair);
+  padding-block: var(--section-y) calc(2rem + env(safe-area-inset-bottom));
+}
+
+.leafLeft,
+.leafRight {
+  position: absolute;
+  width: 240px;
+  color: var(--gold);
+  opacity: 0.1;
+  pointer-events: none;
+}
+.leafLeft { left: -70px; top: -40px; transform: rotate(18deg); }
+.leafRight { right: -80px; bottom: -30px; transform: rotate(-160deg); }
+
+.top {
+  display: grid;
+  gap: clamp(2rem, 1rem + 4vw, 4rem);
+  grid-template-columns: 1fr;
+  align-items: start;
+}
+@media (min-width: 900px) { .top { grid-template-columns: 0.8fr 1.25fr 1fr; } }
+
+/* --- brand --- */
+.brandCol { display: flex; flex-direction: column; align-items: flex-start; gap: 1.4rem; }
+.logo { width: 132px; height: auto; }
+.motto {
+  font-family: var(--font-display);
+  font-size: var(--step-2);
+  line-height: 1.25;
+  white-space: pre-line;
+  color: var(--ivory);
+}
+.seal { width: 74px; color: var(--seal); opacity: 0.9; }
+
+/* --- map --- */
+.mapCol { display: flex; flex-direction: column; gap: 0.7rem; }
+
+/* --- contact --- */
+.infoCol { display: flex; flex-direction: column; gap: 0.6rem; align-items: flex-start; }
+
+.hours { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.45rem; }
+.hours li { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.7rem; }
+.hoursTime {
+  font-variant-numeric: lining-nums tabular-nums;
+  font-size: var(--step-1);
+  color: var(--ivory);
+}
+.hoursNote { font-size: var(--step--2); letter-spacing: 0.1em; text-transform: uppercase; color: var(--ivory-mute); }
+.pending { font-size: var(--step--1); color: var(--gold-lit); max-width: 34ch; line-height: 1.6; }
+
+.infoCol .rule { margin-block: 0.9rem; }
+
+.big {
+  font-family: var(--font-display);
+  font-size: var(--step-2);
+  color: var(--ivory);
+  font-variant-numeric: lining-nums tabular-nums;
+  border-bottom: 1px solid var(--gold-hair);
+  padding-bottom: 0.15em;
+}
+.big:hover { color: var(--gold-lit); border-bottom-color: var(--gold); }
+.mail { font-size: var(--step--1); color: var(--ivory-soft); }
+.mail:hover { color: var(--gold-lit); }
+
+/* --- link columns --- */
+.links {
+  margin-top: clamp(2.5rem, 1.5rem + 4vw, 5rem);
+  padding-top: 2rem;
+  border-top: 1px solid var(--gold-hair);
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: repeat(2, 1fr);
+}
+@media (min-width: 760px) { .links { grid-template-columns: repeat(4, 1fr); } }
+
+.links nav,
+.links > div { display: flex; flex-direction: column; align-items: flex-start; gap: 0.1rem; }
+.links .label { margin-bottom: 0.5rem; }
+
+.link {
+  font-size: var(--step-0);
+  color: var(--ivory-soft);
+  padding-block: 0.28em;
+  transition: color var(--dur-1) var(--ease);
+}
+.link:hover { color: var(--gold-lit); }
+
+/* --- base line --- */
+.base {
+  margin-top: 2.5rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid rgba(239, 177, 92, 0.14);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1.4rem;
+  justify-content: space-between;
+  font-size: var(--step--1);
+  color: var(--ivory-mute);
+}
+.demo { color: var(--gold); letter-spacing: 0.08em; text-transform: uppercase; font-size: var(--step--2); }

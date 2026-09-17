@@ -1,0 +1,415 @@
+/*
+ * The shell.
+ *
+ * Three rows in a viewport-height grid — bar, content, dock — plus a thin
+ * footer. The dock is a real row rather than something floating over the
+ * content, because a floating dock eventually lands on top of the one button a
+ * screen needs. It only *looks* like it floats: it sits in its own row with air
+ * around it and glass behind it.
+ *
+ * Only .content scrolls. Screens that have more than fits are expected to
+ * paginate; the scroll here is the safety net, not the plan.
+ */
+.shell {
+  --shell-gutter: clamp(0.9rem, 0.4rem + 2vw, 2.6rem);
+  --shell-bar-h: 66px;
+  --shell-dock-h: 76px;
+
+  position: relative;
+  z-index: 0;
+  display: grid;
+  grid-template-rows: var(--shell-bar-h) minmax(0, 1fr) auto auto;
+  /*
+   * Small viewport units, not 100vh: on iOS the address bar makes 100vh taller
+   * than the screen, which would push the dock off the bottom — the one place
+   * it must never be.
+   */
+  height: 100svh;
+  min-height: 560px;
+  overflow: hidden;
+  color: var(--ivory);
+  background: var(--green-dark);
+}
+
+/* ---------- the room behind everything ---------- */
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.backdropImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Warm the photograph towards the gold of the room and drop its contrast, so
+     ivory text stays legible wherever a screen happens to put it. */
+  filter: saturate(0.92) contrast(0.94) brightness(0.62);
+}
+
+.backdropVeil {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(120% 90% at 50% 0%, rgba(10, 61, 42, 0.35), transparent 62%),
+    linear-gradient(180deg, rgba(4, 36, 23, 0.72), rgba(4, 36, 23, 0.86));
+}
+
+/* Erleben paints its own video, so the shell stands back entirely. */
+.shell[data-bare='true'] {
+  background: #000;
+}
+
+/* ---------- the top bar ---------- */
+
+.bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0 var(--shell-gutter);
+  padding-top: env(safe-area-inset-top, 0px);
+  border-bottom: 1px solid var(--gold-hair);
+  background: linear-gradient(180deg, rgba(6, 26, 18, 0.82), rgba(6, 26, 18, 0.42));
+  backdrop-filter: blur(14px) saturate(1.1);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+}
+
+.brand img {
+  display: block;
+  width: auto;
+  height: clamp(26px, 3.4vw, 35px);
+}
+
+.barSpacer {
+  flex: 1 1 auto;
+}
+
+.langs {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+  padding: 3px;
+  border: 1px solid var(--gold-hair);
+  border-radius: var(--r-pill);
+}
+
+.lang {
+  padding: 0.24rem 0.52rem;
+  border-radius: var(--r-pill);
+  font-family: var(--font-body);
+  font-size: var(--step--2);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--ivory-mute);
+  text-decoration: none;
+  transition: color var(--dur-1) var(--ease), background var(--dur-1) var(--ease);
+}
+
+.lang:hover {
+  color: var(--ivory);
+}
+
+.lang[aria-current='true'] {
+  color: var(--ink-black);
+  background: var(--gold);
+}
+
+.iconButton,
+.cart {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid var(--gold-hair);
+  border-radius: var(--r-pill);
+  color: var(--ivory);
+  background: rgba(14, 13, 11, 0.42);
+  cursor: pointer;
+  text-decoration: none;
+  transition: border-color var(--dur-1) var(--ease), color var(--dur-1) var(--ease);
+}
+
+.iconButton:hover,
+.cart:hover,
+.cart[data-active='true'] {
+  border-color: var(--gold);
+  color: var(--gold-lit);
+}
+
+/* The cart is wider than the other buttons: it always carries its number. */
+.cart {
+  width: auto;
+  padding: 0 0.72rem 0 0.62rem;
+}
+
+.cartCount {
+  min-width: 1.15rem;
+  padding: 0 0.28rem;
+  border-radius: var(--r-pill);
+  font-family: var(--font-body);
+  font-size: var(--step--2);
+  font-weight: 700;
+  line-height: 1.5;
+  text-align: center;
+  color: var(--ink-black);
+  background: var(--gold);
+}
+
+/* Zero is shown, not hidden — a button that changes width as you shop is worse
+   than a quiet zero. */
+.cartCount[data-empty='true'] {
+  color: var(--ivory-mute);
+  background: rgba(245, 241, 233, 0.12);
+}
+
+/* ---------- the account panel ---------- */
+
+.account {
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.panel {
+  position: absolute;
+  top: calc(100% + 0.6rem);
+  right: 0;
+  z-index: 40;
+  width: min(21rem, calc(100vw - 2rem));
+  padding: 1rem 1.05rem 1.1rem;
+  border: 1px solid var(--gold-hair);
+  border-radius: 6px;
+  background: rgba(8, 32, 21, 0.96);
+  backdrop-filter: blur(18px);
+  box-shadow: var(--shadow-panel);
+}
+
+.panelTitle {
+  margin: 0 0 0.3rem;
+  font-family: var(--font-display);
+  font-size: var(--step-1);
+  color: var(--gold-lit);
+}
+
+.panelText {
+  margin: 0 0 0.85rem;
+  font-size: var(--step--1);
+  line-height: 1.55;
+  color: var(--ivory-soft);
+}
+
+.panelForm + .panelForm {
+  margin-top: 0.75rem;
+}
+
+.panelForm label {
+  display: block;
+  margin-bottom: 0.3rem;
+  font-size: var(--step--2);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ivory-mute);
+}
+
+.panelRow {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.panelRow input {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 0.5rem 0.65rem;
+  border: 1px solid var(--gold-hair);
+  border-radius: var(--r-sm);
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  color: var(--ivory);
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.panelRow input:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 1px;
+}
+
+.panelError {
+  margin: 0.7rem 0 0;
+  font-size: var(--step--1);
+  color: var(--error);
+}
+
+/* ---------- the content row ---------- */
+
+.content {
+  position: relative;
+  min-height: 0;
+  overflow: hidden auto;
+  overscroll-behavior: contain;
+}
+
+/* ---------- the dock ---------- */
+
+.dock {
+  display: flex;
+  justify-content: center;
+  padding: 0.5rem var(--shell-gutter) 0.55rem;
+}
+
+.dockList {
+  display: flex;
+  align-items: stretch;
+  gap: 0.15rem;
+  max-width: 100%;
+  margin: 0;
+  padding: 0.3rem;
+  list-style: none;
+  border: 1px solid var(--gold-hair);
+  border-radius: var(--r-pill);
+  background: rgba(8, 30, 20, 0.72);
+  backdrop-filter: blur(16px) saturate(1.15);
+  box-shadow: 0 18px 44px -28px rgba(0, 0, 0, 0.95);
+  /* Below the width where seven labels fit, the dock scrolls sideways rather
+     than wrapping into two rows and eating the screen above it. */
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.dockList::-webkit-scrollbar {
+  display: none;
+}
+
+.dockItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.18rem;
+  min-width: 4.6rem;
+  padding: 0.4rem 0.6rem 0.3rem;
+  border-radius: var(--r-pill);
+  color: var(--ivory-mute);
+  text-decoration: none;
+  transition: color var(--dur-1) var(--ease), background var(--dur-1) var(--ease);
+}
+
+.dockItem:hover {
+  color: var(--ivory);
+  background: rgba(245, 241, 233, 0.06);
+}
+
+.dockItem[aria-current='page'] {
+  color: var(--gold-lit);
+  background: rgba(239, 177, 92, 0.14);
+}
+
+.dockLabel {
+  font-family: var(--font-body);
+  font-size: var(--step--2);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+/* The second mark on the current item, so it does not rest on colour alone. */
+.dockDot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: transparent;
+}
+
+.dockItem[aria-current='page'] .dockDot {
+  background: var(--gold);
+}
+
+/* ---------- the footer ---------- */
+
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0 var(--shell-gutter) calc(0.5rem + env(safe-area-inset-bottom, 0px));
+  font-size: var(--step--2);
+  color: var(--ivory-mute);
+}
+
+.footer a {
+  color: var(--ivory-mute);
+  text-decoration: none;
+}
+
+.footer a:hover {
+  color: var(--gold-lit);
+  text-decoration: underline;
+}
+
+.dot {
+  opacity: 0.45;
+}
+
+.demo {
+  padding: 0.08rem 0.45rem;
+  border: 1px solid var(--gold-hair);
+  border-radius: var(--r-pill);
+  color: var(--gold);
+}
+
+/* ---------- phone ---------- */
+
+@media (max-width: 720px) {
+  .shell {
+    --shell-bar-h: 58px;
+    --shell-dock-h: 68px;
+  }
+
+  .brand img {
+    height: 24px;
+  }
+
+  /* Seven labels do not fit at 390px, so the dock keeps the icons and drops to
+     a narrower rhythm; it still scrolls if a language runs long. */
+  .dockItem {
+    min-width: 3.9rem;
+    padding: 0.35rem 0.4rem 0.28rem;
+  }
+
+  .dockLabel {
+    font-size: 0.62rem;
+    letter-spacing: 0.02em;
+  }
+
+  /* The languages stay on the phone — they are the first thing a guest who does
+     not read German looks for — but they lose their padding to make room. */
+  .langs {
+    padding: 2px;
+  }
+
+  .lang {
+    padding: 0.2rem 0.34rem;
+    font-size: 0.64rem;
+    letter-spacing: 0.02em;
+  }
+
+  .iconButton,
+  .cart {
+    width: 36px;
+    height: 36px;
+  }
+
+  .cart {
+    width: auto;
+    padding: 0 0.5rem 0 0.42rem;
+  }
+}

@@ -1,0 +1,45 @@
+.wrap { display: flex; flex-direction: column; gap: 0.4rem; }
+
+.trigger {
+  border: 1px solid rgba(166, 72, 60, 0.5);
+  background: transparent;
+  color: var(--error);
+  padding: 0.55em 1.1em;
+  font-size: var(--step--1);
+  cursor: pointer;
+  transition: background var(--dur-1) var(--ease), color var(--dur-1) var(--ease);
+}
+.trigger:hover { background: var(--error); color: var(--cream); }
+
+.confirm {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--error);
+  background: rgba(166, 72, 60, 0.1);
+}
+.question { font-size: var(--step--1); line-height: 1.6; }
+.buttons { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+
+.yes {
+  border: 1px solid var(--error);
+  background: var(--error);
+  color: var(--cream);
+  padding: 0.55em 1.1em;
+  font-size: var(--step--1);
+  cursor: pointer;
+}
+.yes:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.no {
+  border: 1px solid var(--gold-hair);
+  background: transparent;
+  color: var(--ivory);
+  padding: 0.55em 1.1em;
+  font-size: var(--step--1);
+  cursor: pointer;
+}
+.no:hover { border-color: var(--gold); }
+
+.error { font-size: var(--step--1); color: var(--error); }

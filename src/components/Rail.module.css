@@ -1,0 +1,107 @@
+/*
+ * The black rail down the left edge, from the template.
+ *
+ * A fixed column of brand and navigation that never scrolls, against which the
+ * green content slides past. Below 1100px it is removed entirely rather than
+ * squashed — a 168px column on a phone would just eat the content — and the
+ * top bar carries the same links instead.
+ */
+.rail {
+  display: none;
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: var(--rail-w);
+  z-index: 90;
+  background: var(--ink-black);
+  border-right: 1px solid rgba(239, 177, 92, 0.16);
+  padding: 2.6rem 0.9rem 1.5rem;
+  overflow: hidden;
+  text-align: center;
+}
+
+@media (min-width: 1100px) {
+  .rail { display: flex; flex-direction: column; align-items: center; }
+}
+
+/* ---------- brand ---------- */
+.brand { display: flex; flex-direction: column; align-items: center; gap: 0.7rem; }
+.logo { width: 112px; height: auto; }
+
+.tagline {
+  font-size: 0.56rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ivory-mute);
+  line-height: 2;
+}
+
+.hair { width: 46px; height: 1px; background: var(--gold-hair); margin-block: 1.5rem; flex-shrink: 0; }
+
+/* ---------- navigation ---------- */
+.nav { display: flex; flex-direction: column; gap: 1.05rem; width: 100%; }
+
+.navLink {
+  position: relative;
+  font-size: 0.66rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ivory-soft);
+  transition: color var(--dur-1) var(--ease);
+}
+.navLink::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  right: 50%;
+  bottom: -0.4rem;
+  height: 1px;
+  background: var(--gold);
+  transition: left var(--dur-2) var(--ease), right var(--dur-2) var(--ease);
+}
+.navLink:hover,
+.navLink[aria-current='page'] { color: var(--gold-lit); }
+.navLink:hover::after,
+.navLink[aria-current='page']::after { left: 20%; right: 20%; }
+
+/* ---------- botanical ---------- */
+/*
+ * It takes whatever height is left between the navigation and the foot, and is
+ * clipped rather than squashed — the engraving is fine line work and scaling it
+ * unevenly turns it to mush.
+ */
+.botanical {
+  width: 132px;
+  height: auto;
+  min-height: 0;
+  flex: 1 1 auto;
+  object-fit: contain;
+  object-position: center top;
+  opacity: 0.92;
+}
+
+/* ---------- foot ---------- */
+.foot { display: flex; flex-direction: column; align-items: center; width: 100%; }
+
+.langs { display: flex; align-items: center; gap: 0.55rem; }
+.lang {
+  font-size: 0.66rem;
+  letter-spacing: 0.16em;
+  color: var(--ivory-mute);
+  transition: color var(--dur-1) var(--ease);
+}
+.lang:hover { color: var(--gold-lit); }
+.lang[aria-current='true'] { color: var(--gold); }
+/* the hairline separators between DE | EN | VI */
+.lang + .lang { padding-left: 0.55rem; border-left: 1px solid var(--gold-hair); }
+
+.motto {
+  margin-top: 1.4rem;
+  font-size: 0.56rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ivory-mute);
+  line-height: 2.1;
+  white-space: pre-line;
+}

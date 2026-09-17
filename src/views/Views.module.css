@@ -1,0 +1,50 @@
+/* Shared page furniture: the plain dark body, cream body, notices, panels. */
+.plain { background: var(--green); }
+.cream { background: var(--cream); color: var(--ink); }
+
+.notice {
+  display: grid;
+  gap: 0.5rem;
+  padding: 1rem 1.2rem;
+  margin-bottom: 2rem;
+  border-left: 2px solid var(--gold);
+  background: rgba(239, 177, 92, 0.07);
+  font-size: var(--step--1);
+  line-height: 1.65;
+  color: var(--ivory-soft);
+  max-width: 78ch;
+}
+.cream .notice { background: rgba(239, 177, 92, 0.12); color: var(--ink-soft); }
+
+.empty {
+  padding: 2.5rem 1.5rem;
+  border: 1px dashed var(--gold-hair);
+  color: var(--ivory-soft);
+  text-align: center;
+}
+
+.panel {
+  border: 1px solid var(--gold-hair);
+  background: var(--green-panel);
+  padding: clamp(1.2rem, 0.8rem + 1.6vw, 2.2rem);
+}
+.cream .panel { border-color: var(--cream-line); background: rgba(255, 255, 255, 0.45); }
+
+.grid2 {
+  display: grid;
+  gap: clamp(1.5rem, 1rem + 2.5vw, 3rem);
+  align-items: start;
+}
+@media (min-width: 900px) { .grid2 { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); } }
+
+.stack { display: grid; gap: 1rem; }
+.rowBetween { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+
+.money {
+  font-variant-numeric: lining-nums tabular-nums;
+  font-family: var(--font-body);
+}
+
+.h3 { font-family: var(--font-display); font-size: var(--step-2); }
+.muted { color: var(--ivory-mute); font-size: var(--step--1); }
+.cream .muted { color: var(--ink-mute); }

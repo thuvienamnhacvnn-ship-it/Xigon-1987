@@ -1,0 +1,10 @@
+.block { width: 100%; }
+
+.button { white-space: nowrap; }
+.button[data-state='added'] {
+  background: var(--ok);
+  border-color: var(--ok);
+  color: var(--cream);
+}
+
+.error { margin-top: 0.5rem; font-size: var(--step--1); color: var(--error); }

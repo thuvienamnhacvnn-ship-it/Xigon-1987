@@ -1,0 +1,310 @@
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--green);
+  color: var(--ivory);
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  line-height: 1.65;
+  font-synthesis-weight: none;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+  /* The fixed black rail owns the left edge on desktop. */
+  padding-left: var(--rail-w);
+}
+
+/* The back office has no rail, so it has no gutter to leave for one. */
+body[data-chrome='none'] { padding-left: 0; }
+
+/*
+ * The app shell owns the whole viewport and scrolls inside itself.
+ *
+ * The page must not scroll as well: two scrollbars on one screen means the
+ * dock drifts off the bottom on a phone, which is exactly what the shell
+ * exists to prevent. The rail gutter goes too — the dock replaced it.
+ */
+body[data-app='true'] {
+  padding-left: 0;
+  overflow: hidden;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  line-height: 1.06;
+  letter-spacing: -0.008em;
+  margin: 0;
+  text-wrap: balance;
+}
+
+h1 { font-size: var(--step-5); }
+h2 { font-size: var(--step-4); }
+h3 { font-size: var(--step-2); }
+
+p { margin: 0; text-wrap: pretty; }
+img, video, svg { display: block; max-width: 100%; }
+
+/*
+ * `<picture>` is a wrapper for source selection, not a box. Left as a block it
+ * keeps its own intrinsic height, and every `img { height: 100% }` inside a
+ * sized figure silently resolves against nothing — which is how a photograph
+ * ends up floating in a box two thirds its size.
+ */
+picture { display: contents; }
+
+button, input, select, textarea { font: inherit; color: inherit; }
+
+a { color: inherit; text-decoration: none; }
+
+/*
+ * `hidden` has to win over a component's own `display`. Without this a step in
+ * a wizard marked hidden stays on screen, because `.panel { display: flex }`
+ * beats the user-agent rule for `[hidden]`.
+ */
+[hidden] { display: none !important; }
+
+:focus-visible {
+  outline: 2px solid var(--gold-lit);
+  outline-offset: 3px;
+}
+
+::selection { background: var(--gold); color: var(--green-deep); }
+
+/* ---------- layout ---------- */
+.shell {
+  width: min(100% - var(--gutter) * 2, var(--measure));
+  margin-inline: auto;
+}
+.shell-narrow {
+  width: min(100% - var(--gutter) * 2, 980px);
+  margin-inline: auto;
+}
+.section { padding-block: var(--section-y); }
+/*
+ * `content-visibility: auto` was tried here and removed. On a section several
+ * thousand pixels tall it locks the renderer: the placeholder height and the
+ * real height differ so much that scrolling into the section resizes the page,
+ * which scrolls the section back out, which resizes it again. Whatever paint
+ * work it saved is not worth a page that cannot be scrolled.
+ */
+
+/* ---------- the letterspaced label that runs through the whole design ---- */
+.label {
+  font-size: var(--step--1);
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
+  font-weight: 400;
+  color: var(--gold);
+  line-height: 1.9;
+}
+.label--ink { color: var(--ink-mute); }
+
+/* a thin gold rule, the template's favourite separator */
+.rule {
+  width: 44px;
+  height: 1px;
+  border: 0;
+  margin: 0;
+  background: var(--gold);
+  opacity: 0.8;
+}
+.rule--wide { width: 100%; opacity: 0.25; }
+
+/* ---------- buttons ---------- */
+/*
+ * Two shapes, both measured off the template: a filled gold rectangle for the
+ * one action the page actually wants, and a near-black rectangle with a
+ * hairline gold edge for everything beside it. Square corners, serif label,
+ * 56px tall.
+ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.9em;
+  min-height: 56px;
+  padding: 0.8em 1.5em;
+  border: 1px solid rgba(239, 177, 92, 0.38);
+  border-radius: 0;
+  background: rgba(9, 8, 6, 0.82);
+  color: var(--ivory);
+  font-family: var(--font-display);
+  font-size: 1.16rem;
+  font-weight: 400;
+  letter-spacing: 0.005em;
+  cursor: pointer;
+  text-align: center;
+  transition: background var(--dur-1) var(--ease), color var(--dur-1) var(--ease),
+    border-color var(--dur-1) var(--ease);
+}
+.btn:hover { border-color: var(--gold); background: #0b0a08; }
+
+/*
+ * The template spaces a button's three parts across its width — icon left,
+ * label centred, arrow right — rather than bunching them in the middle.
+ */
+.btn--spread { justify-content: space-between; gap: 1.1em; }
+.btn--spread > span { flex: 1; }
+.btn:disabled,
+.btn[aria-disabled='true'] { opacity: 0.45; cursor: not-allowed; }
+
+.btn--gold {
+  /* a shallow warm ramp rather than a flat fill, as in the template */
+  background: linear-gradient(180deg, #f3c883 0%, var(--gold) 55%, #dfa252 100%);
+  border-color: transparent;
+  color: #241a0a;
+}
+.btn--gold:hover {
+  background: linear-gradient(180deg, #fbe6c2, var(--gold-lit));
+  border-color: var(--gold-lit);
+  color: var(--green-deep);
+}
+
+.btn--ink { border-color: rgba(23, 21, 15, 0.35); color: var(--ink); background: transparent; }
+.btn--ink:hover { background: var(--ink); border-color: var(--ink); color: var(--cream); }
+
+.btn--sm { min-height: 42px; padding: 0.55em 1.2em; font-size: var(--step-0); }
+.btn--block { width: 100%; }
+
+/* the rounded pill used by the two actions floating over the banner */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7em;
+  min-height: 52px;
+  padding: 0.6em 1.6em;
+  border: 1px solid rgba(239, 177, 92, 0.42);
+  border-radius: var(--r-pill);
+  background: linear-gradient(180deg, rgba(20, 18, 14, 0.9), rgba(10, 9, 7, 0.9));
+  color: var(--gold-lit);
+  font-family: var(--font-display);
+  font-size: var(--step-0);
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color var(--dur-1) var(--ease), color var(--dur-1) var(--ease);
+}
+.pill:hover { border-color: var(--gold); color: var(--gold-lit); }
+
+/* a plain text link with an arrow, used beside the gold button */
+.linkArrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7em;
+  font-family: var(--font-display);
+  font-size: var(--step-1);
+  color: var(--ivory);
+  border-bottom: 1px solid var(--gold-hair);
+  padding-bottom: 0.25em;
+  transition: border-color var(--dur-1) var(--ease), color var(--dur-1) var(--ease);
+}
+.linkArrow:hover { color: var(--gold-lit); border-bottom-color: var(--gold); }
+
+/* ---------- fields ---------- */
+.field { display: flex; flex-direction: column; gap: 0.4rem; }
+.field > label {
+  font-size: var(--step--2);
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
+  color: var(--ivory-mute);
+}
+
+.input,
+.select,
+.textarea {
+  width: 100%;
+  min-height: 52px;
+  padding: 0.7em 1em;
+  background: rgba(0, 32, 20, 0.45);
+  border: 1px solid var(--gold-hair);
+  border-radius: 0;
+  color: var(--ivory);
+  transition: border-color var(--dur-1) var(--ease);
+}
+.textarea { min-height: 118px; resize: vertical; }
+.input:hover, .select:hover, .textarea:hover { border-color: var(--gold); }
+.input:focus, .select:focus, .textarea:focus { border-color: var(--gold-lit); }
+.input[aria-invalid='true'], .textarea[aria-invalid='true'] { border-color: var(--error); }
+
+.select {
+  appearance: none;
+  padding-right: 2.6em;
+  background-image: linear-gradient(45deg, transparent 50%, currentColor 50%),
+    linear-gradient(135deg, currentColor 50%, transparent 50%);
+  background-position: right 1.25em center, right 0.9em center;
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+}
+
+/* the same fields on a cream surface */
+.on-cream { background: var(--cream); color: var(--ink); }
+.on-cream h1, .on-cream h2, .on-cream h3 { color: var(--ink); }
+.on-cream .field > label { color: var(--ink-mute); }
+.on-cream .input,
+.on-cream .select,
+.on-cream .textarea {
+  border-color: var(--cream-line);
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.4);
+}
+.on-cream .input:hover, .on-cream .select:hover { border-color: var(--gold-deep); }
+
+.field-error { font-size: var(--step--1); color: var(--error); }
+.field-hint { font-size: var(--step--1); color: var(--ivory-mute); }
+.on-cream .field-hint { color: var(--ink-mute); }
+
+.lede {
+  font-size: var(--step-1);
+  line-height: 1.7;
+  color: var(--ivory-soft);
+  max-width: var(--measure-text);
+}
+.on-cream .lede { color: var(--ink-soft); }
+
+/* ---------- a11y ---------- */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden; clip-path: inset(50%);
+  white-space: nowrap; border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  left: var(--sp-2);
+  top: -100px;
+  z-index: 300;
+  background: var(--gold);
+  color: var(--green-deep);
+  padding: 0.8em 1.4em;
+  transition: top var(--dur-1) var(--ease);
+}
+.skip-link:focus { top: var(--sp-2); }
+
+/* ---------- reveal ---------- */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity var(--dur-3) var(--ease), transform var(--dur-3) var(--ease);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+[data-reveal='in'] { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+  [data-reveal] { opacity: 1; transform: none; }
+}

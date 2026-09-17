@@ -1,0 +1,23 @@
+.head {
+  display: grid;
+  gap: 1.4rem;
+  align-items: end;
+  margin-bottom: clamp(2rem, 1rem + 3vw, 3.6rem);
+}
+@media (min-width: 860px) {
+  .head { grid-template-columns: minmax(0, 1fr) auto; gap: 2.5rem; }
+}
+
+.center { justify-items: center; text-align: center; }
+.center .rule { margin-inline: auto; }
+
+.main { display: flex; flex-direction: column; gap: 0.65rem; }
+.title { font-size: var(--step-4); max-width: 18ch; }
+.center .title { max-width: 22ch; }
+.rule { margin-top: 0.35rem; }
+.text { margin-top: 0.5rem; max-width: 52ch; color: var(--ivory-soft); line-height: 1.75; }
+
+.aside { display: flex; align-items: center; gap: 1.2rem; }
+
+/* on a cream section the same block flips to ink */
+:global(.on-cream) .text { color: var(--ink-soft); }

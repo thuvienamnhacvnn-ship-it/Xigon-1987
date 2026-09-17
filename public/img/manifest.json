@@ -1,0 +1,373 @@
+{
+  "scene": {
+    "interior-hero": {
+      "widths": [
+        640,
+        960
+      ],
+      "ratio": 1.7763,
+      "lqip": "data:image/webp;base64,UklGRrwAAABXRUJQVlA4ILAAAACQBACdASoYABAAPu1iqU2ppaOiMAgBMB2JbACdAYxiq3I2ufE9P/GEXJiV4YAA/un2IkI9leREO57MaWDb09Qp/gKnX0iU6hLChnsEaeCVqwHyoLDpatxH7HWsIYYHtrnbqtGRSWigsKtEUx8lRX7HPH6kMCmHIm0aOkW8ScVUOOqrEqtEo8VdcxgEnf0SKhfadHbgWzc3ChL99yObw8lxwEjHRFyuOMpPgRm1aAAAAA=="
+    },
+    "hall-wide": {
+      "widths": [
+        640,
+        960,
+        1280,
+        1600
+      ],
+      "ratio": 1.8515,
+      "lqip": "data:image/webp;base64,UklGRpQAAABXRUJQVlA4IIgAAADwAwCdASoYAAwAPu1iqU2ppaQiMAgBMB2JQBOgBFsmPq0V43+wYCYAAP543uy1xK4YT9AX+3TKQIZ153Fjq3Slf9iUyRXRak6CM7XDq09tkNEEuN1+Tc++u9UAdAlMjN6srfaudqCsDsRpeHfYV3qiNLB5xP1d65+9dmU76p8Y7CdadZKMAAAA"
+    },
+    "hall-square": {
+      "widths": [
+        640,
+        960
+      ],
+      "ratio": 1,
+      "lqip": "data:image/webp;base64,UklGRtIAAABXRUJQVlA4IMYAAAAwBQCdASoYABgAPu1qrlCppaQiqAqpMB2JaAC/OBDVcMd7PHz/PaIUIjfYixWxGQ+MAAD+7FedbVCzonZbvbQzLuib3iCbXe4rOMTAdQG1HVm5Cri8cW/icbIAo3LkwxEsSjWM6lY9hMc3buMdjvh1wHg3fzTDGpC6JE3d9aKGfkQV8JL3Pbx2TB+uzZp9lDalV+J4xSmfhzpJWau15m5sNYt6F+Ly+bxlGIlbK6ZwJ9B2Z/nMfSzV7N+4s2vqPmedlDkAAAA="
+    },
+    "dining-room": {
+      "widths": [
+        640,
+        960,
+        1280,
+        1600,
+        2000
+      ],
+      "ratio": 1.779,
+      "lqip": "data:image/webp;base64,UklGRpIAAABXRUJQVlA4IIYAAAAQBACdASoYAA4APu1iqU2ppaOiMAgBMB2JZgCdMoACS2iW1AcaHaVjAAD+7qR19POmdTc8lcPd2FeLJ6ep9AG/RlaKDzn32f0/3e4sW1yYt13gHT/6o+DU1RoEblynebvMLXhyefwn8LWfOIT3pJHxPqN0lOGdZLRAhxbXhlyRD198frGAAA=="
+    },
+    "neon-logo-wall": {
+      "widths": [
+        640,
+        960
+      ],
+      "ratio": 0.6676,
+      "lqip": "data:image/webp;base64,UklGRvAAAABXRUJQVlA4IOQAAADwBgCdASoYACQAPu1grU+ppSQiMBVaqTAdiWMAvOQKCcX7LX5YnE6j3zUzUYM2iDbz7j+jBaIOh5hoxuvpWhGAAP7yntWOsiRpI+NjXEwW6OvwjxYRjtbNAA0fOY3xpEdsn/ChBxe64Z4DT60e7m20QSQkByyPEj4zWDrFI0/0p5gAm7VDUQiKaSDP3N3rpWSO+TWTr5qZ3B2ix4q7t7gudVrEgT9+UjUfndxVE2ey9m9WUnx7koy8FNklZ88rW0svNocOv4eYClswTtkmX8P1erRvXHW5fEPcJuOgJ2PpAvNAAAA="
+    },
+    "lanterns-bar": {
+      "widths": [
+        640,
+        960,
+        1280,
+        1600
+      ],
+      "ratio": 1.7778,
+      "lqip": "data:image/webp;base64,UklGRmgAAABXRUJQVlA4IFwAAADwAwCdASoYAA4APu1kqU2ppaOiMAgBMB2JZwDG9BuZODboz62syjwAAP7usVrhEB/WT04IJPwm1TS/MtpSvmQ5+JkZBDKBlW2o2Kd7lrpQIERnPVwdPYb8wlYQAA=="
+    },
+    "cabinet-detail": {
+      "widths": [
+        640,
+        960
+      ],
+      "ratio": 0.6676,
+      "lqip": "data:image/webp;base64,UklGRh4BAABXRUJQVlA4IBIBAAAQBgCdASoYACQAPu1qqFAppiOiqqoBMB2JZgDBzY1SdNBMLQVK8IZnBYp9uwk7BWDvrBOV42O88AAA/tBuAhkZWtAoJnxOiLBTnjV0Jd8RkfMWvdI15WzirXHUPiQK0WoU9TeKDZKsomcSL6/8Mk2lel25zv6WscYq6S5W8jefU3efi5JSxVtgg7r3BrRgVObYr0mfakWJy+vy1ArEMmZD2RJ5DmR3ldofzh3IVbhQYuoE3vkOlhf7zi1pc1YLJNcCmKk+Scnd0PzZYXdLRcveAmUTqEEVicucplFP+YQQeOqfA4qBcSYtg3M/pMiBH+xH8NbWL/YUaxdVtWFirXE23icCdjfEQWOKfLg41a6QAAAA"
+    },
+    "sushi-bench": {
+      "widths": [
+        640,
+        960,
+        1280,
+        1600
+      ],
+      "ratio": 1.7778,
+      "lqip": "data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAAAwAwCdASoYAA4APu1iqU2ppaOiMAgBMB2JZ2c1UXDwAbrAAP7vn0v61N9rRdL/KoCxOQzFPMv/9Uxq89nD0T3jyd4HyfcOKGPV3Uw4AAA="
+    },
+    "interior-colour": {
+      "widths": [
+        640,
+        960,
+        1280,
+        1600
+      ],
+      "ratio": 1.7778,
+      "lqip": "data:image/webp;base64,UklGRlYAAABXRUJQVlA4IEoAAACwAwCdASoYAA4APu1krU2ppaSiMAgBMB2JaQAAW37EjdP6A9QqAAD+8MxuY1fbovAzkMX63slHXu8JMy+Gh2ORYKr6DbPQ6KgAAA=="
+    }
+  },
+  "plate": {
+    "sushi-roll": {
+      "widths": [
+        420,
+        700,
+        1000
+      ],
+      "ratio": 1.1875
+    },
+    "sushi-platter": {
+      "widths": [
+        420,
+        700,
+        1000
+      ],
+      "ratio": 1.2626
+    },
+    "oysters": {
+      "widths": [
+        420,
+        700,
+        1000
+      ],
+      "ratio": 0.8919
+    },
+    "drink": {
+      "widths": [
+        420,
+        700,
+        1000
+      ],
+      "ratio": 0.8235
+    },
+    "dessert": {
+      "widths": [
+        420,
+        700,
+        1000
+      ],
+      "ratio": 1
+    },
+    "xigon-platter": {
+      "widths": [
+        700,
+        1100,
+        1600
+      ],
+      "ratio": 1.8913
+    }
+  },
+  "layer": {
+    "table": {
+      "widths": [
+        900,
+        1400
+      ],
+      "ratio": 1.8767
+    },
+    "botanical": {
+      "widths": [
+        420,
+        800
+      ],
+      "ratio": 0.4086
+    }
+  },
+  "dish": {
+    "buddha-bowl": {
+      "widths": [
+        480,
+        720,
+        1080
+      ],
+      "ratio": 1.3333333333333333,
+      "lqip": "data:image/webp;base64,UklGRqgAAABXRUJQVlA4IJwAAACwBACdASoUABAAPu1iqU2ppaOiMAgBMB2JbACdL1yagA3l9kBHNF3yrJyvFR8AAP7s2tbVH/X7HluRTOWrQNkP37QFtG/cTO7LE3NyIcKCsaN1lOd4XbaAY1ERg9B0CBbFfjLSzyGSZxt7pqz8YFCG9QOgVfj8k6HhGmntpgGy4ulQ5OYThruIZy4AANFzpYtHhHhdSwRmbMSpqAA="
+    },
+    "cocktail-trio": {
+      "widths": [
+        480,
+        720,
+        1080
+      ],
+      "ratio": 1.3333333333333333,
+      "lqip": "data:image/webp;base64,UklGRrYAAABXRUJQVlA4IKoAAADwBACdASoUAA4APu1iqU2ppaOiMAgBMB2JbACdMoAvQTQgw+Xw3kmmua/1aTrpMoAAzIP7HAfCzgwgA0HQFx9xbh7TjNVkbX4VGmt17vGOZnp6444UUbwTh8KtKi3CWp7bUaO5wM1vB2NzXk0sSKozI/sNXbrptSFrdqEv3GfjD9ISdwH2tdY4OFXu8z2m5a+j9/r5dvPQtmHr2BtUwd3N8EDlv6y1BkAAAA=="
+    },
+    "coupe-cocktail": {
+      "widths": [
+        480,
+        720,
+        1080
+      ],
+      "ratio": 1.3333333333333333,
+      "lqip": "data:image/webp;base64,UklGRpgAAABXRUJQVlA4IIwAAAAwBACdASoUABAAPu1iqU2ppaOiMAgBMB2JbACdACIaVB2V+NqnOChptAAA/uRp7VxtR5uoxRIYlu8uDlbMBbbwu94ltcfHNdjc7TH/xdgDgKWz8FP1syLDkTzcgOQTGqWAJmPMFkunNtSWEItpQr08eTzmcWfKnYYnlmhWFZsuKi2I9YjEDgRsOIAAAA=="
+    },
+    "entenbrust": {
+      "widths": [
+        480,
+        720,
+        1080
+      ],
+      "ratio": 1.3333333333333333,
+      "lqip": "data:image/webp;base64,UklGRrYAAABXRUJQVlA4IKoAAACwBACdASoUAA4APu1iqU2ppaOiMAgBMB2JbACw7dwLgsb9ajHOnCdXlPf0w7AAAPwAgd+iJFG1jwdlSmP1316/j5GIBqwx7Q2q8zFX4FmVZ1ELm3pOhOBCIfVyeThGbYVIn7sPXW+NStMV5u/K/HfH8O3p7FYooGkGuLlZRuNGpHajzfOiZGMDX1Cz9/vmg52cum9I6oF4isnTGp2XNW1fiAc42hEDTAAAAA=="
+    },
+    "garnelen-curry": {
+      "widths": [
+        480,
+        720,
+        1080
+      ],
+      "ratio": 1.3333333333333333,
+      "lqip": "data:image/webp;base64,UklGRqQAAABXRUJQVlA4IJgAAADQBACdASoUAA4APu1iqU2ppaOiMAgBMB2JbACdGaAEDuK35g/IIlIl//3pdFCWgADypkMDRV8MW4aL6QEt0ERsUFBSmmjIdEF1I63BIH0V8q4RLthzj/Xn6JrcU7P564Sdrfb+Jsyl2/pO4xSLtj9YjxRxUqJ9q13n8sjP2G9VM3xNgYBOirQwMMJKUm702BSxnx60fHAAAA=="
+    },
+    "garnelen-nudeln": {
+      "widths": [
+        480,
+        720,
+        1080
+      ],
+      "ratio": 1.3333333333333333,
+      "lqip": "data:image/webp;base64,UklGRqQAAABXRUJQVlA4IJgAAABwBACdASoUAA4APu1iqU2ppaOiMAgBMB2JbACdMoADX2YkJbD77KykD+w1AAD92+nxAmwv+yda6NegTMyGcTRqb8qEadcv/v96pjq3+JzY4bJ66nWgE2RUy8WWheQsvGft94K95HisdxJGbenwlIk6K/fmczk+rnYm9sExpNX+zJjaFLAk7AzKL/XQfYCQTyu3+Wet0zgAAA=="
+    },
+    "inside-out-rolle": {
+      "widths": [
+        480,
+        720,
+        1080
+      ],
+      "ratio": 1.3333333333333333,
+      "lqip": "data:image/webp;base64,UklGRngAAABXRUJQVlA4IGwAAADQAwCdASoUABAAPu1iqU2ppaOiMAgBMB2JYgC2yCP/1Lv7l9zmNOAA/vDsdRe1qPSQFiEn7tcRe5THqwRPAxMfYrHM4rVauKuXdcTFXwOa6zbMxEDr0KQueu4F7+5VNml7iq7fkVt36YAAAAA="
+    },
+    "lachsfilet": {
+      "widths": [
+        480,
+        720,
+        1080
+      ],
+      "ratio": 1.3333333333333333,
+      "lqip": "data:image/webp;base64,UklGRrgAAABXRUJQVlA4IKwAAACwBACdASoUABAAPu1iqU2ppaOiMAgBMB2JagCdMoAlsBVeg1quLGuH3f06v73wAP7u4IK/ZvUHjSnnN7t86Yemx8CS2++J/CywTL9txLatJoGZ8KHdQ9mEuCWYD8Siu7+7TBKBo9HVJ8pA/JCmRHAKFkn7o0SP2RAmh2Uw2kbxriiRggalfEf0krRHN9NEoZjYvSKSKtenSt7VUYiIzQhMKbvMBxdSCKjaAAAA"
+    },
+    "miso-suppe": {
+      "widths": [
+        480,
+        720,
+        1080
+      ],
+      "ratio": 1.3333333333333333,
+      "lqip": "data:image/webp;base64,UklGRp4AAABXRUJQVlA4IJIAAABwBACdASoUABAAPu1iqU2ppaOiMAgBMB2JYgCw7Ys2zyBuoA6yXdbMrCIT8AD+8M6+tfreRHyIasjbLZXoVkm9yArZoYjVh1hfsyibqd6zAmmjTZa62BbTJRQAg2dt42MbOpRB5NEKTXraEEwR7dEOjlcsue+eS39zjEvyEx6CUJvPox/6CXx00js2g5RRhukAAA=="
+    },
+    "nigiri-avocado": {
+      "widths": [
+        480,
+        720,
+        1080
+      ],
+      "ratio": 1.3333333333333333,
+      "lqip": "data:image/webp;base64,UklGRmoAAABXRUJQVlA4IF4AAACQAwCdASoUAA4APu1iqU2ppaOiMAgBMB2JQBjehDw452hsXgeAAP65sgi9UMM0igyZ5jFGTqV2O5jEAc+qA7OvbhupSnlgXATdBbEGdnf54JUuubw+jqRTQ8O4wAAA"
+    },
+    "nigiri-lachs": {
+      "widths": [
+        480,
+        720,
+        1080
+      ],
+      "ratio": 1.3333333333333333,
+      "lqip": "data:image/webp;base64,UklGRnYAAABXRUJQVlA4IGoAAAAQBACdASoUABAAPu1iqU2ppaOiMAgBMB2JbAC7GaAAQRmokzrFSMhOAAD+dLcMi7xsVItAx4QgIltu+wfMnz03umt59npavB9NwEimj6uDilju8w2it7q3nX447PmnvUMr89A7M5vZAAAA"
+    },
+    "pad-thai": {
+      "widths": [
+        480,
+        720,
+        1080
+      ],
+      "ratio": 1.3333333333333333,
+      "lqip": "data:image/webp;base64,UklGRqIAAABXRUJQVlA4IJYAAABwBACdASoUAA4APu1iqU2ppaOiMAgBMB2JbACdMoMYAEmmuEYTD/OucjmYiAD+6k0SZNQoSGi8K+IN2teOop+7BkL5qFSi/wJa4mtAuUlfYmZfcmdEEaiNCe/6b8U/AkPc5xyUnZP0ZiN2JIxd1Wy6JmeGXmcGpIGwN7rAxkab1qfuZh+MDh0IOaGsve+XPwqNoELQAAA="
+    },
+    "papayasalat": {
+      "widths": [
+        480,
+        720,
+        1080
+      ],
+      "ratio": 1.3333333333333333,
+      "lqip": "data:image/webp;base64,UklGRowAAABXRUJQVlA4IIAAAAAwBACdASoUAA4APu1iqU2ppaOiMAgBMB2JbACdMoAluhCQqYQVBkx4DUAA/umDcyX2uKR6cWfkcPcE0R7syOsayy/7vEq8GgXkvDPWux/OltlWFkfgC/9mUL5IN19/60Zi/78/omvnI4UDHd9YrSlBRA87YfJT4GJi4Ko8R0sQAA=="
+    },
+    "riesengarnelen": {
+      "widths": [
+        480,
+        720,
+        1080
+      ],
+      "ratio": 1.3333333333333333,
+      "lqip": "data:image/webp;base64,UklGRqAAAABXRUJQVlA4IJQAAABwBACdASoUAA4APu1iqU2ppaOiMAgBMB2JbACdL1yBr7PJbm+vaVaY/8MCgAD+5s24O0E69ca2AWgfTlYgu3FriFiXma4OxMtOU3qWSJDfV1N5cFSBmbmk1ZJJA0pOiV1eD5MGu3WTAMRUiuvSUlhCRKuv92qTHZVwtMdwBeXvbksLPgKh1sZixsgpqPtXAk+0AAAA"
+    },
+    "rinderfilet": {
+      "widths": [
+        480,
+        720,
+        1080
+      ],
+      "ratio": 1.3333333333333333,
+      "lqip": "data:image/webp;base64,UklGRrgAAABXRUJQVlA4IKwAAADQBACdASoUAA4APu1iqU2ppaOiMAgBMB2JZACdMoMzG+gay5F90SgPMWCNmOFpMAD9w/wASu+ODt37W2o0PW7DCQkRlKhrm8zbTyWDP+qIzBPLSl8YTE2AtYxMQ6OcLD8ftvAQexvTDGvjtJGfTb4sp25BaoKgg6naZRuyr3pD2XqM0SGMCAgW13DW5UbB3TyS2jgYSYZvTfjwGtQCpIVqeyaRDjCPvkgbAAAA"
+    },
+    "signature-cocktail": {
+      "widths": [
+        480,
+        720,
+        1080
+      ],
+      "ratio": 1.3333333333333333,
+      "lqip": "data:image/webp;base64,UklGRpIAAABXRUJQVlA4IIYAAABQBACdASoUABAAPu1iqU2ppaOiMAgBMB2JbACdIIjCzAlsqClhWochdxAAAP7tBYcy0bJlBmReyBiBpJEya5/xsWr5aEV/XC2+o+v4l17F28B8/mDENC6JdCphSKKHmYrRT/Vh2AKHKYHkOPMdnFWr7uFlo6BkuSqRsVjW55GYZRQw4AAAAA=="
+    },
+    "signature-turm": {
+      "widths": [
+        480,
+        720,
+        1080
+      ],
+      "ratio": 1.3333333333333333,
+      "lqip": "data:image/webp;base64,UklGRpoAAABXRUJQVlA4II4AAACQBACdASoUABAAPu1iqU2ppaOiMAgBMB2JbACdEf/i2LD9GZD1KczrjgQUTAAA/vFs4ZHBgkvGYFYzSJC7ZuH7JsG8xXjn7XH09wD0bI9s43ym/1MaMZw5O/o1ieAXvHa2UuXgIh9LC5nADNv6H/07+wh62InaCUGXW6QA1sYiXap0bUnIQgsJIl+ldQAA"
+    },
+    "sommerrollen": {
+      "widths": [
+        480,
+        720,
+        1080
+      ],
+      "ratio": 1.3333333333333333,
+      "lqip": "data:image/webp;base64,UklGRrIAAABXRUJQVlA4IKYAAABwBACdASoUAA4APu1iqU2ppaOiMAgBMB2JYgCdMoAvQTOATu6rhZ4USbLG0AD+0gwp1B+13V8+4UP9rXAecWjmgO1v6BTICl8dLcmI7lt6DqcW5rFTSzKZqH+d+0aqBB71liWLO548P08Uyd9pclATj46WKrwhcbQPCAqxucNqJyY8cTRNnUKF1RBcMKA7rsLWz9x2/5JwA/eJezAc47u3QiUaR5gA"
+    },
+    "surf-and-turf": {
+      "widths": [
+        480,
+        720,
+        1080
+      ],
+      "ratio": 1.3333333333333333,
+      "lqip": "data:image/webp;base64,UklGRpQAAABXRUJQVlA4IIgAAADQAwCdASoUAA4APu1iqU2ppaOiMAgBMB2JaACdAYuQ3SZ3W+zRZrAA/s4Hs9nq/0o3fDxanpO4T4HubFx29a/qD9xjtHYAr68xvOeYaObaCWAJURawAOmk7AYRGJM/WocH77qYYUfddPMy82/fI5aw/POMfqO2g4zlR8kpgSFqJOeHvnei1LAA"
+    },
+    "tempura-garnelen": {
+      "widths": [
+        480,
+        720,
+        1080
+      ],
+      "ratio": 1.3333333333333333,
+      "lqip": "data:image/webp;base64,UklGRp4AAABXRUJQVlA4IJIAAACQBACdASoUABAAPu1iqU2ppaOiMAgBMB2JYgCdAYsY3Hj7QQRIIc83LIc1EgAA/u7dGiJBY4VdgZYewELxxR+vGym6RDOsAUxCCjjzbiVlqJLMe3ZQJXSYru6YuKFa3IHLgK6QcjlLFDQ3xeVytNgn7ouFNitBTsd1BjUg+TMMim5F2Ue/hCmAy9t1UZaAUCAAAA=="
+    },
+    "tisch-lachs": {
+      "widths": [
+        480,
+        720,
+        1080
+      ],
+      "ratio": 1.3333333333333333,
+      "lqip": "data:image/webp;base64,UklGRqgAAABXRUJQVlA4IJwAAACwBACdASoUABAAPu1iqU2ppaOiMAgBMB2JQBbgf9kFyMDkB5RXs4kYSb4bImYAAP7y/wfwr1URE4tkXwO9ePP5lopdIW2OD5VgqDdHvsgUQsMi8N9zaiSyf+fOy1dQRikbWvX1d+4+Nxu/Gg3kJbqq2B/2RSX2a/JC/Au2Tzx7/7h8dM+iu6xTQ9eJoIR2wUurhrJtyxfEPdgAAAA="
+    },
+    "tisch-salat": {
+      "widths": [
+        480,
+        720,
+        1080
+      ],
+      "ratio": 1.3333333333333333,
+      "lqip": "data:image/webp;base64,UklGRo4AAABXRUJQVlA4IIIAAABwBACdASoUABAAPu1iqU2ppaOiMAgBMB2JQBhQMXrcwyUnbvDrVrIBcm5yAAD+9DGN0A2M0hqfrPvV/5To5oJPTdX6c6c1bTrJ8Gsy9Bp/Pxiwf6hMszWvFrekjRT9Q0ZbWCyG2K/7TdsN9IF7AfN/wPAAQyS0M88DfnyUYKidQAAA"
+    },
+    "xigon-platte": {
+      "widths": [
+        480,
+        720,
+        1080
+      ],
+      "ratio": 1.3333333333333333,
+      "lqip": "data:image/webp;base64,UklGRq4AAABXRUJQVlA4IKIAAACwBACdASoUABAAPu1iqU2ppaOiMAgBMB2JbAC7G1/DyDoNvgUoQFBSlBmNA4MAAP7s3gkxuXl/pjN6qPQurHShGfSrhsItwuQwtIuvFeRAb/X3XI6jAL+zROftqls5l/fFeAJ9Qmm+ymAA+hNp5MIgILV3gqafyWIHPNwKzjxcZVVx41CWu5ZWfy5quL106iXQ6We56+GVOMm04V31+0UAAAA="
+    }
+  },
+  "video": {
+    "atmosphaere": {
+      "seconds": 11
+    },
+    "kueche": {
+      "seconds": 14
+    },
+    "bar": {
+      "seconds": 14
+    }
+  }
+}

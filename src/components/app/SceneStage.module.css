@@ -1,0 +1,222 @@
+/*
+ * Erleben.
+ *
+ * The video is the screen — it fills the content row of the shell and nothing
+ * boxes it in. Every other element on this screen floats on top of it, and the
+ * copy sits in the left third where the house video is quietest.
+ */
+.stage {
+  position: relative;
+  display: grid;
+  /* status line · the words · the controls */
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  background: #000;
+}
+
+/*
+ * The video is taken out of the flow on purpose.
+ *
+ * A <video> in a grid row reports its own intrinsic size — 848×478 for this
+ * file — and a percentage height against an auto row is circular, so the row
+ * grows to the film's natural height and pushes the controls off the bottom.
+ * Absolute inset:0 makes it a backdrop with no say in the layout.
+ */
+.video,
+.veil {
+  position: absolute;
+  inset: 0;
+}
+
+.video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /*
+   * The house video is 848×478. Scaled to a desktop it is soft, so it is
+   * deliberately held a little dark and a little contrasty — a soft picture
+   * reads as atmosphere at this exposure and as a bad file at full brightness.
+   */
+  filter: contrast(1.04) saturate(1.05) brightness(0.86);
+}
+
+.veil {
+  /* Readable type over moving pictures needs a gradient, not a flat scrim. */
+  background:
+    linear-gradient(90deg, rgba(4, 22, 14, 0.88) 0%, rgba(4, 22, 14, 0.5) 38%, transparent 66%),
+    linear-gradient(0deg, rgba(4, 22, 14, 0.8) 0%, transparent 34%);
+  pointer-events: none;
+}
+
+/* ---------- the words ---------- */
+
+.copy {
+  position: relative;
+  grid-row: 2;
+  align-self: center;
+  justify-self: start;
+  max-width: min(34rem, 52vw);
+  padding: 0 clamp(1.2rem, 0.4rem + 3.2vw, 4.5rem);
+}
+
+.eyebrow {
+  margin: 0 0 0.9rem;
+  font-family: var(--font-body);
+  font-size: var(--step--2);
+  font-weight: 600;
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.title {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--step-4);
+  font-weight: 400;
+  line-height: 1.02;
+  color: var(--ivory);
+  text-shadow: 0 2px 30px rgba(0, 0, 0, 0.55);
+}
+
+.text {
+  margin: 1.1rem 0 0;
+  max-width: 28rem;
+  font-size: var(--step-0);
+  line-height: 1.6;
+  color: var(--ivory-soft);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin-top: 1.7rem;
+}
+
+/* ---------- the controls ---------- */
+
+.controls {
+  position: relative;
+  grid-row: 3;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0 clamp(1.2rem, 0.4rem + 3.2vw, 4.5rem) clamp(1rem, 0.6rem + 1.4vw, 2rem);
+}
+
+.scenes {
+  display: flex;
+  gap: 1px;
+  padding: 3px;
+  border: 1px solid var(--gold-hair);
+  border-radius: var(--r-pill);
+  background: rgba(8, 30, 20, 0.6);
+  backdrop-filter: blur(12px);
+}
+
+.scene {
+  padding: 0.42rem 0.95rem;
+  border: 0;
+  border-radius: var(--r-pill);
+  font-family: var(--font-body);
+  font-size: var(--step--2);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--ivory-mute);
+  background: transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color var(--dur-1) var(--ease), background var(--dur-1) var(--ease);
+}
+
+.scene:hover {
+  color: var(--ivory);
+}
+
+.scene[aria-pressed='true'] {
+  color: var(--ink-black);
+  background: var(--gold);
+}
+
+.controlSpacer {
+  flex: 1 1 auto;
+}
+
+.round {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border: 1px solid var(--gold-hair);
+  border-radius: 50%;
+  color: var(--ivory);
+  background: rgba(8, 30, 20, 0.6);
+  backdrop-filter: blur(12px);
+  cursor: pointer;
+  transition: border-color var(--dur-1) var(--ease), color var(--dur-1) var(--ease);
+}
+
+.round:hover {
+  border-color: var(--gold);
+  color: var(--gold-lit);
+}
+
+/* ---------- the status line ---------- */
+
+.notice {
+  position: relative;
+  grid-row: 1;
+  justify-self: end;
+  margin: 1rem clamp(1.2rem, 0.4rem + 3.2vw, 4.5rem) 0;
+  padding: 0.4rem 0.8rem;
+  border: 1px solid var(--gold-hair);
+  border-radius: var(--r-pill);
+  font-size: var(--step--2);
+  color: var(--ivory-soft);
+  background: rgba(8, 30, 20, 0.72);
+  backdrop-filter: blur(12px);
+}
+
+/* ---------- phone ---------- */
+
+@media (max-width: 720px) {
+  .copy {
+    align-self: end;
+    max-width: none;
+    padding-bottom: 1.2rem;
+  }
+
+  .veil {
+    background: linear-gradient(0deg, rgba(4, 22, 14, 0.92) 12%, rgba(4, 22, 14, 0.35) 55%, transparent 82%);
+  }
+
+  .title {
+    font-size: var(--step-3);
+  }
+
+  .controls {
+    padding-bottom: 0.7rem;
+  }
+
+  .scene {
+    padding: 0.36rem 0.7rem;
+    font-size: 0.66rem;
+  }
+
+  .round {
+    width: 36px;
+    height: 36px;
+  }
+
+  .notice {
+    justify-self: stretch;
+    text-align: center;
+  }
+}

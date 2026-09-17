@@ -1,0 +1,204 @@
+/*
+ * Two shapes, one card.
+ *
+ * `.feature` is the tall card the home page uses for the signature dishes.
+ * `.row` is the quieter one the menu uses for everything else: photograph left,
+ * words right, a hairline underneath. Both sit on either ground — the cream
+ * overrides live at the bottom of the file.
+ */
+
+.feature,
+.row {
+  position: relative;
+  --card-line: rgba(239, 177, 92, 0.2);
+}
+
+/* ---------- feature ---------- */
+.feature {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--card-line);
+  background: linear-gradient(180deg, rgba(4, 58, 36, 0.9), rgba(0, 32, 20, 0.9));
+  transition: border-color var(--dur-2) var(--ease), transform var(--dur-2) var(--ease);
+}
+.feature:hover { border-color: var(--gold); transform: translateY(-3px); }
+
+.feature .media {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  /* the same warm pool of light the banner puts under a dish */
+  background: radial-gradient(circle at 50% 62%, rgba(239, 177, 92, 0.22), rgba(0, 32, 20, 0) 66%);
+}
+.feature .plate {
+  width: 78%;
+  height: auto;
+  max-height: 88%;
+  object-fit: contain;
+  filter: drop-shadow(0 26px 34px rgba(0, 0, 0, 0.72));
+  transition: transform var(--dur-3) var(--ease);
+}
+.feature:hover .plate { transform: scale(1.04) rotate(-1.5deg); }
+.feature .scene { width: 100%; height: 100%; object-fit: cover; }
+
+.feature .body { display: flex; flex-direction: column; gap: 0.6rem; padding: 1.3rem 1.4rem 1.5rem; flex: 1; }
+
+/* ---------- row ---------- */
+.row {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr);
+  gap: 1.1rem;
+  padding-block: 1.15rem;
+  border-bottom: 1px solid var(--card-line);
+}
+@media (min-width: 700px) { .row { grid-template-columns: 132px minmax(0, 1fr); gap: 1.6rem; } }
+
+.row .media {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 58%, rgba(239, 177, 92, 0.16), rgba(0, 32, 20, 0) 70%);
+  border: 1px solid var(--card-line);
+}
+.row .plate { width: 88%; height: auto; max-height: 92%; object-fit: contain; }
+.row .scene { width: 100%; height: 100%; object-fit: cover; }
+.row .body { display: flex; flex-direction: column; gap: 0.4rem; }
+
+/* ---------- shared innards ---------- */
+.blank {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  background:
+    radial-gradient(circle at 50% 45%, rgba(239, 177, 92, 0.14), rgba(0, 32, 20, 0) 68%),
+    var(--green-panel);
+}
+.medallion {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: min(62%, 150px);
+  aspect-ratio: 1;
+  color: var(--gold);
+}
+.medallion svg { width: 100%; height: 100%; }
+.medallionText {
+  position: absolute;
+  font-family: var(--font-display);
+  font-size: var(--step-2);
+  letter-spacing: 0.06em;
+  color: var(--gold-lit);
+}
+
+.soldOut {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  padding: 0.35em 0.8em;
+  background: var(--green-deep);
+  color: var(--gold-lit);
+  font-size: var(--step--2);
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
+}
+
+.titleRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.name {
+  font-family: var(--font-display);
+  font-size: var(--step-2);
+  line-height: 1.2;
+  display: flex;
+  align-items: baseline;
+  gap: 0.55rem;
+  min-width: 0;
+}
+.nameLink { transition: color var(--dur-1) var(--ease); }
+.nameLink:hover { color: var(--gold-lit); }
+/* The stretched link makes the whole card clickable without nesting anchors. */
+.nameLink::after { content: ''; position: absolute; inset: 0; }
+
+.code {
+  font-family: var(--font-body);
+  font-size: var(--step--2);
+  letter-spacing: 0.16em;
+  color: var(--gold);
+  flex-shrink: 0;
+}
+
+.price {
+  /* Lining, tabular figures: the display face sets old-style numerals, and a
+     column of prices where 1 looks like I is unreadable. */
+  font-family: var(--font-body);
+  font-variant-numeric: lining-nums tabular-nums;
+  font-size: var(--step-0);
+  color: var(--gold-lit);
+  white-space: nowrap;
+}
+.from { font-size: var(--step--2); letter-spacing: 0.1em; text-transform: uppercase; color: var(--ivory-mute); }
+.onRequest { font-size: var(--step--2); letter-spacing: 0.12em; text-transform: uppercase; color: var(--ivory-mute); }
+
+.text {
+  font-size: var(--step--1);
+  line-height: 1.7;
+  color: var(--ivory-soft);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.2rem; }
+.tag {
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold);
+  border: 1px solid var(--gold-hair);
+  padding: 0.28em 0.6em;
+}
+
+.actions {
+  position: relative;
+  z-index: 2;
+  margin-top: auto;
+  padding-top: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.9rem;
+  flex-wrap: wrap;
+}
+.actions :global(.linkArrow) { font-size: var(--step-0); }
+.note { font-size: var(--step--2); letter-spacing: 0.1em; text-transform: uppercase; color: var(--ivory-mute); }
+
+/* ---------- on cream ---------- */
+:global(.on-cream) .feature,
+:global(.on-cream) .row { --card-line: var(--cream-line); }
+:global(.on-cream) .feature { background: rgba(255, 255, 255, 0.42); }
+:global(.on-cream) .feature .media,
+:global(.on-cream) .row .media {
+  background: radial-gradient(circle at 50% 60%, rgba(239, 177, 92, 0.2), rgba(243, 236, 221, 0) 70%);
+}
+:global(.on-cream) .text { color: var(--ink-soft); }
+:global(.on-cream) .price { color: var(--gold-deep); }
+:global(.on-cream) .from,
+:global(.on-cream) .onRequest,
+:global(.on-cream) .note { color: var(--ink-mute); }
+:global(.on-cream) .tag { color: var(--gold-deep); border-color: var(--cream-line); }
+:global(.on-cream) .blank {
+  background: radial-gradient(circle at 50% 45%, rgba(239, 177, 92, 0.16), rgba(230, 220, 198, 0) 68%), var(--cream-deep);
+}
+:global(.on-cream) .medallion { color: var(--gold-deep); }
+:global(.on-cream) .medallionText { color: var(--gold-deep); }
+:global(.on-cream) .soldOut { background: var(--ink); color: var(--cream); }

@@ -1,0 +1,40 @@
+.options {
+  display: grid;
+  gap: clamp(1rem, 0.6rem + 1.6vw, 1.8rem);
+}
+@media (min-width: 760px) { .options { grid-template-columns: 1fr 1fr; } }
+
+.option {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.7rem;
+  padding: clamp(1.3rem, 1rem + 1.6vw, 2.2rem);
+  border: 1px solid var(--gold-hair);
+  background: var(--green-panel);
+}
+/* A switched-off option is visibly quieter rather than hidden: a guest should
+   see that delivery exists and is simply not open yet. */
+.option[data-on='false'] { opacity: 0.62; }
+
+.optionTitle { font-family: var(--font-display); font-size: var(--step-3); }
+.optionText { color: var(--ivory-soft); line-height: 1.7; }
+.optionMeta {
+  font-size: var(--step--2);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-variant-numeric: lining-nums tabular-nums;
+}
+.option .btn { margin-top: auto; }
+
+.off {
+  margin-top: auto;
+  font-size: var(--step--1);
+  color: var(--gold-lit);
+  border-left: 2px solid var(--gold);
+  padding-left: 0.8rem;
+  line-height: 1.6;
+}
+
+.hoursNote { margin-top: 2rem; font-size: var(--step--1); color: var(--ivory-mute); max-width: 60ch; line-height: 1.7; }

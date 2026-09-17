@@ -1,0 +1,122 @@
+.flow { max-width: 780px; display: flex; flex-direction: column; gap: 1.4rem; }
+
+.steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.6rem;
+}
+.step {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: var(--step--2);
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
+  color: var(--ivory-mute);
+}
+.step[data-state='current'] { color: var(--gold-lit); }
+.step[data-state='done'] { color: var(--ivory-soft); }
+.stepNumber {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  font-variant-numeric: lining-nums tabular-nums;
+  letter-spacing: 0;
+}
+
+.live { min-height: 1.2em; font-size: var(--step--1); color: var(--gold-lit); }
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  align-items: flex-start;
+  padding: clamp(1.2rem, 0.9rem + 1.4vw, 2rem);
+  border: 1px solid var(--gold-hair);
+  background: var(--green-panel);
+}
+.panel form { display: flex; flex-direction: column; gap: 1.1rem; width: 100%; }
+
+.row { display: grid; gap: 1rem; width: 100%; }
+@media (min-width: 620px) { .row { grid-template-columns: 1fr 1fr; } }
+
+.summaryLine {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+  padding-bottom: 0.9rem;
+  border-bottom: 1px solid var(--gold-hair);
+  font-size: var(--step--1);
+  color: var(--ivory-soft);
+}
+.change {
+  margin-left: auto;
+  border: 0;
+  background: none;
+  color: var(--gold);
+  cursor: pointer;
+  font-size: var(--step--2);
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--gold-hair);
+  padding-bottom: 0.15em;
+}
+.change:hover { border-bottom-color: var(--gold); }
+
+.slots { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.slot {
+  min-width: 78px;
+  padding: 0.7em 0.8em;
+  border: 1px solid var(--gold-hair);
+  background: transparent;
+  color: var(--ivory);
+  font-variant-numeric: lining-nums tabular-nums;
+  cursor: pointer;
+  transition: background var(--dur-1) var(--ease), border-color var(--dur-1) var(--ease), color var(--dur-1) var(--ease);
+}
+.slot:hover:not(:disabled) { background: var(--gold); border-color: var(--gold); color: var(--green-deep); }
+.slot:disabled { opacity: 0.4; cursor: wait; }
+
+/* The countdown on the held table. Visible on purpose: a hold the guest cannot
+   see is a deadline they cannot plan around. */
+.holdClock {
+  align-self: flex-start;
+  font-variant-numeric: lining-nums tabular-nums;
+  font-size: var(--step--1);
+  letter-spacing: 0.1em;
+  color: var(--gold-lit);
+  border: 1px solid var(--gold-hair);
+  padding: 0.35em 0.8em;
+}
+
+.note {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  align-items: flex-start;
+  font-size: var(--step-0);
+  line-height: 1.7;
+  color: var(--ivory-soft);
+}
+.hint { font-size: var(--step--1); color: var(--ivory-mute); line-height: 1.6; }
+.error { font-size: var(--step--1); color: var(--error); line-height: 1.6; }
+
+.disabled {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.2rem;
+  max-width: 60ch;
+  padding: clamp(1.4rem, 1rem + 1.8vw, 2.4rem);
+  border: 1px dashed var(--gold-hair);
+  color: var(--ivory-soft);
+  line-height: 1.7;
+}
