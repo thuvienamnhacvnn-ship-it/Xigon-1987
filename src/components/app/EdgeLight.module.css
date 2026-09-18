@@ -26,18 +26,35 @@
   stroke-linecap: round;
   /*
    * The dash walks the path, which is what keeps the light on the line through
-   * the corners. Twenty-six seconds for one circuit: noticed once, never
-   * nagging.
+   * the corners. Fourteen seconds for one circuit — slow enough to be calm,
+   * fast enough that a glance catches it moving. At twenty-six it read as
+   * standing still, which is a decoration nobody sees.
    */
-  animation: edge-travel 26s linear infinite;
+  animation: edge-travel 14s linear infinite;
 }
 
+/*
+ * Plain numbers, and no `var()` anywhere near them.
+ *
+ * This used to read `stroke-dashoffset: calc(100 + var(--centre, 0))`, which
+ * looks reasonable and does not work: a keyframe value built from a `calc()`
+ * containing a custom property is not resolved to a length Chrome will
+ * interpolate, so the animation ran — `currentTime` climbing, `playState`
+ * "running" — while the computed offset sat at `calc(100px)` and never moved.
+ * Measured: 82200ms and 85383ms apart, byte-identical frames.
+ *
+ * Every light needs a different starting point along the path, and that is a
+ * phase, not a value. A phase belongs in `animation-delay`: the cycle is
+ * linear and 26s long, so starting `n` percent along is a delay of
+ * -0.26n seconds. The keyframes stay two constants, which browsers interpolate
+ * without being asked twice.
+ */
 @keyframes edge-travel {
   from {
-    stroke-dashoffset: calc(100 + var(--centre, 0));
+    stroke-dashoffset: 100;
   }
   to {
-    stroke-dashoffset: var(--centre, 0);
+    stroke-dashoffset: 0;
   }
 }
 

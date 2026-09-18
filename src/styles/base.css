@@ -273,17 +273,21 @@ a { color: inherit; text-decoration: none; }
 /*
  * The eyebrow over a heading — KONTAKT, SIGNATURES, RECHTLICHES.
  *
- * Rose rather than terracotta. It is a label, not a call to action, and in the
- * accent it competed with the button below it on every screen that had both.
- * The rose is the same warmth a step quieter, which is what the second accent
- * in the palette is for.
+ * Green, which is where the house colour belongs in type: a label names the
+ * kind of thing below it and never asks to be pressed, so it wants the calm
+ * colour rather than the accent. In terracotta it competed with the button on
+ * every screen that had both.
+ *
+ * The lifted green, not #0a3d2a — at label size the dark one is unreadable on
+ * a dark panel. Bold too: a letterspaced line this small in a mid green is thin
+ * enough to disappear at 400.
  */
 .label {
   font-size: var(--step--1);
   letter-spacing: var(--track-wide);
   text-transform: uppercase;
-  font-weight: 400;
-  color: var(--accent-soft);
+  font-weight: var(--weight-body);
+  color: var(--forest-lit);
   line-height: 1.9;
 }
 .label--ink { color: var(--ink-mute); }

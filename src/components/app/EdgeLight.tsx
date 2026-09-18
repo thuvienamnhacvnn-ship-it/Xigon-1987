@@ -25,19 +25,25 @@ import styles from './EdgeLight.module.css';
  * under the spacing between lights.
  *
  * With one light a 34% glow was a long soft comet. With three lights a third of
- * the perimeter apart, a 34% glow reaches exactly as far as the next light —
- * so the three joined up and the whole edge was lit all the time. That is not
- * three lights travelling, it is a stationary multi-coloured border, and it
- * looked like a fault. Halved, each light covers about half the gap to the next
- * and there is dark line between them, which is the only thing that makes them
- * read as moving.
+ * the perimeter apart, a 34% glow reaches exactly as far as the next light — so
+ * the three joined up and the whole edge was lit all the time. That is not three
+ * lights travelling, it is a stationary multi-coloured border, and it looked
+ * like a fault. At 20% each light covers about two thirds of the gap to the next
+ * and dark line shows between them, which is the only thing that makes them read
+ * as moving.
  */
 const PASSES = [
-  { lit: 15, opacity: 0.12, width: 3.5 },
-  { lit: 9.5, opacity: 0.24, width: 2.4 },
-  { lit: 5, opacity: 0.5, width: 1.6 },
-  { lit: 2.2, opacity: 1, width: 1.2 },
+  { lit: 20, opacity: 0.16, width: 5 },
+  { lit: 13, opacity: 0.32, width: 3.4 },
+  { lit: 7, opacity: 0.6, width: 2.2 },
+  { lit: 3, opacity: 1, width: 1.6 },
 ];
+
+/** The longest pass, and what the others are centred against. */
+const SPREAD = PASSES[0].lit;
+
+/** One circuit, and the unit the phase offsets are measured against. */
+const CYCLE_SECONDS = 14;
 
 /*
  * Three lights, not one, spaced a third of the way apart around the edge.
@@ -93,13 +99,20 @@ export function EdgeLight({ radius }: { radius?: string }) {
               strokeWidth: pass.width,
               stroke: light.colour,
               /*
+               * Where this stroke starts along the path, expressed as a phase.
+               *
                * Each pass is pulled back by half its own length so all four
-               * share a centre, then the whole group is pushed round the path by
-               * its light's share. Aligned at their leading edges instead, the
-               * glow would trail the bright head like a comet tail — a different
-               * effect, and not the one a reflection makes.
+               * share a centre — aligned at their leading edges instead, the
+               * glow would trail the bright head like a comet tail, which is a
+               * different effect and not the one a reflection makes. The light's
+               * own share is added on top of that.
+               *
+               * It is a negative delay rather than a starting value because a
+               * keyframe cannot carry a custom property and still be
+               * interpolated; see the note in the stylesheet, which this project
+               * paid for with a light that sat still for days.
                */
-              ['--centre' as string]: String((15 - pass.lit) / 2 + light.at),
+              animationDelay: `${-CYCLE_SECONDS * (((SPREAD - pass.lit) / 2 + light.at) / 100)}s`,
             }}
           />
         )),

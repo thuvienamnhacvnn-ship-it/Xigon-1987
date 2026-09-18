@@ -30,7 +30,9 @@
   padding: 0.28rem;
   border: var(--edge-w) solid var(--gold-hair);
   border-radius: var(--r-pill);
-  background: rgba(32, 32, 32, 0.5);
+  /* The house green, like the bar at the foot and the categories on the card:
+     the scenes are three things that exist, and green is what says so. */
+  background: rgba(10, 61, 42, 0.86);
   backdrop-filter: blur(16px);
   pointer-events: auto;
 }
@@ -52,6 +54,7 @@
 
 .scene:hover {
   color: var(--ivory);
+  background: #12563b;
 }
 
 .scene[aria-pressed='true'] {

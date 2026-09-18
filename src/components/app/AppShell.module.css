@@ -381,7 +381,16 @@
      read as one object rather than a smudge over the floor. */
   border: var(--edge-w) solid rgba(229, 122, 78, 0.6);
   border-radius: var(--r-pill);
-  background: rgba(32, 32, 32, 0.62);
+  /*
+   * The bar is the house green.
+   *
+   * It is the one piece of furniture on every screen, so it is where the green
+   * earns its place in the palette without ever being the ground behind a
+   * screen. Held a little short of opaque: the film still moves behind it,
+   * which is what stops a solid bar reading as a strip of plastic laid on the
+   * room.
+   */
+  background: rgba(10, 61, 42, 0.88);
   backdrop-filter: blur(18px) saturate(1.1);
   box-shadow: 0 24px 60px -32px rgba(0, 0, 0, 0.95);
   /* Below the width where the labels fit, the dock scrolls sideways rather than
@@ -614,7 +623,9 @@
     padding: 0.45rem 0.2rem calc(0.4rem + env(safe-area-inset-bottom, 0px));
     border-width: var(--edge-w) 0 0;
     border-radius: 20px 20px 0 0;
-    background: rgba(28, 28, 28, 0.86);
+    /* Denser than the floating pill: a bar sitting on the edge of the screen
+       has the whole page behind it, not just a slice of film. */
+    background: rgba(9, 52, 36, 0.94);
     /* The round button is lifted out of the bar, so nothing here may clip. */
     overflow: visible;
   }
@@ -674,10 +685,11 @@
     border-radius: 50%;
     color: #2d2d2d;
     background: linear-gradient(180deg, var(--gold-lit), var(--gold-deep));
-    /* A dark ring so the button reads as sitting in front of the bar rather
-       than welded into it. */
+    /* A ring in the bar's own green, so the button reads as sitting in front of
+       the bar rather than welded into it. Charcoal here left a grey halo around
+       the card button once the bar itself went green. */
     box-shadow:
-      0 0 0 5px rgba(28, 28, 28, 0.92),
+      0 0 0 5px rgba(9, 52, 36, 0.96),
       0 10px 24px -8px rgba(0, 0, 0, 0.9);
   }
 
