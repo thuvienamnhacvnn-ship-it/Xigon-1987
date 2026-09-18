@@ -6,7 +6,8 @@ belonging to other projects, and a stray `docker compose ... --remove-orphans`
 there has come close to deleting a service outside the repo that issued it.
 A systemd unit touches none of that.
 
-- **Address:** http://162.19.44.241:3060
+- **Address:** https://www.xigon1987.com (the bare port, `162.19.44.241:3060`,
+  still answers and should be closed — see below)
 - **Directory:** `/opt/xigon1987`
 - **Service:** `xigon1987.service`
 - **Log:** `/var/log/xigon1987.log`
@@ -83,11 +84,25 @@ there does not break one site, it breaks three** — nginx refuses to start when
 any `server` block names a certificate that does not exist. So the vhost goes
 in twice, in this order, and `nginx -t` runs before every reload:
 
-1. `deploy/nginx/xigon1987.conf` — plain HTTP. Installed already. This is what
-   answers the moment DNS arrives, and it is what Let's Encrypt fetches its
-   proof from.
+1. `deploy/nginx/xigon1987.conf` — plain HTTP. This is what answers the moment
+   DNS arrives, and it is what Let's Encrypt fetches its proof from.
 2. `deploy/nginx/xigon1987-https.conf` — the real thing, installed **after**
    `certbot certonly` has succeeded. The commands are in the file's own header.
+   This is what is installed now, as `conf.d/xigon1987.conf`.
+
+**Copy these files with `scp`, never by piping them through PowerShell.** Two
+separate corruptions came from trying: PowerShell wrote a UTF-8 BOM at the
+front, which nginx reports as `unknown directive "﻿#"`, and then `tr -d "\r"`
+lost its backslash on the way through and deleted every letter `r` in the file
+— nginx reported `unknown directive "seve"`, which is `server` with its `r`s
+removed. Both times `nginx -t` caught it before the reload, which is the whole
+reason the test runs first.
+
+The certificate covers `www.xigon1987.com` and `xigon1987.com`, expires
+2026-12-17, and renews through the `ptc-bonus-certbot-1` container that already
+renews the other two sites — verified by `www.xigon1987.com.conf` being present
+in `/etc/letsencrypt/renewal/` inside the shared volume. The Let's Encrypt
+account e-mail is the restaurant's own.
 
 The app is a plain Node service on the host, so nginx reaches it through the
 docker bridge gateway (`172.18.0.1:3060`) rather than by container name.
@@ -102,11 +117,12 @@ When the domain is live and HTTPS is on, close the bare port —
 
 ## What is still open
 
-**There is no HTTPS yet**, because the certificate cannot be issued until the
-domain resolves to this server. Until then the site answers on a bare port over
-plain HTTP, the admin password travels in clear text, and every browser calls
-it insecure. That is acceptable while this is something to look at; it is not
-acceptable before it is shown to guests.
+**Port 3060 is still open to the world.** The site is on HTTPS now, but
+`http://162.19.44.241:3060/de/admin` still answers over plain HTTP, which means
+the back-office password can still be sent in clear text — the certificate
+protects nothing while there is a second door beside it. Close it with
+`ufw delete allow 3060/tcp`; nginx reaches the app through the docker bridge,
+not through the firewall, so nothing else breaks.
 
 **Why not Vercel.** PGlite writes its database to disk. Vercel's filesystem is
 read-only and each request may land on a different machine, so the site would
