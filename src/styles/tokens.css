@@ -1,31 +1,44 @@
 /*
  * XIGON 1987 — design tokens.
  *
- * Sampled from the approved template, not guessed: the deep green of the
- * ground (#01482c falling to #003a23), the near-black of the side rail
- * (#0e0d0b) and the gold of the filled button (#efb15c) are the exact pixels
- * from that file.
+ * The palette is the restaurant's own, five colours and no more:
  *
- * The rule the palette follows: green is the room, black is the frame, gold is
- * the only accent. Colour beyond that belongs to the photography.
+ *   #0a3d2a  deep green    the house colour, and every solid ground
+ *   #2d2d2d  charcoal      the frame — bars, rails, outlines
+ *   #d3d5d4  warm grey     everything written
+ *   #e57a4e  terracotta    the one accent: buttons, rules, the current item
+ *   #c5877a  dusty rose    the second accent, for what must be seen but not shouted
+ *
+ * Tints and shades below are mixed from those five and introduce no new hue.
+ * A flat five cannot build a button with a lit edge or a disabled state, and
+ * inventing a sixth colour to do it is how a palette stops being a palette.
+ *
+ * The rule: green is the room, charcoal is the frame, terracotta is the only
+ * thing allowed to raise its voice. Everything else belongs to the photography,
+ * which is warm and lit and does not need help.
+ *
+ * Green and terracotta are opposite in temperature, which is why this works and
+ * why it has to be kept in proportion: a lot of green, a little terracotta. The
+ * moment the accent covers as much ground as the green, both look cheap.
  */
 :root {
   /*
    * Surfaces.
    *
-   * The ground of this site is the photograph of the restaurant, so every
-   * surface above it is warm near-black glass, never a colour. Green belongs to
-   * the velvet on the banquettes in the pictures and to nothing else.
+   * The ground of this site is a film of the restaurant, so the panels above it
+   * are smoked glass rather than paint — the deep green at low opacity, which
+   * reads as the room seen through a dark pane instead of as a green wash laid
+   * over the picture. The difference matters: a full-screen green veil over
+   * this film was rejected once already, and rightly.
    *
-   * The --green-* names below are aliases kept only so the screens written
-   * before this change keep working; they point at the surfaces now and should
-   * be replaced at the call site as each screen is redrawn.
+   * The --green-* names are aliases kept so screens written before this change
+   * keep working.
    */
-  --surface: #120c08;
-  --surface-deep: #0d0906;
-  --surface-dark: #080705;
-  --surface-panel: rgba(30, 22, 15, 0.55);
-  --surface-veil: rgba(8, 7, 5, 0.86);
+  --surface: #0a3d2a;
+  --surface-deep: #07281b;
+  --surface-dark: #051c13;
+  --surface-panel: rgba(10, 61, 42, 0.55);
+  --surface-veil: rgba(5, 22, 15, 0.86);
 
   --green: var(--surface);
   --green-deep: var(--surface-deep);
@@ -33,44 +46,64 @@
   --green-panel: var(--surface-panel);
   --green-veil: var(--surface-veil);
 
-  /* black — the rail, the top bar, the outlined buttons */
-  --ink-black: #0e0d0b;
-  --ink-black-soft: #15130f;
+  /* charcoal — the rail, the top bar, the outlined buttons */
+  --ink-black: #2d2d2d;
+  --ink-black-soft: #383838;
 
-  /* gold — buttons, rules, small caps, the headline */
-  --gold: #efb15c;
-  --gold-lit: #f7d9a4;
-  --gold-deep: #c49251;
-  --gold-hair: rgba(239, 177, 92, 0.52);
   /*
-   * How heavy the gold edge is, in one place.
+   * Terracotta — buttons, rules, small caps, the current item.
    *
-   * A single hairline disappears against a photograph of a lit restaurant —
-   * which is what every panel on this site sits on. Slightly over a pixel is
-   * enough to hold at any brightness without becoming a drawn box.
+   * The --gold-* names are what every screen already calls this accent. They
+   * are kept as the working names rather than renamed across two dozen files in
+   * one sweep; the accent is terracotta now and the comment says so, which is
+   * cheaper and safer than a rename that touches everything at once.
+   */
+  --accent: #e57a4e;
+  --accent-lit: #f0a582;
+  --accent-deep: #c2673f;
+  --accent-soft: #c5877a;
+
+  --gold: var(--accent);
+  --gold-lit: var(--accent-lit);
+  --gold-deep: var(--accent-deep);
+  --gold-hair: rgba(229, 122, 78, 0.52);
+  /*
+   * How heavy the accent edge is, in one place.
+   *
+   * A single hairline disappears against a film of a lit restaurant — which is
+   * what every panel on this site sits on. Slightly over a pixel is enough to
+   * hold at any brightness without becoming a drawn box.
    */
   --edge-w: 1.5px;
-  --gold-faint: rgba(239, 177, 92, 0.12);
+  --gold-faint: rgba(229, 122, 78, 0.12);
 
-  /* the seal red from the mark, used once or twice and never as a surface */
-  --seal: #a6483c;
+  /* the rose, used where the accent would be too loud */
+  --seal: var(--accent-soft);
 
   /* type colours */
-  --ivory: #f5f1e9;
-  --ivory-soft: rgba(245, 241, 233, 0.78);
-  --ivory-mute: rgba(245, 241, 233, 0.52);
+  --ivory: #d3d5d4;
+  --ivory-soft: rgba(211, 213, 212, 0.78);
+  --ivory-mute: rgba(211, 213, 212, 0.52);
 
-  /* cream surfaces, for the few light sections */
-  --cream: #f3ecdd;
-  --cream-deep: #e6dcc6;
-  --cream-line: #d3c5a8;
-  --ink: #17150f;
-  --ink-soft: rgba(23, 21, 15, 0.68);
-  --ink-mute: rgba(23, 21, 15, 0.46);
+  /* the light surfaces, for the few sections that are not over the film */
+  --cream: #d3d5d4;
+  --cream-deep: #c0c3c2;
+  --cream-line: #a7abaa;
+  --ink: #2d2d2d;
+  --ink-soft: rgba(45, 45, 45, 0.68);
+  --ink-mute: rgba(45, 45, 45, 0.46);
 
-  --ok: #6fae7c;
-  --warn: #d9a85f;
-  --error: #d1655a;
+  /*
+   * Three states, mixed from the same five.
+   *
+   * "Confirmed", "careful" and "wrong" have to be told apart at a glance and a
+   * palette of five flat colours has no way to say them, so these are the house
+   * green lifted until it reads on a dark panel, the accent itself, and the rose
+   * pushed towards red. No new hue enters.
+   */
+  --ok: #4e8f6b;
+  --warn: var(--accent);
+  --error: #c2564a;
 
   /* type */
   /*

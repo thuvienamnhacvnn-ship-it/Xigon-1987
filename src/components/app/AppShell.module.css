@@ -32,7 +32,7 @@
   height: 100dvh;
   overflow: hidden;
   color: var(--ivory);
-  background: #080705;
+  background: #051c13;
 }
 
 /* ---------- the room ---------- */
@@ -70,6 +70,16 @@
  * unreadable at any weight. This is a gradient rather than a flat wash so the
  * room still shows at the edges, which is the whole point of the backdrop.
  */
+/*
+ * The scrim is neutral, and stays neutral.
+ *
+ * When the palette changed, this went green with everything else and the film
+ * behind it went green with it — a wash of colour over the whole picture, which
+ * is the one thing this site has been told twice not to do. The green belongs
+ * to the panels, which are objects laid on the room; a full-screen tint is not
+ * an object, it is paint over a photograph. So this is the charcoal from the
+ * palette, which only darkens.
+ */
 .shell:not([data-bare='true'])::after {
   content: '';
   position: absolute;
@@ -77,8 +87,8 @@
   z-index: 1;
   pointer-events: none;
   background:
-    radial-gradient(120% 75% at 50% 42%, rgba(6, 4, 3, 0.62), transparent 70%),
-    linear-gradient(180deg, rgba(6, 4, 3, 0.5), rgba(6, 4, 3, 0.2) 38%, rgba(6, 4, 3, 0.62));
+    radial-gradient(120% 75% at 50% 42%, rgba(18, 18, 18, 0.62), transparent 70%),
+    linear-gradient(180deg, rgba(18, 18, 18, 0.5), rgba(18, 18, 18, 0.2) 38%, rgba(18, 18, 18, 0.62));
 }
 
 /* ---------- the content ---------- */
@@ -182,7 +192,7 @@
   letter-spacing: 0.06em;
   white-space: nowrap;
   color: var(--ivory);
-  background: rgba(14, 10, 7, 0.55);
+  background: rgba(9, 34, 24, 0.55);
   backdrop-filter: blur(16px);
 }
 
@@ -369,9 +379,9 @@
   list-style: none;
   /* The hairline is plainly visible in the drawing — it is what makes the bar
      read as one object rather than a smudge over the floor. */
-  border: var(--edge-w) solid rgba(239, 177, 92, 0.6);
+  border: var(--edge-w) solid rgba(229, 122, 78, 0.6);
   border-radius: var(--r-pill);
-  background: rgba(14, 10, 7, 0.62);
+  background: rgba(9, 34, 24, 0.62);
   backdrop-filter: blur(18px) saturate(1.1);
   box-shadow: 0 24px 60px -32px rgba(0, 0, 0, 0.95);
   /* Below the width where the labels fit, the dock scrolls sideways rather than
@@ -410,7 +420,7 @@
 /* Hovering the screen you are already on should not promise a journey. */
 .dockItem[aria-current='page']:hover {
   color: var(--gold-lit);
-  background: rgba(239, 177, 92, 0.12);
+  background: rgba(229, 122, 78, 0.12);
 }
 
  /*
@@ -509,7 +519,7 @@
   margin-left: 0.5rem;
   padding: 3px;
   border-radius: 5px;
-  background: rgba(245, 241, 233, 0.9);
+  background: rgba(211, 213, 212, 0.9);
   opacity: 0.72;
   transition: opacity var(--dur-1) var(--ease);
 }
@@ -604,7 +614,7 @@
     padding: 0.45rem 0.2rem calc(0.4rem + env(safe-area-inset-bottom, 0px));
     border-width: var(--edge-w) 0 0;
     border-radius: 20px 20px 0 0;
-    background: rgba(12, 9, 6, 0.86);
+    background: rgba(7, 30, 21, 0.86);
     /* The round button is lifted out of the bar, so nothing here may clip. */
     overflow: visible;
   }
@@ -662,12 +672,12 @@
     width: 3.5rem;
     height: 3.5rem;
     border-radius: 50%;
-    color: #241a0a;
+    color: #2d2d2d;
     background: linear-gradient(180deg, var(--gold-lit), var(--gold-deep));
     /* A dark ring so the button reads as sitting in front of the bar rather
        than welded into it. */
     box-shadow:
-      0 0 0 5px rgba(12, 9, 6, 0.92),
+      0 0 0 5px rgba(7, 30, 21, 0.92),
       0 10px 24px -8px rgba(0, 0, 0, 0.9);
   }
 
@@ -689,7 +699,7 @@
   }
 
   .dockList li[data-key='menu'] .dockItem:hover .dockIcon {
-    background: linear-gradient(180deg, #ffe9c4, var(--gold));
+    background: linear-gradient(180deg, #f5bb9d, var(--gold));
   }
 
   .dockList li[data-key='menu'] .dockDot {
@@ -739,7 +749,7 @@
   place-items: center;
   pointer-events: none;
   /* The room dims a little behind it, the way it would. */
-  background: radial-gradient(60% 55% at 50% 50%, rgba(6, 4, 3, 0.55), rgba(6, 4, 3, 0.86));
+  background: radial-gradient(60% 55% at 50% 50%, rgba(5, 20, 14, 0.55), rgba(5, 20, 14, 0.86));
   animation: flare-room 260ms var(--ease) both;
 }
 
@@ -767,11 +777,11 @@
 @keyframes flare-strike {
   0% {
     opacity: 0;
-    filter: brightness(0.2) drop-shadow(0 0 0 rgba(247, 217, 164, 0));
+    filter: brightness(0.2) drop-shadow(0 0 0 rgba(240, 165, 130, 0));
   }
   6% {
     opacity: 1;
-    filter: brightness(2.6) drop-shadow(0 0 60px rgba(247, 217, 164, 0.9));
+    filter: brightness(2.6) drop-shadow(0 0 60px rgba(240, 165, 130, 0.9));
   }
   11% {
     opacity: 0.08;
@@ -779,7 +789,7 @@
   }
   17% {
     opacity: 1;
-    filter: brightness(2.1) drop-shadow(0 0 44px rgba(247, 217, 164, 0.8));
+    filter: brightness(2.1) drop-shadow(0 0 44px rgba(240, 165, 130, 0.8));
   }
   21% {
     opacity: 0.15;
@@ -787,7 +797,7 @@
   }
   26% {
     opacity: 1;
-    filter: brightness(1.7) drop-shadow(0 0 34px rgba(247, 217, 164, 0.75));
+    filter: brightness(1.7) drop-shadow(0 0 34px rgba(240, 165, 130, 0.75));
   }
   33% {
     opacity: 0.45;
@@ -795,7 +805,7 @@
   }
   38% {
     opacity: 1;
-    filter: brightness(1.9) drop-shadow(0 0 40px rgba(247, 217, 164, 0.85));
+    filter: brightness(1.9) drop-shadow(0 0 40px rgba(240, 165, 130, 0.85));
   }
   46% {
     opacity: 0.7;
@@ -804,7 +814,7 @@
   52%,
   100% {
     opacity: 1;
-    filter: brightness(1.35) drop-shadow(0 0 30px rgba(247, 217, 164, 0.65));
+    filter: brightness(1.35) drop-shadow(0 0 30px rgba(240, 165, 130, 0.65));
   }
 }
 
@@ -812,10 +822,10 @@
 @keyframes flare-breathe {
   0%,
   100% {
-    filter: brightness(1.35) drop-shadow(0 0 30px rgba(247, 217, 164, 0.65));
+    filter: brightness(1.35) drop-shadow(0 0 30px rgba(240, 165, 130, 0.65));
   }
   50% {
-    filter: brightness(1.6) drop-shadow(0 0 46px rgba(247, 217, 164, 0.85));
+    filter: brightness(1.6) drop-shadow(0 0 46px rgba(240, 165, 130, 0.85));
   }
 }
 
@@ -830,6 +840,6 @@
 
   .flareMark {
     animation: none;
-    filter: brightness(1.35) drop-shadow(0 0 30px rgba(247, 217, 164, 0.65));
+    filter: brightness(1.35) drop-shadow(0 0 30px rgba(240, 165, 130, 0.65));
   }
 }

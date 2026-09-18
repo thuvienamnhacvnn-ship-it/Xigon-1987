@@ -101,9 +101,16 @@ const grade =
   'format=rgba,' +
   'hue=s=0,' +
   "curves=all='0/0 0.62/0.015 0.86/0.10 0.95/0.55 1/1'," +
+  /*
+   * The streets come out in the house accent. These three numbers are
+   * terracotta #e57a4e divided through by its own red channel, so the brightest
+   * road lands exactly on the accent and everything below it falls off in the
+   * same hue. They were gold while the site was gold; a map is not exempt from
+   * the palette.
+   */
   'colorchannelmixer=' +
   '1.00:0:0:0:' +
-  '0.72:0:0:0:' +
+  '0.53:0:0:0:' +
   '0.34:0:0:0,' +
   'eq=contrast=1.06:brightness=-0.02'
 

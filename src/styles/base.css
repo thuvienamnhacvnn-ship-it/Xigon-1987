@@ -14,7 +14,7 @@ body {
    * restaurant; anything painted behind it only shows as a coloured seam at the
    * edges while the picture loads.
    */
-  background: #080705;
+  background: #051c13;
   color: var(--ivory);
   font-family: var(--font-body);
   font-size: var(--step-0);
@@ -101,7 +101,7 @@ a { color: inherit; text-decoration: none; }
   outline-offset: 3px;
 }
 
-::selection { background: var(--gold); color: #17110a; }
+::selection { background: var(--gold); color: #07281b; }
 
 /* ---------- layout ---------- */
 .shell {
@@ -148,9 +148,11 @@ a { color: inherit; text-decoration: none; }
  */
 .glass {
   position: relative;
-  border: var(--edge-w) solid rgba(239, 177, 92, 0.62);
+  border: var(--edge-w) solid rgba(229, 122, 78, 0.62);
   border-radius: var(--glass-r);
-  background: linear-gradient(180deg, rgba(13, 10, 7, 0.84), rgba(8, 6, 4, 0.9));
+  /* A pane of the house green, darkening downwards — the room seen through
+     smoked glass, not a green wash laid over the film. */
+  background: linear-gradient(180deg, rgba(11, 48, 34, 0.82), rgba(5, 24, 17, 0.92));
   backdrop-filter: blur(30px) saturate(1.04) brightness(0.6);
   box-shadow: 0 40px 90px -54px rgba(0, 0, 0, 0.95);
 }
@@ -212,8 +214,8 @@ a { color: inherit; text-decoration: none; }
   padding: 0.7em 1.8em;
   border: 0;
   border-radius: var(--r-pill);
-  background: linear-gradient(180deg, #f6d79f 0%, var(--gold) 52%, #d79f4e 100%);
-  color: #241a0a;
+  background: linear-gradient(180deg, #f0a582 0%, var(--gold) 52%, #c2673f 100%);
+  color: #2d2d2d;
   font-family: var(--font-body);
   font-size: var(--step-0);
   font-weight: var(--weight-body);
@@ -294,9 +296,9 @@ a { color: inherit; text-decoration: none; }
   gap: 0.9em;
   min-height: 56px;
   padding: 0.8em 1.5em;
-  border: 1px solid rgba(239, 177, 92, 0.38);
+  border: 1px solid rgba(229, 122, 78, 0.38);
   border-radius: 0;
-  background: rgba(9, 8, 6, 0.82);
+  background: rgba(6, 24, 17, 0.82);
   color: var(--ivory);
   font-family: var(--font-display);
   font-size: 1.16rem;
@@ -322,12 +324,12 @@ a { color: inherit; text-decoration: none; }
   /* a shallow warm ramp rather than a flat fill, as in the template */
   background: linear-gradient(180deg, #f3c883 0%, var(--gold) 55%, #dfa252 100%);
   border-color: transparent;
-  color: #241a0a;
+  color: #2d2d2d;
 }
 .btn--gold:hover {
-  background: linear-gradient(180deg, #fbe6c2, var(--gold-lit));
+  background: linear-gradient(180deg, #f0a582, var(--gold-lit));
   border-color: var(--gold-lit);
-  color: #17110a;
+  color: #07281b;
 }
 
 .btn--ink { border-color: rgba(23, 21, 15, 0.35); color: var(--ink); background: transparent; }
@@ -343,7 +345,7 @@ a { color: inherit; text-decoration: none; }
   gap: 0.7em;
   min-height: 52px;
   padding: 0.6em 1.6em;
-  border: 1px solid rgba(239, 177, 92, 0.42);
+  border: 1px solid rgba(229, 122, 78, 0.42);
   border-radius: var(--r-pill);
   background: linear-gradient(180deg, rgba(20, 18, 14, 0.9), rgba(10, 9, 7, 0.9));
   color: var(--gold-lit);

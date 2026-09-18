@@ -29,7 +29,7 @@
   transition: border-color var(--dur-1) var(--ease), background var(--dur-1) var(--ease);
 }
 .option:hover { border-color: var(--gold); }
-.option[data-active='true'] { border-color: var(--gold); background: rgba(239, 177, 92, 0.12); }
+.option[data-active='true'] { border-color: var(--gold); background: rgba(229, 122, 78, 0.12); }
 .option:focus-within { outline: 2px solid var(--gold-lit); outline-offset: 2px; }
 
 .optionLabel { font-size: var(--step-0); }
@@ -48,7 +48,7 @@
   cursor: pointer;
   transition: background var(--dur-1) var(--ease);
 }
-.stepper button:hover { background: rgba(239, 177, 92, 0.16); }
+.stepper button:hover { background: rgba(229, 122, 78, 0.16); }
 
 .count {
   min-width: 46px;

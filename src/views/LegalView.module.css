@@ -22,7 +22,7 @@
 .warn {
   padding: 1rem 1.2rem;
   border-left: 2px solid var(--gold);
-  background: rgba(239, 177, 92, 0.09);
+  background: rgba(229, 122, 78, 0.09);
   color: var(--gold-lit);
   line-height: 1.7;
 }

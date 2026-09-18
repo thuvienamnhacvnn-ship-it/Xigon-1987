@@ -259,7 +259,7 @@
   white-space: nowrap;
 }
 .small:hover { border-color: var(--gold); color: var(--ivory); }
-.smallDanger { border-color: rgba(209, 101, 90, 0.5); color: var(--error); }
+.smallDanger { border-color: rgba(194, 86, 74, 0.5); color: var(--error); }
 .smallDanger:hover { background: var(--error); color: var(--cream); }
 
 .confirm {
@@ -270,7 +270,7 @@
   font-size: var(--step--1);
   padding: 0.5rem 0.7rem;
   border: 1px solid var(--error);
-  background: rgba(209, 101, 90, 0.1);
+  background: rgba(194, 86, 74, 0.1);
 }
 .noteForm { display: flex; gap: 0.35rem; }
 .noteForm .input { min-height: 36px; padding-block: 0.25em; font-size: var(--step--1); }

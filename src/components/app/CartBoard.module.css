@@ -69,7 +69,7 @@
   /* A hairline in the panel's own gold rather than the platform's grey bar,
      which sat on the dark glass like a scratch. */
   scrollbar-width: thin;
-  scrollbar-color: rgba(239, 177, 92, 0.38) transparent;
+  scrollbar-color: rgba(229, 122, 78, 0.38) transparent;
   margin: clamp(0.8rem, 0.4rem + 1vw, 1.5rem) 0 0;
   padding: 0;
   list-style: none;
@@ -81,7 +81,7 @@
 
 .lines::-webkit-scrollbar-thumb {
   border-radius: 3px;
-  background: rgba(239, 177, 92, 0.38);
+  background: rgba(229, 122, 78, 0.38);
 }
 
 .lines::-webkit-scrollbar-track {
@@ -99,7 +99,7 @@
 /* A hairline between the lines, not around them — the drawing has no boxes in
    this column. */
 .line + .line {
-  border-top: 1px solid rgba(239, 177, 92, 0.16);
+  border-top: 1px solid rgba(229, 122, 78, 0.16);
 }
 
 /*
@@ -115,7 +115,7 @@
   height: clamp(56px, min(14.5vh, 9.1vw), 157px);
   overflow: hidden;
   border-radius: calc(var(--glass-r) * 0.7);
-  background: #140e09;
+  background: #0a3d2a;
 }
 
 .thumb img {
@@ -188,7 +188,7 @@
 .warn {
   margin: 0.3rem 0 0;
   font-size: var(--step--2);
-  color: #e8b27a;
+  color: #c5877a;
 }
 
 /* ---------- the stepper ---------- */
@@ -202,7 +202,7 @@
   padding: 0.25rem;
   border: var(--edge-w) solid var(--gold-hair);
   border-radius: var(--r-pill);
-  background: rgba(20, 14, 9, 0.5);
+  background: rgba(10, 44, 31, 0.5);
 }
 
 .step {
@@ -221,7 +221,7 @@
 
 .step:hover {
   color: var(--gold-lit);
-  background: rgba(239, 177, 92, 0.12);
+  background: rgba(229, 122, 78, 0.12);
 }
 
 .count {
@@ -260,8 +260,8 @@
 }
 
 .remove:hover {
-  color: #e8a07a;
-  background: rgba(232, 160, 122, 0.12);
+  color: #c5877a;
+  background: rgba(197, 135, 122, 0.12);
 }
 
 /* ---------- nothing in it yet ---------- */
@@ -310,17 +310,17 @@
 .wishesInput {
   width: 100%;
   padding: 0.85rem 1.1rem;
-  border: var(--edge-w) solid rgba(239, 177, 92, 0.24);
+  border: var(--edge-w) solid rgba(229, 122, 78, 0.24);
   border-radius: calc(var(--glass-r) * 0.7);
   font-family: inherit;
   font-weight: var(--weight-quiet);
   font-size: var(--step--1);
   color: var(--ivory);
-  background: rgba(12, 9, 6, 0.55);
+  background: rgba(7, 30, 21, 0.55);
 }
 
 .wishesInput::placeholder {
-  color: rgba(245, 241, 233, 0.34);
+  color: rgba(211, 213, 212, 0.34);
 }
 
 .wishesInput:focus-visible {
@@ -353,9 +353,9 @@
   overflow-y: auto;
   overscroll-behavior: contain;
   padding: clamp(0.9rem, 0.5rem + 1.1vw, 1.6rem);
-  border: var(--edge-w) solid rgba(239, 177, 92, 0.3);
+  border: var(--edge-w) solid rgba(229, 122, 78, 0.3);
   border-radius: var(--glass-r);
-  background: rgba(16, 11, 7, 0.55);
+  background: rgba(8, 34, 24, 0.55);
 }
 
 .ways {
@@ -369,11 +369,11 @@
   align-items: center;
   gap: 0.55rem;
   padding: 0.75rem 0.7rem;
-  border: var(--edge-w) solid rgba(239, 177, 92, 0.22);
+  border: var(--edge-w) solid rgba(229, 122, 78, 0.22);
   border-radius: calc(var(--glass-r) * 0.7);
   text-align: left;
   color: var(--ivory-mute);
-  background: rgba(10, 7, 4, 0.4);
+  background: rgba(7, 28, 19, 0.4);
   cursor: pointer;
   transition: border-color var(--dur-1) var(--ease), color var(--dur-1) var(--ease);
 }
@@ -381,7 +381,7 @@
 .way[data-on] {
   border-color: var(--gold);
   color: var(--ivory);
-  background: rgba(239, 177, 92, 0.08);
+  background: rgba(229, 122, 78, 0.08);
 }
 
 .way[data-on] svg {
@@ -421,7 +421,7 @@
   flex-direction: column;
   gap: 0.45rem;
   padding-top: clamp(0.6rem, 0.3rem + 0.7vw, 1rem);
-  border-top: 1px solid rgba(239, 177, 92, 0.16);
+  border-top: 1px solid rgba(229, 122, 78, 0.16);
 }
 
 .timeLabel {
@@ -436,10 +436,10 @@
   align-items: center;
   gap: 0.6rem;
   padding: 0 0.9rem;
-  border: var(--edge-w) solid rgba(239, 177, 92, 0.28);
+  border: var(--edge-w) solid rgba(229, 122, 78, 0.28);
   border-radius: calc(var(--glass-r) * 0.7);
   color: var(--gold-deep);
-  background: rgba(10, 7, 4, 0.45);
+  background: rgba(7, 28, 19, 0.45);
 }
 
 .timeControl select {
@@ -462,8 +462,8 @@
 }
 
 .timeControl option {
-  color: #f5f1e9;
-  background: #140e09;
+  color: #d3d5d4;
+  background: #0a3d2a;
 }
 
 .timeNone {
@@ -479,7 +479,7 @@
   flex-direction: column;
   gap: 0.35rem;
   padding-top: clamp(0.6rem, 0.3rem + 0.7vw, 1rem);
-  border-top: 1px solid rgba(239, 177, 92, 0.16);
+  border-top: 1px solid rgba(229, 122, 78, 0.16);
 }
 
 .sumRow {
@@ -541,7 +541,7 @@
   font-weight: var(--weight-quiet);
   font-size: var(--step--2);
   color: var(--ivory-soft);
-  background: rgba(239, 177, 92, 0.06);
+  background: rgba(229, 122, 78, 0.06);
 }
 
 /* ---------- the payment marks ---------- */
@@ -571,9 +571,21 @@
   opacity: 0.9;
 }
 
-.mark[data-tone='paypal'] { color: #7aa7e8; }
-.mark[data-tone='visa'] { color: #8fa9e6; font-style: italic; letter-spacing: 0.08em; }
-.mark[data-tone='mastercard'] { color: #e8a97a; font-size: var(--step--2); }
+/*
+ * The marks are set in the site's own colours, not the providers'.
+ *
+ * Borrowed brand blues did two things wrong at once: they were the only colours
+ * on the site that belonged to no palette, and a wordmark in a company's own
+ * colour reads as that company's badge — a stronger claim than this site can
+ * make, since none of them has been signed up. The name still says which is
+ * which, which is all a name has to do.
+ */
+.mark[data-tone='paypal'],
+.mark[data-tone='visa'],
+.mark[data-tone='mastercard'] { color: var(--ivory-soft); }
+
+.mark[data-tone='visa'] { font-style: italic; letter-spacing: 0.08em; }
+.mark[data-tone='mastercard'] { font-size: var(--step--2); }
 
 /* Two overlapping circles, which is a shape rather than a logo. */
 .mcRings {
@@ -582,8 +594,8 @@
   height: 16px;
   border-radius: 8px;
   background:
-    radial-gradient(circle 8px at 8px 8px, rgba(232, 122, 90, 0.85) 98%, transparent 100%),
-    radial-gradient(circle 8px at 18px 8px, rgba(232, 178, 90, 0.85) 98%, transparent 100%);
+    radial-gradient(circle 8px at 8px 8px, rgba(197, 135, 122, 0.85) 98%, transparent 100%),
+    radial-gradient(circle 8px at 18px 8px, rgba(229, 122, 78, 0.85) 98%, transparent 100%);
 }
 
 .fine {

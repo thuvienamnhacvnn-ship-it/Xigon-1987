@@ -30,7 +30,7 @@
   padding: 0.28rem;
   border: var(--edge-w) solid var(--gold-hair);
   border-radius: var(--r-pill);
-  background: rgba(14, 10, 7, 0.5);
+  background: rgba(9, 34, 24, 0.5);
   backdrop-filter: blur(16px);
   pointer-events: auto;
 }
@@ -57,7 +57,7 @@
 .scene[aria-pressed='true'] {
   color: var(--ink-black);
   background: linear-gradient(180deg, var(--gold-lit), var(--gold-deep));
-  box-shadow: 0 2px 16px -4px rgba(239, 177, 92, 0.5);
+  box-shadow: 0 2px 16px -4px rgba(229, 122, 78, 0.5);
 }
 
 /* ---------- the mark in the middle of the film ---------- */
@@ -93,7 +93,7 @@
   border: var(--edge-w) solid var(--gold-hair);
   border-radius: 50%;
   color: var(--ivory);
-  background: rgba(14, 10, 7, 0.4);
+  background: rgba(9, 34, 24, 0.4);
   backdrop-filter: blur(10px);
   cursor: pointer;
   text-decoration: none;
@@ -104,7 +104,7 @@
 .railButton:hover {
   border-color: var(--gold);
   color: var(--gold-lit);
-  background: rgba(14, 10, 7, 0.68);
+  background: rgba(9, 34, 24, 0.68);
 }
 
 /* The guide is the one button on the rail that goes somewhere on this site, so
@@ -164,7 +164,7 @@
   font-weight: 300;
   line-height: 1;
   color: var(--gold-lit);
-  background: rgba(14, 10, 7, 0.45);
+  background: rgba(9, 34, 24, 0.45);
   backdrop-filter: blur(8px);
   transition: background var(--dur-1) var(--ease);
 }
@@ -180,7 +180,7 @@
   font-family: var(--font-body);
   font-size: var(--step--1);
   color: var(--ivory);
-  background: rgba(14, 10, 7, 0.62);
+  background: rgba(9, 34, 24, 0.62);
   backdrop-filter: blur(12px);
   white-space: nowrap;
 }
@@ -205,7 +205,7 @@
   border: var(--edge-w) solid var(--gold-hair);
   border-radius: 50%;
   color: var(--ivory);
-  background: rgba(14, 10, 7, 0.45);
+  background: rgba(9, 34, 24, 0.45);
   backdrop-filter: blur(12px);
   cursor: pointer;
   transition: border-color var(--dur-1) var(--ease), color var(--dur-1) var(--ease);
@@ -231,7 +231,7 @@
   font-size: var(--step--2);
   text-align: center;
   color: var(--ivory-soft);
-  background: rgba(14, 10, 7, 0.78);
+  background: rgba(9, 34, 24, 0.78);
   backdrop-filter: blur(12px);
 }
 
@@ -266,9 +266,9 @@
     height: min(46vw, 230px);
     background: radial-gradient(
       closest-side,
-      rgba(6, 4, 3, 0.72),
-      rgba(6, 4, 3, 0.45) 55%,
-      rgba(6, 4, 3, 0) 100%
+      rgba(5, 20, 14, 0.72),
+      rgba(5, 20, 14, 0.45) 55%,
+      rgba(5, 20, 14, 0) 100%
     );
     pointer-events: none;
   }

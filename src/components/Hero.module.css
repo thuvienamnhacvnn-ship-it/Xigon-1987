@@ -55,7 +55,7 @@
       rgba(6, 10, 8, 0.32) 100%
     ),
     /* a foot of shadow, so the table has something to stand in */
-    linear-gradient(0deg, rgba(4, 7, 5, 0.86) 0%, rgba(4, 7, 5, 0) 46%),
+    linear-gradient(0deg, rgba(4, 18, 12, 0.86) 0%, rgba(4, 18, 12, 0) 46%),
     /* and the faintest vignette, to close the corners */
     radial-gradient(120% 90% at 50% 40%, rgba(0, 0, 0, 0) 52%, rgba(0, 0, 0, 0.45) 100%);
 }
@@ -145,9 +145,9 @@
   border-radius: 50%;
   background: radial-gradient(
     circle,
-    rgba(247, 217, 164, 0.2) 0%,
-    rgba(239, 177, 92, 0.09) 40%,
-    rgba(239, 177, 92, 0) 68%
+    rgba(240, 165, 130, 0.2) 0%,
+    rgba(229, 122, 78, 0.09) 40%,
+    rgba(229, 122, 78, 0) 68%
   );
 }
 
@@ -199,7 +199,7 @@
   letter-spacing: -0.015em;
   white-space: pre-line;
   /* the template's headline is not flat gold but a light champagne ramp */
-  background: linear-gradient(174deg, #fbeccd 4%, var(--gold-lit) 38%, var(--gold) 82%);
+  background: linear-gradient(174deg, #f5bb9d 4%, var(--gold-lit) 38%, var(--gold) 82%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;

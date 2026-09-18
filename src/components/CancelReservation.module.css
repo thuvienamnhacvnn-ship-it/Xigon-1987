@@ -1,7 +1,7 @@
 .wrap { display: flex; flex-direction: column; gap: 0.4rem; }
 
 .trigger {
-  border: 1px solid rgba(166, 72, 60, 0.5);
+  border: 1px solid rgba(194, 86, 74, 0.5);
   background: transparent;
   color: var(--error);
   padding: 0.55em 1.1em;
@@ -17,7 +17,7 @@
   gap: 0.7rem;
   padding: 1rem 1.1rem;
   border: 1px solid var(--error);
-  background: rgba(166, 72, 60, 0.1);
+  background: rgba(194, 86, 74, 0.1);
 }
 .question { font-size: var(--step--1); line-height: 1.6; }
 .buttons { display: flex; gap: 0.6rem; flex-wrap: wrap; }

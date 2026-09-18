@@ -179,7 +179,7 @@
   height: clamp(150px, 26vh, 290px);
   overflow: hidden;
   border-radius: var(--glass-r);
-  background: #120c08;
+  background: #0a3d2a;
 }
 
 .photo img {
@@ -203,8 +203,8 @@
   text-transform: uppercase;
   color: var(--ivory-mute);
   background:
-    repeating-linear-gradient(135deg, rgba(239, 177, 92, 0.05) 0 14px, transparent 14px 28px),
-    #171009;
+    repeating-linear-gradient(135deg, rgba(229, 122, 78, 0.05) 0 14px, transparent 14px 28px),
+    #07281b;
 }
 
 .soldOut {
@@ -472,7 +472,7 @@
   font-size: var(--step--1);
   font-weight: var(--weight-body);
   color: var(--ivory-soft);
-  background: rgba(24, 17, 12, 0.5);
+  background: rgba(12, 44, 31, 0.5);
   cursor: pointer;
   transition: color var(--dur-1) var(--ease), background var(--dur-1) var(--ease),
     border-color var(--dur-1) var(--ease);
@@ -639,7 +639,7 @@
     align-items: center;
     gap: 0.6rem;
     padding-bottom: 0.55rem;
-    border-bottom: 1px solid rgba(239, 177, 92, 0.16);
+    border-bottom: 1px solid rgba(229, 122, 78, 0.16);
   }
 
   /* A rule under the last plate of the page reads as a list cut off, not as a
