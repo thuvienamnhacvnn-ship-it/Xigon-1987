@@ -304,7 +304,7 @@
   font-size: var(--step--2);
   letter-spacing: var(--track-wide);
   text-transform: uppercase;
-  color: var(--forest-lit);
+  color: var(--accent-soft);
 }
 
 .wishesInput {
@@ -379,17 +379,17 @@
 }
 
 /*
- * The chosen one is green.
+ * The chosen one is outlined and washed, not filled.
  *
- * Green is the palette's colour for settled — confirmed, paid, chosen — and
- * this is the only decision on the screen that has already been made. Using the
- * accent here would have put terracotta on the tile, the total and the button
- * all at once, and three shouts in one corner is no emphasis at all.
+ * Filled in the accent it was as loud as "Zur Kasse" directly beneath it, and
+ * two solid orange blocks in one corner leave the eye no idea which is the
+ * thing to press. A lit edge over a faint wash says "this one is selected"
+ * without competing — the button keeps the only solid fill on the card.
  */
 .way[data-on] {
-  border-color: var(--forest);
+  border-color: var(--gold);
   color: var(--ivory);
-  background: var(--forest);
+  background: rgba(229, 122, 78, 0.16);
 }
 
 .way[data-on] svg {

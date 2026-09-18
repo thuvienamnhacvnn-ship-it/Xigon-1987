@@ -151,7 +151,7 @@ a { color: inherit; text-decoration: none; }
   border: var(--edge-w) solid rgba(229, 122, 78, 0.62);
   border-radius: var(--glass-r);
   /* Charcoal, darkening downwards: smoked glass in front of the film, not a
-     colour laid over it. The green in the palette is not a ground. */
+     colour laid over it. No panel on this site is tinted. */
   background: linear-gradient(180deg, rgba(42, 42, 42, 0.82), rgba(22, 22, 22, 0.92));
   backdrop-filter: blur(30px) saturate(1.04) brightness(0.6);
   box-shadow: 0 40px 90px -54px rgba(0, 0, 0, 0.95);
@@ -237,16 +237,16 @@ a { color: inherit; text-decoration: none; }
   min-height: 46px;
   padding: 0.6em 1.4em;
   /*
-   * The second button on a screen is green, not an outline.
+   * The second button: a filled charcoal capsule with a warm hairline.
    *
-   * Outlined everywhere, these were invisible next to the one filled terracotta
-   * button and the palette's green never appeared at any size worth seeing.
-   * Filled green they read as a real second choice, and the orange keeps
-   * meaning "this is the one".
+   * Left transparent it was invisible beside the one filled terracotta button,
+   * so a screen with two choices looked like a screen with one. A solid ground
+   * makes it a real second choice while the accent keeps meaning "this is the
+   * one".
    */
-  border: var(--edge-w) solid var(--forest);
+  border: var(--edge-w) solid var(--gold-hair);
   border-radius: var(--r-pill);
-  background: var(--forest);
+  background: rgba(45, 45, 45, 0.82);
   color: var(--ivory);
   font-family: var(--font-body);
   font-size: var(--step--1);
@@ -255,7 +255,7 @@ a { color: inherit; text-decoration: none; }
     background var(--dur-1) var(--ease);
 }
 
-.ghost:hover { border-color: var(--forest-lit); background: #12563b; color: var(--ivory); }
+.ghost:hover { border-color: var(--gold); background: rgba(229, 122, 78, 0.16); color: var(--ivory); }
 .ghost[aria-pressed='true'] {
   border-color: var(--gold);
   color: var(--ink-black);
@@ -273,32 +273,30 @@ a { color: inherit; text-decoration: none; }
 /*
  * The eyebrow over a heading — KONTAKT, SIGNATURES, RECHTLICHES.
  *
- * Green, which is where the house colour belongs in type: a label names the
- * kind of thing below it and never asks to be pressed, so it wants the calm
- * colour rather than the accent. In terracotta it competed with the button on
- * every screen that had both.
+ * The rose, not the accent. A label names the kind of thing below it and never
+ * asks to be pressed, so it wants the quieter of the two warm colours; in
+ * terracotta it competed with the button on every screen that had both.
  *
- * The lifted green, not #0a3d2a — at label size the dark one is unreadable on
- * a dark panel. Bold too: a letterspaced line this small in a mid green is thin
- * enough to disappear at 400.
+ * Bold, because a letterspaced line this small in a mid tone is thin enough to
+ * disappear at 400.
  */
 .label {
   font-size: var(--step--1);
   letter-spacing: var(--track-wide);
   text-transform: uppercase;
   font-weight: var(--weight-body);
-  color: var(--forest-lit);
+  color: var(--accent-soft);
   line-height: 1.9;
 }
 .label--ink { color: var(--ink-mute); }
 
 /*
- * The little rule under a heading — the house's three colours in order.
+ * The little rule under a heading — the accent, the rose, then the accent's
+ * deep end.
  *
- * It was 44px of one flat accent, which is the sort of thing a template ships
- * with. Three hard stops rather than a blend: a gradient between terracotta and
- * green passes through a muddy olive in the middle, and at this size the middle
- * is most of it.
+ * It was 44px of one flat colour, which is what a template ships with. Three
+ * hard stops rather than a blend: at 64px a smooth gradient is mostly its own
+ * middle, and the middle of a blend is always the least deliberate part of it.
  */
 .rule {
   width: 64px;
@@ -310,7 +308,7 @@ a { color: inherit; text-decoration: none; }
     90deg,
     var(--accent) 0 33.33%,
     var(--accent-soft) 33.33% 66.66%,
-    var(--forest-lit) 66.66% 100%
+    var(--accent-deep) 66.66% 100%
   );
 }
 .rule--wide { width: 100%; opacity: 0.25; }

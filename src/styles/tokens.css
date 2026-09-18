@@ -1,17 +1,19 @@
 /*
  * XIGON 1987 — design tokens.
  *
- * The palette is the restaurant's own, five colours and no more:
+ * The palette is the restaurant's own, four colours and no more:
  *
- *   #0a3d2a  deep green    confirmed, paid, live — never a ground
- *   #2d2d2d  charcoal      the frame — bars, rails, outlines
+ *   #2d2d2d  charcoal      the ground and the frame — panels, bars, rails
  *   #d3d5d4  warm grey     everything written
- *   #e57a4e  terracotta    the one accent: buttons, rules, the current item
+ *   #e57a4e  terracotta    the one accent: buttons, prices, the current item
  *   #c5877a  dusty rose    the second accent, for what must be seen but not shouted
  *
- * Tints and shades below are mixed from those five and introduce no new hue.
- * A flat five cannot build a button with a lit edge or a disabled state, and
- * inventing a sixth colour to do it is how a palette stops being a palette.
+ * It arrived as five. The fifth was a deep green, and it is gone — see the note
+ * beside `--forest` below for where it was tried and why none of it held.
+ *
+ * Tints and shades below are mixed from these four and introduce no new hue.
+ * A flat four cannot build a button with a lit edge or a disabled state, and
+ * inventing a fifth colour to do it is how a palette stops being a palette.
  *
  * The rule: charcoal is the room and the frame, terracotta is the only thing
  * allowed to raise its voice, and the greys carry the words. Everything else
@@ -23,17 +25,17 @@
  */
 :root {
   /*
-   * Surfaces — charcoal, and never green.
+   * Surfaces — charcoal, and never a colour.
    *
-   * The green is in the palette but it is not a ground. Told three times now:
-   * no green behind the screens. It reads as a colour laid over the film rather
-   * than as glass in front of it, and the film is the only thing on this site
-   * that is actually the restaurant. So every surface is the charcoal from the
-   * palette at varying depth, which darkens without tinting.
+   * Every surface on this site sits in front of a film of a warm, lamplit room,
+   * and the film is the only thing here that is actually the restaurant. A
+   * tinted panel reads as colour laid over that picture rather than as glass in
+   * front of it. So the surfaces are one charcoal at varying depth: they darken
+   * without tinting.
    *
    * The --green-* names are aliases kept so screens written before any of this
-   * keep working. They no longer point at anything green, and the name is now
-   * only a name.
+   * keep working. They have not pointed at anything green for some time; the
+   * name is now only a name.
    */
   --surface: #2d2d2d;
   --surface-deep: #232323;
@@ -46,20 +48,6 @@
   --green-dark: var(--surface-dark);
   --green-panel: var(--surface-panel);
   --green-veil: var(--surface-veil);
-
-  /*
-   * The forest green itself, kept for the one thing it is good at here: saying
-   * that something is confirmed, paid, live. It is never a background.
-   */
-  --forest: #0a3d2a;
-  /*
-   * The same green lifted until it reads as light rather than as a hole.
-   *
-   * #0a3d2a is darker than most of the surfaces it would sit on, so anything
-   * asked to glow in it — the travelling edge light, a lit icon — came out as a
-   * dark patch. Same hue, raised; no sixth colour.
-   */
-  --forest-lit: #3f9e6e;
 
   /* charcoal — the rail, the top bar, the outlined buttons */
   --ink-black: #2d2d2d;
@@ -94,6 +82,24 @@
 
   /* the rose, used where the accent would be too loud */
   --seal: var(--accent-soft);
+
+  /*
+   * There is no green on this site.
+   *
+   * The palette it came with had one, and it was tried in every role a colour
+   * can have here: the ground behind the screens, the panels, the bar, the
+   * category pills, the second button, the labels, the marks for "chosen" and
+   * "done". It was rejected in every one of them, and rightly — against a film
+   * of a warm, lamplit room a cool green reads as something gone wrong with the
+   * picture, not as a second colour.
+   *
+   * These two aliases are what is left of it, and they point at charcoal and
+   * rose. They exist so that anything still asking for green gets something
+   * that belongs, rather than a broken variable — and so that the next person
+   * to reach for `--forest` finds this note first.
+   */
+  --forest: var(--surface);
+  --forest-lit: var(--accent-soft);
 
   /* type colours */
   --ivory: #d3d5d4;

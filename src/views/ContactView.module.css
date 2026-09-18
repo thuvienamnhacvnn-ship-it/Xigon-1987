@@ -64,10 +64,10 @@
 /*
  * One mark per fact, and each one a different colour from the palette.
  *
- * Three identical outlined circles told the eye nothing and used one colour
- * where the house has three. Address, hours and telephone are three different
- * kinds of answer, so they are three different colours — filled, because a
- * hairline circle at 38px is too little of a colour to register as one.
+ * Three identical outlined circles told the eye nothing. Address, hours and
+ * telephone are three different kinds of answer, so they are three different
+ * tones — filled, because a hairline circle at 40px is too little colour to
+ * register as any.
  */
 .rowIcon {
   display: inline-flex;
@@ -83,7 +83,7 @@
 }
 
 .row:nth-of-type(2) .rowIcon {
-  background: var(--forest);
+  background: #3a3a3a;
 }
 
 .row:nth-of-type(3) .rowIcon {

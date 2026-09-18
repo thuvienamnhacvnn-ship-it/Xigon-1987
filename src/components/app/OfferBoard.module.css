@@ -252,13 +252,14 @@
  *
  * Every badge in the accent made three offers look like three copies of one
  * notice. They are different things — a weekday lunch, an evening at the
- * counter, a voucher — and a colour each is the cheapest way to say so. The
- * cycle is by position rather than by content, so an offer added in the back
- * office takes the next colour without anyone choosing one.
+ * counter, a voucher — so the second is charcoal and the third rose, leaving
+ * the accent to the one at the top. The cycle is by position rather than by
+ * content, so an offer added in the back office takes the next tone without
+ * anyone choosing one.
  */
 .column .card:nth-child(1) .badge {
   color: var(--ivory);
-  background: linear-gradient(180deg, #14543a, var(--forest));
+  background: linear-gradient(180deg, #3a3a3a, #262626);
 }
 
 .column .card:nth-child(2) .badge {
@@ -280,7 +281,7 @@
   font-size: var(--step--2);
   letter-spacing: var(--track-wide);
   text-transform: uppercase;
-  color: var(--forest-lit);
+  color: var(--accent-soft);
 }
 
 .clockValue {

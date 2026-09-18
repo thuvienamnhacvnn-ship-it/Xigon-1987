@@ -30,9 +30,9 @@
   padding: 0.28rem;
   border: var(--edge-w) solid var(--gold-hair);
   border-radius: var(--r-pill);
-  /* The house green, like the bar at the foot and the categories on the card:
-     the scenes are three things that exist, and green is what says so. */
-  background: rgba(10, 61, 42, 0.86);
+  /* Smoked glass, like the bar at the foot: the switch is an instrument for
+     looking at the film, so it stays out of the film's way. */
+  background: rgba(30, 30, 30, 0.72);
   backdrop-filter: blur(16px);
   pointer-events: auto;
 }
@@ -54,7 +54,7 @@
 
 .scene:hover {
   color: var(--ivory);
-  background: #12563b;
+  background: rgba(229, 122, 78, 0.16);
 }
 
 .scene[aria-pressed='true'] {

@@ -96,11 +96,12 @@
   white-space: nowrap;
 }
 
-/* Behind the guest and settled — which is what the green is for here. */
+/* Behind the guest and settled: the accent held back to a wash, so a finished
+   step reads as done rather than as the one to look at. */
 .stepItem[data-state='done'] .stepMark {
-  border-color: var(--forest-lit);
+  border-color: var(--gold-hair);
   color: var(--ivory);
-  background: var(--forest);
+  background: rgba(229, 122, 78, 0.22);
 }
 
 .stepItem[data-state='now'] .stepMark {
