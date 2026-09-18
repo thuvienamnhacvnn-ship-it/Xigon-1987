@@ -236,17 +236,26 @@ a { color: inherit; text-decoration: none; }
   gap: 0.6em;
   min-height: 46px;
   padding: 0.6em 1.4em;
-  border: var(--edge-w) solid var(--gold-hair);
+  /*
+   * The second button on a screen is green, not an outline.
+   *
+   * Outlined everywhere, these were invisible next to the one filled terracotta
+   * button and the palette's green never appeared at any size worth seeing.
+   * Filled green they read as a real second choice, and the orange keeps
+   * meaning "this is the one".
+   */
+  border: var(--edge-w) solid var(--forest);
   border-radius: var(--r-pill);
-  background: transparent;
+  background: var(--forest);
   color: var(--ivory);
   font-family: var(--font-body);
   font-size: var(--step--1);
   cursor: pointer;
-  transition: border-color var(--dur-1) var(--ease), color var(--dur-1) var(--ease);
+  transition: border-color var(--dur-1) var(--ease), color var(--dur-1) var(--ease),
+    background var(--dur-1) var(--ease);
 }
 
-.ghost:hover { border-color: var(--gold); color: var(--gold-lit); }
+.ghost:hover { border-color: var(--forest-lit); background: #12563b; color: var(--ivory); }
 .ghost[aria-pressed='true'] {
   border-color: var(--gold);
   color: var(--ink-black);

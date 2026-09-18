@@ -63,6 +63,15 @@
   gap: 0.3rem;
 }
 
+/*
+ * The categories are the one row on the site long enough to carry a colour.
+ *
+ * Every pill was transparent with the chosen one filled, so the screen showed a
+ * single orange lozenge and seven ghosts. Filling them in the house green turns
+ * that row into the green the palette asks for, and leaves the terracotta doing
+ * what an accent is for: marking the one that is chosen. Green for what is
+ * there, orange for what you picked.
+ */
 .tab {
   padding: 0.5rem 1.25rem;
   border: 0;
@@ -71,8 +80,8 @@
   font-size: var(--step--1);
   font-weight: var(--weight-body);
   letter-spacing: 0.02em;
-  color: var(--ivory-soft);
-  background: transparent;
+  color: var(--ivory);
+  background: var(--forest);
   cursor: pointer;
   white-space: nowrap;
   transition: color var(--dur-1) var(--ease), background var(--dur-1) var(--ease),
@@ -80,8 +89,8 @@
 }
 
 .tab:hover {
-  border-color: var(--gold);
   color: var(--ivory);
+  background: #12563b;
 }
 
 .tab[aria-pressed='true'] {

@@ -20,11 +20,23 @@ import styles from './EdgeLight.module.css';
  * dash length below is a percentage of the perimeter, whatever the panel's size
  * or aspect — one set of numbers for a card and for a screen-wide sheet.
  */
+/*
+ * The lit lengths are a share of the perimeter, and they have to stay well
+ * under the spacing between lights.
+ *
+ * With one light a 34% glow was a long soft comet. With three lights a third of
+ * the perimeter apart, a 34% glow reaches exactly as far as the next light —
+ * so the three joined up and the whole edge was lit all the time. That is not
+ * three lights travelling, it is a stationary multi-coloured border, and it
+ * looked like a fault. Halved, each light covers about half the gap to the next
+ * and there is dark line between them, which is the only thing that makes them
+ * read as moving.
+ */
 const PASSES = [
-  { lit: 34, opacity: 0.1, width: 3.5 },
-  { lit: 22, opacity: 0.2, width: 2.4 },
-  { lit: 12, opacity: 0.45, width: 1.6 },
-  { lit: 5, opacity: 0.95, width: 1.2 },
+  { lit: 15, opacity: 0.12, width: 3.5 },
+  { lit: 9.5, opacity: 0.24, width: 2.4 },
+  { lit: 5, opacity: 0.5, width: 1.6 },
+  { lit: 2.2, opacity: 1, width: 1.2 },
 ];
 
 /*
@@ -87,7 +99,7 @@ export function EdgeLight({ radius }: { radius?: string }) {
                * glow would trail the bright head like a comet tail — a different
                * effect, and not the one a reflection makes.
                */
-              ['--centre' as string]: String((34 - pass.lit) / 2 + light.at),
+              ['--centre' as string]: String((15 - pass.lit) / 2 + light.at),
             }}
           />
         )),
