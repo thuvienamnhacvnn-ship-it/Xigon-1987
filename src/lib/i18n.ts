@@ -4,13 +4,31 @@
  * German is primary. Each route carries its own slug per locale, so
  * /de/speisekarte and /en/menu are the same page under two honest URLs, and a
  * page rejects a slug belonging to another locale instead of quietly serving a
- * duplicate. Vietnamese reuses the English slugs — they are already ASCII and
- * keep the URL set small.
+ * duplicate.
+ *
+ * Vietnamese was published and has been taken down again. The translations are
+ * still in the dictionaries and the `vi` columns are still in the database —
+ * nothing was deleted, because turning a language back on should be a matter of
+ * putting `'vi'` back in this list rather than translating the site twice.
+ * Everything else keys off this array: the switcher, the routing table, the
+ * proxy's language negotiation and what `tr()` will look at.
  */
 
-export const locales = ['de', 'en', 'vi'] as const;
+export const locales = ['de', 'en'] as const;
 export type Locale = (typeof locales)[number];
 export const defaultLocale: Locale = 'de';
+
+/**
+ * Every language the site has words for, served or not.
+ *
+ * Kept apart from `locales` so that taking a language off the site does not
+ * mean deleting its slugs, its dictionary and its database columns — which
+ * would make putting it back a translation job rather than a one-line change.
+ * Tables of content are keyed by this; anything the guest can reach is keyed by
+ * `Locale`.
+ */
+export const contentLocales = ['de', 'en', 'vi'] as const;
+export type ContentLocale = (typeof contentLocales)[number];
 
 export function isLocale(value: unknown): value is Locale {
   return typeof value === 'string' && (locales as readonly string[]).includes(value);
@@ -37,7 +55,7 @@ export type RouteKey =
   | 'privacy'
   | 'orderTerms';
 
-export const routes: Record<RouteKey, Record<Locale, string>> = {
+export const routes: Record<RouteKey, Record<ContentLocale, string>> = {
   home: { de: '', en: '', vi: '' },
   /*
    * One screen, one URL. The dock switches the content area and the address
@@ -143,8 +161,8 @@ export function switchPath(pathname: string, from: Locale, to: Locale): string {
   return `/${to}`;
 }
 
-export const localeShort: Record<Locale, string> = { de: 'DE', en: 'EN', vi: 'VI' };
-export const localeLabels: Record<Locale, string> = { de: 'Deutsch', en: 'English', vi: 'Tiếng Việt' };
+export const localeShort: Record<ContentLocale, string> = { de: 'DE', en: 'EN', vi: 'VI' };
+export const localeLabels: Record<ContentLocale, string> = { de: 'Deutsch', en: 'English', vi: 'Tiếng Việt' };
 
 export type Translated = { de?: string | null; en?: string | null; vi?: string | null };
 
@@ -154,12 +172,12 @@ export type Translated = { de?: string | null; en?: string | null; vi?: string |
  * Vietnamese falls back to English before German: an untranslated dish is
  * better served to a Vietnamese reader in English than in German.
  */
-export function tr(locale: Locale, values: Translated): string {
+export function tr(locale: ContentLocale, values: Translated): string {
   if (locale === 'vi') return values.vi || values.en || values.de || '';
   if (locale === 'en') return values.en || values.de || '';
   return values.de || values.en || '';
 }
 
-export function trOrNull(locale: Locale, values: Translated): string | null {
+export function trOrNull(locale: ContentLocale, values: Translated): string | null {
   return tr(locale, values) || null;
 }

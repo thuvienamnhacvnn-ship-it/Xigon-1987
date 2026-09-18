@@ -6,8 +6,26 @@ import { defaultLocale, locales } from '@/lib/i18n';
  * somewhere. German is the house language; the Accept-Language header only
  * gets to override that with a language we actually publish.
  */
+/**
+ * Languages the site used to serve.
+ *
+ * Vietnamese was live on this domain, so links to it exist. Rather than let
+ * them 404 — or worse, become `/de/vi/…`, which is what pushing a locale in
+ * front of them would do — they are sent to the English page. Vietnamese reused
+ * the English slugs, so the path after the language carries over unchanged and
+ * a link to a dish still opens that dish.
+ */
+const RETIRED = ['vi'];
+
 export default function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  const [, first, ...rest] = pathname.split('/');
+  if (RETIRED.includes(first)) {
+    const url = request.nextUrl.clone();
+    url.pathname = `/en${rest.length ? `/${rest.join('/')}` : ''}`;
+    return NextResponse.redirect(url, 301);
+  }
   if (locales.some((locale) => pathname === `/${locale}` || pathname.startsWith(`/${locale}/`))) {
     /*
      * A layout cannot read the path it is rendering. It needs to, because the

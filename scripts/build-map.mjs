@@ -87,44 +87,24 @@ for (let row = 0; row < DOWN; row += 1) {
 }
 
 /*
- * The tint is not decoration, and it is not a simple darkening either.
+ * No grading. The map is left exactly as it comes off the tile server.
  *
- * A standard OSM tile is a light beige ground with near-white roads on it: the
- * difference between "street" and "not street" is only a few per cent of
- * brightness. Dimming the whole image keeps that tiny difference tiny and gives
- * a brown rectangle. What makes the streets read as gold lines on a dark ground
- * is a steep curve at the top of the range — everything below the roads is
- * crushed to almost nothing, and the last few per cent is stretched across the
- * whole scale. Only then is it worth tinting.
+ * It was graded to gold-on-black, then to terracotta-on-black to follow the
+ * palette. Both were wrong for the same reason: a map is read, not looked at.
+ * A guest checking which corner the restaurant is on wants the street map they
+ * already know — the one in their phone — not an ornament in the house colours
+ * where the streets and the park and the water are all the same hue. Matching
+ * the palette cost them the only thing a map has to do.
+ *
+ * So the tiles are stacked and written out, and nothing else happens to them.
  */
-const grade =
-  'format=rgba,' +
-  'hue=s=0,' +
-  "curves=all='0/0 0.62/0.015 0.86/0.10 0.95/0.55 1/1'," +
-  /*
-   * The streets come out in the house accent. These three numbers are
-   * terracotta #e57a4e divided through by its own red channel, so the brightest
-   * road lands exactly on the accent and everything below it falls off in the
-   * same hue. They were gold while the site was gold; a map is not exempt from
-   * the palette.
-   */
-  'colorchannelmixer=' +
-  '1.00:0:0:0:' +
-  '0.53:0:0:0:' +
-  '0.34:0:0:0,' +
-  'eq=contrast=1.06:brightness=-0.02'
-
 execFileSync(
   'ffmpeg',
   [
     '-v', 'error', '-y',
     ...inputs,
     '-filter_complex',
-    `xstack=inputs=${files.length}:layout=${layout.join('|')}[grid];` +
-      `[grid]${grade}[map];` +
-      // A soft vignette so the image sits into the panel instead of ending at a
-      // hard rectangle of streets.
-      `[map]vignette=angle=PI/5[out]`,
+    `xstack=inputs=${files.length}:layout=${layout.join('|')}[out]`,
     '-map', '[out]',
     '-frames:v', '1',
     join(OUT, 'contact.png'),

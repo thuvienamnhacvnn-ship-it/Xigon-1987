@@ -47,7 +47,7 @@
   margin: 0.3rem 0 0;
   font-size: var(--step--1);
   letter-spacing: 0.03em;
-  color: var(--ivory-mute);
+  color: var(--accent-soft);
 }
 
 /* ---------- the three marks ---------- */
@@ -442,7 +442,7 @@
 
 .timeControl select option {
   color: var(--ivory);
-  background: #07281b;
+  background: #232323;
 }
 
 .timeNone {

@@ -7,7 +7,7 @@
  * no ratings, no founding year inferred from the name, no opening hours
  * presented as final while the old sources still contradict each other.
  */
-import type { Locale } from './i18n';
+import type { ContentLocale, Locale } from './i18n';
 import { vi } from './dictionary-vi';
 
 const de = {
@@ -957,7 +957,7 @@ const en: Dictionary = {
   },
 };
 
-export const dictionaries = { de, en, vi } satisfies Record<Locale, Dictionary>;
+export const dictionaries = { de, en, vi } satisfies Record<ContentLocale, Dictionary>;
 
 export function getDictionary(locale: Locale): Dictionary {
   return dictionaries[locale];

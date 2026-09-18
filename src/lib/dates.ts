@@ -6,7 +6,7 @@
  * Europe/Berlin rather than in UTC or in the host's local zone.
  */
 import { RESTAURANT } from './restaurant';
-import type { Locale } from './i18n';
+import type { ContentLocale, Locale } from './i18n';
 
 const ISO = new Intl.DateTimeFormat('en-CA', {
   timeZone: RESTAURANT.timezone,
@@ -26,7 +26,7 @@ export function addDays(isoDate: string, days: number): string {
   return shifted.toISOString().slice(0, 10);
 }
 
-const DATE_FORMAT_LOCALE: Record<Locale, string> = { de: 'de-DE', en: 'en-GB', vi: 'vi-VN' };
+const DATE_FORMAT_LOCALE: Record<ContentLocale, string> = { de: 'de-DE', en: 'en-GB', vi: 'vi-VN' };
 
 export function formatDate(isoDate: string, locale: Locale): string {
   const [year, month, day] = isoDate.split('-').map(Number);

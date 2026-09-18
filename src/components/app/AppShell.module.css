@@ -32,7 +32,7 @@
   height: 100dvh;
   overflow: hidden;
   color: var(--ivory);
-  background: #051c13;
+  background: #191919;
 }
 
 /* ---------- the room ---------- */
@@ -192,7 +192,7 @@
   letter-spacing: 0.06em;
   white-space: nowrap;
   color: var(--ivory);
-  background: rgba(9, 34, 24, 0.55);
+  background: rgba(32, 32, 32, 0.55);
   backdrop-filter: blur(16px);
 }
 
@@ -381,7 +381,7 @@
      read as one object rather than a smudge over the floor. */
   border: var(--edge-w) solid rgba(229, 122, 78, 0.6);
   border-radius: var(--r-pill);
-  background: rgba(9, 34, 24, 0.62);
+  background: rgba(32, 32, 32, 0.62);
   backdrop-filter: blur(18px) saturate(1.1);
   box-shadow: 0 24px 60px -32px rgba(0, 0, 0, 0.95);
   /* Below the width where the labels fit, the dock scrolls sideways rather than
@@ -614,7 +614,7 @@
     padding: 0.45rem 0.2rem calc(0.4rem + env(safe-area-inset-bottom, 0px));
     border-width: var(--edge-w) 0 0;
     border-radius: 20px 20px 0 0;
-    background: rgba(7, 30, 21, 0.86);
+    background: rgba(28, 28, 28, 0.86);
     /* The round button is lifted out of the bar, so nothing here may clip. */
     overflow: visible;
   }
@@ -677,7 +677,7 @@
     /* A dark ring so the button reads as sitting in front of the bar rather
        than welded into it. */
     box-shadow:
-      0 0 0 5px rgba(7, 30, 21, 0.92),
+      0 0 0 5px rgba(28, 28, 28, 0.92),
       0 10px 24px -8px rgba(0, 0, 0, 0.9);
   }
 
@@ -749,7 +749,7 @@
   place-items: center;
   pointer-events: none;
   /* The room dims a little behind it, the way it would. */
-  background: radial-gradient(60% 55% at 50% 50%, rgba(5, 20, 14, 0.55), rgba(5, 20, 14, 0.86));
+  background: radial-gradient(60% 55% at 50% 50%, rgba(18, 18, 18, 0.55), rgba(18, 18, 18, 0.86));
   animation: flare-room 260ms var(--ease) both;
 }
 

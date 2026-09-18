@@ -1,6 +1,12 @@
 /*
- * The map plate. The image was graded to the same warm dark as the panel it
- * sits in, so it needs a frame and nothing else.
+ * The map plate.
+ *
+ * The map itself is the ordinary street map, left the colours it comes in — a
+ * map is read, not looked at, and a guest checking which corner the restaurant
+ * is on wants the map they already know rather than an ornament in the house
+ * colours. That makes it the one light thing on a dark site, so everything
+ * drawn on top of it is set for a light ground: dark type with a pale halo, not
+ * the pale type with a dark halo the rest of the site uses.
  */
 .plate {
   position: relative;
@@ -11,7 +17,7 @@
   overflow: hidden;
   border: var(--edge-w) solid var(--gold-hair);
   border-radius: var(--glass-r);
-  background: #051c13;
+  background: #191919;
 }
 
 .image {
@@ -31,25 +37,28 @@
   height: 0;
 }
 
+/* The accent at full strength, ringed in white so it holds against a pale
+   street or a green park equally. */
 .pinDot {
   position: absolute;
-  width: 11px;
-  height: 11px;
+  width: 13px;
+  height: 13px;
+  border: 2px solid #fff;
   border-radius: 50%;
-  background: var(--gold-lit);
-  box-shadow: 0 0 10px 2px rgba(240, 165, 130, 0.75);
+  background: var(--accent);
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.45);
 }
 
 /*
- * A single slow pulse rather than a bouncing marker. The dot alone is easy to
- * miss on a map made of gold lines; a ring that opens out of it once every few
- * seconds finds the eye without asking for attention.
+ * A single slow pulse rather than a bouncing marker. One dot on a street map is
+ * easy to miss among all the other dots a map already has; a ring that opens
+ * out of it once every few seconds finds the eye without asking for attention.
  */
 .pinRing {
   position: absolute;
-  width: 11px;
-  height: 11px;
-  border: var(--edge-w) solid var(--gold);
+  width: 13px;
+  height: 13px;
+  border: 2px solid var(--accent);
   border-radius: 50%;
   animation: pin-pulse 3.6s ease-out infinite;
 }
@@ -82,8 +91,14 @@
   letter-spacing: 0.16em;
   text-transform: uppercase;
   white-space: nowrap;
-  color: var(--ivory);
-  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.9);
+  /* Dark type with a white halo: the site's pale-on-dark treatment vanished
+     the moment the map stopped being dark. */
+  color: #2d2d2d;
+  font-weight: var(--weight-body);
+  text-shadow:
+    0 0 3px #fff,
+    0 0 6px #fff,
+    0 1px 2px rgba(255, 255, 255, 0.9);
 }
 
 /* ---------- the foot ---------- */
@@ -99,7 +114,9 @@
   justify-content: space-between;
   gap: 0.5rem;
   padding: 0.75rem 0.9rem 0.6rem;
-  background: linear-gradient(0deg, rgba(5, 22, 15, 0.92), transparent);
+  /* A dark band along the foot, so the link and the attribution keep the site's
+     own treatment instead of being the only pale-on-pale text on the page. */
+  background: linear-gradient(0deg, rgba(20, 20, 20, 0.92), transparent);
 }
 
 .open {

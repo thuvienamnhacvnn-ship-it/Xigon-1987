@@ -3,7 +3,7 @@
  *
  * The palette is the restaurant's own, five colours and no more:
  *
- *   #0a3d2a  deep green    the house colour, and every solid ground
+ *   #0a3d2a  deep green    confirmed, paid, live — never a ground
  *   #2d2d2d  charcoal      the frame — bars, rails, outlines
  *   #d3d5d4  warm grey     everything written
  *   #e57a4e  terracotta    the one accent: buttons, rules, the current item
@@ -13,38 +13,45 @@
  * A flat five cannot build a button with a lit edge or a disabled state, and
  * inventing a sixth colour to do it is how a palette stops being a palette.
  *
- * The rule: green is the room, charcoal is the frame, terracotta is the only
- * thing allowed to raise its voice. Everything else belongs to the photography,
- * which is warm and lit and does not need help.
+ * The rule: charcoal is the room and the frame, terracotta is the only thing
+ * allowed to raise its voice, and the greys carry the words. Everything else
+ * belongs to the photography, which is warm and lit and does not need help.
  *
- * Green and terracotta are opposite in temperature, which is why this works and
- * why it has to be kept in proportion: a lot of green, a little terracotta. The
- * moment the accent covers as much ground as the green, both look cheap.
+ * Terracotta stays a small share of any screen. It is the warmest thing in the
+ * palette and the film behind it is warm too; the moment the accent covers as
+ * much ground as the charcoal, the whole thing turns orange and looks cheap.
  */
 :root {
   /*
-   * Surfaces.
+   * Surfaces — charcoal, and never green.
    *
-   * The ground of this site is a film of the restaurant, so the panels above it
-   * are smoked glass rather than paint — the deep green at low opacity, which
-   * reads as the room seen through a dark pane instead of as a green wash laid
-   * over the picture. The difference matters: a full-screen green veil over
-   * this film was rejected once already, and rightly.
+   * The green is in the palette but it is not a ground. Told three times now:
+   * no green behind the screens. It reads as a colour laid over the film rather
+   * than as glass in front of it, and the film is the only thing on this site
+   * that is actually the restaurant. So every surface is the charcoal from the
+   * palette at varying depth, which darkens without tinting.
    *
-   * The --green-* names are aliases kept so screens written before this change
-   * keep working.
+   * The --green-* names are aliases kept so screens written before any of this
+   * keep working. They no longer point at anything green, and the name is now
+   * only a name.
    */
-  --surface: #0a3d2a;
-  --surface-deep: #07281b;
-  --surface-dark: #051c13;
-  --surface-panel: rgba(10, 61, 42, 0.55);
-  --surface-veil: rgba(5, 22, 15, 0.86);
+  --surface: #2d2d2d;
+  --surface-deep: #232323;
+  --surface-dark: #191919;
+  --surface-panel: rgba(45, 45, 45, 0.55);
+  --surface-veil: rgba(20, 20, 20, 0.86);
 
   --green: var(--surface);
   --green-deep: var(--surface-deep);
   --green-dark: var(--surface-dark);
   --green-panel: var(--surface-panel);
   --green-veil: var(--surface-veil);
+
+  /*
+   * The forest green itself, kept for the one thing it is good at here: saying
+   * that something is confirmed, paid, live. It is never a background.
+   */
+  --forest: #0a3d2a;
 
   /* charcoal — the rail, the top bar, the outlined buttons */
   --ink-black: #2d2d2d;

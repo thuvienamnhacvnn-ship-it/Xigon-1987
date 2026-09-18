@@ -38,7 +38,7 @@
   padding: clamp(1.4rem, 0.8rem + 2vw, 3rem);
   /* Type on a photograph needs its own ground; the card's glass is behind the
      picture, not in front of it. */
-  background: linear-gradient(0deg, rgba(5, 22, 15, 0.9) 12%, rgba(5, 22, 15, 0.35) 62%, transparent);
+  background: linear-gradient(0deg, rgba(20, 20, 20, 0.9) 12%, rgba(20, 20, 20, 0.35) 62%, transparent);
   width: 100%;
 }
 
@@ -217,7 +217,7 @@
 
 .control select option {
   color: var(--ivory);
-  background: #07281b;
+  background: #232323;
 }
 
 .control::after {

@@ -5,14 +5,14 @@
  * the cart — so nothing is ever rounded twice. Only this file turns them into
  * text.
  */
-import type { Locale } from './i18n';
+import type { ContentLocale, Locale } from './i18n';
 
 /**
  * Guests pay euros in Berlin whatever language they read the page in, so the
  * Vietnamese view uses German number formatting (12,90 €) rather than a
  * Vietnamese one. Only English gets its own shape (€12.90).
  */
-const FORMAT_LOCALE: Record<Locale, string> = { de: 'de-DE', en: 'en-GB', vi: 'de-DE' };
+const FORMAT_LOCALE: Record<ContentLocale, string> = { de: 'de-DE', en: 'en-GB', vi: 'de-DE' };
 
 const cache = new Map<string, Intl.NumberFormat>();
 

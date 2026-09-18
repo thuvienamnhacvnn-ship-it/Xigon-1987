@@ -42,7 +42,7 @@
   font-weight: var(--weight-quiet);
   font-size: var(--step--1);
   letter-spacing: 0.03em;
-  color: var(--ivory-mute);
+  color: var(--accent-soft);
   text-shadow: 0 1px 10px rgba(0, 0, 0, 0.8);
 }
 
@@ -98,7 +98,7 @@
   height: 100%;
   background:
     repeating-linear-gradient(135deg, rgba(229, 122, 78, 0.05) 0 14px, transparent 14px 28px),
-    #07281b;
+    #232323;
 }
 
 /* Words read off a photograph need their own ground. A gradient out of the
@@ -108,10 +108,10 @@
   inset: 0;
   background: linear-gradient(
     0deg,
-    rgba(5, 22, 15, 0.95) 0%,
-    rgba(5, 22, 15, 0.86) 26%,
-    rgba(5, 22, 15, 0.42) 56%,
-    rgba(5, 22, 15, 0.08) 80%,
+    rgba(20, 20, 20, 0.95) 0%,
+    rgba(20, 20, 20, 0.86) 26%,
+    rgba(20, 20, 20, 0.42) 56%,
+    rgba(20, 20, 20, 0.08) 80%,
     transparent 100%
   );
 }
@@ -125,10 +125,10 @@
 .card:not([data-feature='true']) .scrim {
   background: linear-gradient(
     0deg,
-    rgba(5, 22, 15, 0.97) 0%,
-    rgba(5, 22, 15, 0.93) 44%,
-    rgba(5, 22, 15, 0.72) 68%,
-    rgba(5, 22, 15, 0.28) 88%,
+    rgba(20, 20, 20, 0.97) 0%,
+    rgba(20, 20, 20, 0.93) 44%,
+    rgba(20, 20, 20, 0.72) 68%,
+    rgba(20, 20, 20, 0.28) 88%,
     transparent 100%
   );
 }
@@ -287,7 +287,7 @@
   font-family: var(--font-body);
   font-size: var(--step--1);
   color: var(--ivory-soft);
-  background: rgba(12, 44, 31, 0.5);
+  background: rgba(41, 41, 41, 0.5);
   cursor: pointer;
 }
 
@@ -341,7 +341,7 @@
   gap: 0.3rem;
   padding: 0.28rem 0.45rem;
   border-radius: 999px;
-  background: rgba(7, 28, 19, 0.55);
+  background: rgba(26, 26, 26, 0.55);
   backdrop-filter: blur(6px);
 }
 

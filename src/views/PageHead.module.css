@@ -9,7 +9,7 @@
   position: relative;
   overflow: hidden;
   padding-block: clamp(1rem, 0.6rem + 1.4vw, 1.9rem) clamp(0.7rem, 0.5rem + 0.9vw, 1.2rem);
-  background: linear-gradient(180deg, rgba(6, 48, 31, 0.72), rgba(10, 61, 42, 0.32));
+  background: linear-gradient(180deg, rgba(42, 42, 42, 0.72), rgba(45, 45, 45, 0.32));
   border-bottom: 1px solid var(--gold-hair);
 }
 
