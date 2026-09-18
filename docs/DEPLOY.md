@@ -6,7 +6,7 @@ belonging to other projects, and a stray `docker compose ... --remove-orphans`
 there has come close to deleting a service outside the repo that issued it.
 A systemd unit touches none of that.
 
-- **Address:** https://www.xigon1987.com (the bare port, `162.19.44.241:3060`,
+- **Address:** https://www.1987xigon.com (the bare port, `162.19.44.241:3060`,
   still answers and should be closed — see below)
 - **Directory:** `/opt/xigon1987`
 - **Service:** `xigon1987.service`
@@ -65,13 +65,19 @@ connected.
 Then the unit at `/etc/systemd/system/xigon1987.service`, and
 `ufw allow 3060/tcp`.
 
-## The domain
+## The domains
 
-`www.xigon1987.com` is registered at Namecheap and its nameservers are
-Namecheap's own (`dns1/dns2.registrar-servers.com`), so the records are changed
-in the Namecheap dashboard — nothing on this server can do it.
+The site is **`www.1987xigon.com`** — the restaurant's own name, the one on its
+e-mail address. `xigon1987.com` was bought first by mistake; it is kept and
+redirects here, carrying the path, because it was live for a few hours with a
+certificate of its own and an address that has been handed out once is an
+address somebody has written down.
 
-Two records, replacing whatever the parking page left behind:
+Both are registered at Namecheap with Namecheap's own nameservers
+(`dns1/dns2.registrar-servers.com`), so records are changed in the Namecheap
+dashboard — nothing on this server can do it. Two records per domain, replacing
+whatever the parking page left behind (the `www` CNAME to
+`parkingpage.namecheap.com` has to go before an A record can be added):
 
 | Type | Host | Value |
 |---|---|---|
@@ -84,11 +90,18 @@ there does not break one site, it breaks three** — nginx refuses to start when
 any `server` block names a certificate that does not exist. So the vhost goes
 in twice, in this order, and `nginx -t` runs before every reload:
 
-1. `deploy/nginx/xigon1987.conf` — plain HTTP. This is what answers the moment
+1. `deploy/nginx/1987xigon.conf` — plain HTTP. This is what answers the moment
    DNS arrives, and it is what Let's Encrypt fetches its proof from.
-2. `deploy/nginx/xigon1987-https.conf` — the real thing, installed **after**
+2. `deploy/nginx/1987xigon-https.conf` — the real thing, installed **after**
    `certbot certonly` has succeeded. The commands are in the file's own header.
-   This is what is installed now, as `conf.d/xigon1987.conf`.
+
+What is installed now: `1987xigon-https.conf` as `conf.d/1987xigon.conf`, and
+`xigon1987-redirect.conf` as `conf.d/xigon1987.conf`. The old domain keeps its
+certificate and keeps renewing — it has to, because a guest arriving at
+`https://xigon1987.com` completes the TLS handshake *before* the redirect, so a
+missing certificate there is a browser warning rather than a clean forward.
+`xigon1987.conf` and `xigon1987-https.conf` stay in the repo as the record of
+how that domain was stood up.
 
 **Copy these files with `scp`, never by piping them through PowerShell.** Two
 separate corruptions came from trying: PowerShell wrote a UTF-8 BOM at the
@@ -98,11 +111,12 @@ lost its backslash on the way through and deleted every letter `r` in the file
 removed. Both times `nginx -t` caught it before the reload, which is the whole
 reason the test runs first.
 
-The certificate covers `www.xigon1987.com` and `xigon1987.com`, expires
-2026-12-17, and renews through the `ptc-bonus-certbot-1` container that already
-renews the other two sites — verified by `www.xigon1987.com.conf` being present
-in `/etc/letsencrypt/renewal/` inside the shared volume. The Let's Encrypt
-account e-mail is the restaurant's own.
+There are two certificates, one per domain, each covering the bare name and the
+`www` one. Both renew through the `ptc-bonus-certbot-1` container that already
+renews the other two sites — verified by `www.1987xigon.com.conf` and
+`www.xigon1987.com.conf` both being present in `/etc/letsencrypt/renewal/`
+inside the shared volume, rather than by trusting certbot's closing message.
+The Let's Encrypt account e-mail is the restaurant's own.
 
 The app is a plain Node service on the host, so nginx reaches it through the
 docker bridge gateway (`172.18.0.1:3060`) rather than by container name.
