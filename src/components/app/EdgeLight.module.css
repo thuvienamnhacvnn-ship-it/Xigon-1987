@@ -26,11 +26,10 @@
   stroke-linecap: round;
   /*
    * The dash walks the path, which is what keeps the light on the line through
-   * the corners. Fourteen seconds for one circuit — slow enough to be calm,
-   * fast enough that a glance catches it moving. At twenty-six it read as
-   * standing still, which is a decoration nobody sees.
+   * the corners. Twenty-two seconds for one circuit — a sheen crossing a pane
+   * of glass, not a light asking to be watched.
    */
-  animation: edge-travel 14s linear infinite;
+  animation: edge-travel 22s linear infinite;
 }
 
 /*

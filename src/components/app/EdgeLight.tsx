@@ -21,49 +21,41 @@ import styles from './EdgeLight.module.css';
  * or aspect — one set of numbers for a card and for a screen-wide sheet.
  */
 /*
- * The lit lengths are a share of the perimeter, and they have to stay well
- * under the spacing between lights.
+ * One light, in one colour.
  *
- * With one light a 34% glow was a long soft comet. With three lights a third of
- * the perimeter apart, a 34% glow reaches exactly as far as the next light — so
- * the three joined up and the whole edge was lit all the time. That is not three
- * lights travelling, it is a stationary multi-coloured border, and it looked
- * like a fault. At 20% each light covers about two thirds of the gap to the next
- * and dark line shows between them, which is the only thing that makes them read
- * as moving.
+ * It was three — terracotta, rose and green — chasing each other round every
+ * panel, on the reasoning that it put the palette in motion. On the screen it
+ * read as fairground bulbs: three saturated colours circling every box on the
+ * site at once. A reflection is one colour and there is one of it; the moment
+ * there are three, the eye stops reading light and starts reading decoration,
+ * and decoration that moves is the least expensive-looking thing a page can do.
+ *
+ * The palette has plenty of presence elsewhere — the bar, the category pills,
+ * the badges, the labels. The edge does not have to carry it too.
+ *
+ * Five passes, not four, and the brightest never reaches full strength. A dash
+ * at opacity 1 is a bright worm crawling the border; at 0.55 with a long faint
+ * falloff behind it, the same thing reads as the sheen travelling along a piece
+ * of glass, which is what it is meant to be.
  */
 const PASSES = [
-  { lit: 20, opacity: 0.16, width: 5 },
-  { lit: 13, opacity: 0.32, width: 3.4 },
-  { lit: 7, opacity: 0.6, width: 2.2 },
-  { lit: 3, opacity: 1, width: 1.6 },
+  { lit: 26, opacity: 0.05, width: 6 },
+  { lit: 18, opacity: 0.09, width: 4 },
+  { lit: 11, opacity: 0.16, width: 2.6 },
+  { lit: 6, opacity: 0.3, width: 1.6 },
+  { lit: 2.5, opacity: 0.55, width: 1.1 },
 ];
 
 /** The longest pass, and what the others are centred against. */
 const SPREAD = PASSES[0].lit;
 
-/** One circuit, and the unit the phase offsets are measured against. */
-const CYCLE_SECONDS = 14;
-
 /*
- * Three lights, not one, spaced a third of the way apart around the edge.
- *
- * One near-white light said nothing about the restaurant. Three — terracotta,
- * rose and green — put the whole palette in motion on every panel of the site,
- * which is the one piece of decoration here that is always visible and never in
- * the way of a word. They are a third apart so that at any moment one of them
- * is on a long side, and they never bunch into what would look like a single
- * fat light.
- *
- * The green is the forest lifted until it reads as light. A colour this dark
- * cannot glow; at #0a3d2a the third light was a dark patch travelling round a
- * dark edge, which is the opposite of the effect.
+ * One circuit. Slow: this is a sheen, not a signal, and a light that laps the
+ * panel every few seconds is a page asking to be looked at instead of read.
  */
-const LIGHTS = [
-  { colour: 'var(--accent)', at: 0 },
-  { colour: 'var(--accent-soft)', at: 33.33 },
-  { colour: 'var(--forest-lit)', at: 66.66 },
-];
+const CYCLE_SECONDS = 22;
+
+const LIGHT_COLOUR = 'var(--accent-lit)';
 
 export function EdgeLight({ radius }: { radius?: string }) {
   return (
@@ -83,40 +75,37 @@ export function EdgeLight({ radius }: { radius?: string }) {
       focusable="false"
       preserveAspectRatio="none"
     >
-      {LIGHTS.flatMap((light) =>
-        PASSES.map((pass) => (
-          <rect
-            key={`${light.at}-${pass.lit}`}
-            className={styles.pass}
-            x="0.5"
-            y="0.5"
-            width="calc(100% - 1px)"
-            height="calc(100% - 1px)"
-            pathLength={100}
-            strokeDasharray={`${pass.lit} ${100 - pass.lit}`}
-            style={{
-              opacity: pass.opacity,
-              strokeWidth: pass.width,
-              stroke: light.colour,
-              /*
-               * Where this stroke starts along the path, expressed as a phase.
-               *
-               * Each pass is pulled back by half its own length so all four
-               * share a centre — aligned at their leading edges instead, the
-               * glow would trail the bright head like a comet tail, which is a
-               * different effect and not the one a reflection makes. The light's
-               * own share is added on top of that.
-               *
-               * It is a negative delay rather than a starting value because a
-               * keyframe cannot carry a custom property and still be
-               * interpolated; see the note in the stylesheet, which this project
-               * paid for with a light that sat still for days.
-               */
-              animationDelay: `${-CYCLE_SECONDS * (((SPREAD - pass.lit) / 2 + light.at) / 100)}s`,
-            }}
-          />
-        )),
-      )}
+      {PASSES.map((pass) => (
+        <rect
+          key={pass.lit}
+          className={styles.pass}
+          x="0.5"
+          y="0.5"
+          width="calc(100% - 1px)"
+          height="calc(100% - 1px)"
+          pathLength={100}
+          strokeDasharray={`${pass.lit} ${100 - pass.lit}`}
+          style={{
+            opacity: pass.opacity,
+            strokeWidth: pass.width,
+            stroke: LIGHT_COLOUR,
+            /*
+             * Where this stroke starts along the path, expressed as a phase.
+             *
+             * Each pass is pulled back by half its own length so they share a
+             * centre — aligned at their leading edges instead, the glow would
+             * trail the bright head like a comet tail, which is a different
+             * effect and not the one a reflection makes.
+             *
+             * It is a negative delay rather than a starting value because a
+             * keyframe cannot carry a custom property and still be interpolated;
+             * see the note in the stylesheet, which this project paid for with a
+             * light that sat perfectly still while reporting itself as running.
+             */
+            animationDelay: `${-CYCLE_SECONDS * ((SPREAD - pass.lit) / 2 / 100)}s`,
+          }}
+        />
+      ))}
     </svg>
   );
 }
