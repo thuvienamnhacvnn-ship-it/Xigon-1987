@@ -61,16 +61,34 @@
   border-bottom: 1px solid var(--gold-hair);
 }
 
+/*
+ * One mark per fact, and each one a different colour from the palette.
+ *
+ * Three identical outlined circles told the eye nothing and used one colour
+ * where the house has three. Address, hours and telephone are three different
+ * kinds of answer, so they are three different colours — filled, because a
+ * hairline circle at 38px is too little of a colour to register as one.
+ */
 .rowIcon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   flex: 0 0 auto;
-  width: 38px;
-  height: 38px;
-  border: var(--edge-w) solid var(--gold-hair);
+  width: 40px;
+  height: 40px;
+  border: 0;
   border-radius: 50%;
-  color: var(--gold);
+  color: var(--ivory);
+  background: var(--accent-deep);
+}
+
+.row:nth-of-type(2) .rowIcon {
+  background: var(--forest);
+}
+
+.row:nth-of-type(3) .rowIcon {
+  background: var(--accent-soft);
+  color: #2d2d2d;
 }
 
 .rowBody {

@@ -27,6 +27,26 @@ const PASSES = [
   { lit: 5, opacity: 0.95, width: 1.2 },
 ];
 
+/*
+ * Three lights, not one, spaced a third of the way apart around the edge.
+ *
+ * One near-white light said nothing about the restaurant. Three — terracotta,
+ * rose and green — put the whole palette in motion on every panel of the site,
+ * which is the one piece of decoration here that is always visible and never in
+ * the way of a word. They are a third apart so that at any moment one of them
+ * is on a long side, and they never bunch into what would look like a single
+ * fat light.
+ *
+ * The green is the forest lifted until it reads as light. A colour this dark
+ * cannot glow; at #0a3d2a the third light was a dark patch travelling round a
+ * dark edge, which is the opposite of the effect.
+ */
+const LIGHTS = [
+  { colour: 'var(--accent)', at: 0 },
+  { colour: 'var(--accent-soft)', at: 33.33 },
+  { colour: 'var(--forest-lit)', at: 66.66 },
+];
+
 export function EdgeLight({ radius }: { radius?: string }) {
   return (
     /*
@@ -45,29 +65,33 @@ export function EdgeLight({ radius }: { radius?: string }) {
       focusable="false"
       preserveAspectRatio="none"
     >
-      {PASSES.map((pass) => (
-        <rect
-          key={pass.lit}
-          className={styles.pass}
-          x="0.5"
-          y="0.5"
-          width="calc(100% - 1px)"
-          height="calc(100% - 1px)"
-          pathLength={100}
-          strokeDasharray={`${pass.lit} ${100 - pass.lit}`}
-          style={{
-            opacity: pass.opacity,
-            strokeWidth: pass.width,
-            /*
-             * Each pass is pulled back by half its own length so all four share
-             * a centre. Aligned at their leading edges instead, the glow would
-             * trail the bright head like a comet tail — which is a different
-             * effect, and not the one a reflection makes.
-             */
-            ['--centre' as string]: String((34 - pass.lit) / 2),
-          }}
-        />
-      ))}
+      {LIGHTS.flatMap((light) =>
+        PASSES.map((pass) => (
+          <rect
+            key={`${light.at}-${pass.lit}`}
+            className={styles.pass}
+            x="0.5"
+            y="0.5"
+            width="calc(100% - 1px)"
+            height="calc(100% - 1px)"
+            pathLength={100}
+            strokeDasharray={`${pass.lit} ${100 - pass.lit}`}
+            style={{
+              opacity: pass.opacity,
+              strokeWidth: pass.width,
+              stroke: light.colour,
+              /*
+               * Each pass is pulled back by half its own length so all four
+               * share a centre, then the whole group is pushed round the path by
+               * its light's share. Aligned at their leading edges instead, the
+               * glow would trail the bright head like a comet tail — a different
+               * effect, and not the one a reflection makes.
+               */
+              ['--centre' as string]: String((34 - pass.lit) / 2 + light.at),
+            }}
+          />
+        )),
+      )}
     </svg>
   );
 }

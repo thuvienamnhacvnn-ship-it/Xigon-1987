@@ -21,7 +21,8 @@
   rx: var(--edge-r, var(--glass-r));
   ry: var(--edge-r, var(--glass-r));
   fill: none;
-  stroke: rgb(255, 246, 224);
+  /* The colour is set per light in the component; this is only the fallback. */
+  stroke: var(--accent);
   stroke-linecap: round;
   /*
    * The dash walks the path, which is what keeps the light on the line through

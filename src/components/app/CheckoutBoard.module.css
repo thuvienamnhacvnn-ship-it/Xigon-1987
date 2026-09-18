@@ -96,9 +96,11 @@
   white-space: nowrap;
 }
 
+/* Behind the guest and settled — which is what the green is for here. */
 .stepItem[data-state='done'] .stepMark {
-  border-color: var(--gold);
-  color: var(--gold-lit);
+  border-color: var(--forest-lit);
+  color: var(--ivory);
+  background: var(--forest);
 }
 
 .stepItem[data-state='now'] .stepMark {

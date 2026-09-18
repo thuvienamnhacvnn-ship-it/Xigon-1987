@@ -175,6 +175,34 @@
   max-width: 46ch;
 }
 
+/*
+ * The two beside the feature get one line of description, not two.
+ *
+ * Measured at 1920: a small card is 267px tall and its words wanted 247 of
+ * them, leaving nothing for the badge pinned in the top corner — so "GUTSCHEIN"
+ * printed straight through "Einen Abend verschenken". The card carrying a
+ * countdown is the tallest and it is the one that broke. One line frees the
+ * band the badge needs, and the offer still says what it is.
+ */
+.column .card .text {
+  -webkit-line-clamp: 1;
+}
+
+.column .card .body {
+  gap: 0.28rem;
+  padding: clamp(0.7rem, 0.4rem + 0.8vw, 1.15rem);
+}
+
+/* A smaller tag on the smaller cards, tucked closer to the corner. Eight pixels
+   of clearance is not clearance; this buys the band back. */
+.column .card .badge {
+  top: 0.6rem;
+  left: 0.6rem;
+  padding: 0.22rem 0.7rem;
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+}
+
 .runs {
   display: inline-flex;
   align-items: center;
@@ -217,6 +245,25 @@
   color: #2d2d2d;
   background: linear-gradient(180deg, var(--gold-lit), var(--gold-deep));
   box-shadow: 0 6px 18px -8px rgba(0, 0, 0, 0.9);
+}
+
+/*
+ * A different colour per offer, cycling the palette.
+ *
+ * Every badge in the accent made three offers look like three copies of one
+ * notice. They are different things — a weekday lunch, an evening at the
+ * counter, a voucher — and a colour each is the cheapest way to say so. The
+ * cycle is by position rather than by content, so an offer added in the back
+ * office takes the next colour without anyone choosing one.
+ */
+.column .card:nth-child(1) .badge {
+  color: var(--ivory);
+  background: linear-gradient(180deg, #14543a, var(--forest));
+}
+
+.column .card:nth-child(2) .badge {
+  color: #2d2d2d;
+  background: linear-gradient(180deg, #d4a096, var(--accent-soft));
 }
 
 /* ---------- the clock ---------- */

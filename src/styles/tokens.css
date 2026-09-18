@@ -52,6 +52,14 @@
    * that something is confirmed, paid, live. It is never a background.
    */
   --forest: #0a3d2a;
+  /*
+   * The same green lifted until it reads as light rather than as a hole.
+   *
+   * #0a3d2a is darker than most of the surfaces it would sit on, so anything
+   * asked to glow in it — the travelling edge light, a lit icon — came out as a
+   * dark patch. Same hue, raised; no sixth colour.
+   */
+  --forest-lit: #3f9e6e;
 
   /* charcoal — the rail, the top bar, the outlined buttons */
   --ink-black: #2d2d2d;
