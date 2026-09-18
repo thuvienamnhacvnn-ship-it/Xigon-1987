@@ -64,14 +64,49 @@ connected.
 Then the unit at `/etc/systemd/system/xigon1987.service`, and
 `ufw allow 3060/tcp`.
 
+## The domain
+
+`www.xigon1987.com` is registered at Namecheap and its nameservers are
+Namecheap's own (`dns1/dns2.registrar-servers.com`), so the records are changed
+in the Namecheap dashboard — nothing on this server can do it.
+
+Two records, replacing whatever the parking page left behind:
+
+| Type | Host | Value |
+|---|---|---|
+| A | `@` | `162.19.44.241` |
+| A | `www` | `162.19.44.241` |
+
+The nginx in front of this app is a container belonging to the ptc-bonus stack
+and it also serves `ptc-bonus.com` and `ptc-hub.org`. **A broken vhost file
+there does not break one site, it breaks three** — nginx refuses to start when
+any `server` block names a certificate that does not exist. So the vhost goes
+in twice, in this order, and `nginx -t` runs before every reload:
+
+1. `deploy/nginx/xigon1987.conf` — plain HTTP. Installed already. This is what
+   answers the moment DNS arrives, and it is what Let's Encrypt fetches its
+   proof from.
+2. `deploy/nginx/xigon1987-https.conf` — the real thing, installed **after**
+   `certbot certonly` has succeeded. The commands are in the file's own header.
+
+The app is a plain Node service on the host, so nginx reaches it through the
+docker bridge gateway (`172.18.0.1:3060`) rather than by container name.
+
+`X-Forwarded-Proto` matters more here than it looks: the app decides whether
+its cookies may be marked `Secure` from that header, so behind the HTTPS block
+the basket and the back-office session become `Secure` on their own, with no
+setting to remember. See `src/server/cookie-security.ts`.
+
+When the domain is live and HTTPS is on, close the bare port —
+`ufw delete allow 3060/tcp` — so there is one way in and it is encrypted.
+
 ## What is still open
 
-**There is no HTTPS.** The site answers on a bare port over plain HTTP, so the
-admin password travels in clear text and every browser will call it insecure.
-That is acceptable while this is something to look at; it is not acceptable
-before it is shown to guests. Both are fixed by the same step: point a domain
-at the box, add a vhost beside the ones in
-`/opt/ptc-bonus/PTC-Loyalty/docker/nginx/conf.d/`, and take a certificate.
+**There is no HTTPS yet**, because the certificate cannot be issued until the
+domain resolves to this server. Until then the site answers on a bare port over
+plain HTTP, the admin password travels in clear text, and every browser calls
+it insecure. That is acceptable while this is something to look at; it is not
+acceptable before it is shown to guests.
 
 **Why not Vercel.** PGlite writes its database to disk. Vercel's filesystem is
 read-only and each request may land on a different machine, so the site would
